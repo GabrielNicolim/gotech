@@ -34,7 +34,7 @@ void sair();
 
 main()
 {
-	SetConsoleTitle("Func_Borda"); 		   // Define o nome do console
+	SetConsoleTitle("GoTech"); 		   // Define o nome do console
     system("mode con:cols=120 lines=45");  // Define o tamanho do console
     
 	inicio(); // Função de construção da tela inicial
@@ -282,5 +282,4 @@ void cursor (int x) { 	// Define se o cursor ira aparecer (1) ou não (0)
 		}
 	}
 }
-
 
