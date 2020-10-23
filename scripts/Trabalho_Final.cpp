@@ -29,6 +29,8 @@ void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
 void menu_ini();
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
+// Função que finaliza a execução do programa no menu
+void sair();
 
 main()
 {
@@ -44,6 +46,7 @@ void inicio() // Apresenta tela de inicio
 	borda(11, 1, col, lin); 
 	disquete((col/3) + 8, 4);
 	menu_ini();
+	
 	getch(); // Remover
 }
 
@@ -52,19 +55,33 @@ void menu_ini()
 	int inic = (col/2) - 10, inil = (lin)/2; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
 	
 	// Menu 
-	gotoxy(inic, inil); 	printf("*********");
-	gotoxy(inic, (inil+2)); printf("*********");
-	gotoxy(inic, (inil+4)); printf("*********");
-	gotoxy(inic, (inil+6)); printf("*********");
+	gotoxy(inic, inil); 	printf("Cadastro");
+	gotoxy(inic, (inil+2)); printf("Pesquisa");
+	gotoxy(inic, (inil+4)); printf("Info do Sistema");
+	gotoxy(inic, (inil+6)); printf("Sair");
 	
 	// Chama navegação com setas
 	int escolha;
 	escolha = navegar_menu(inil, (inil + 6), (inic - 2));
 	
-	system("cls");
-	printf("%d", escolha);
+	switch(escolha)
+	{
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			sair();
+			break;
+	}
 }
 
+void sair()
+{
+	exit(1);
+}
 int navegar_menu(int ini, int fim, int p)
 {
 	cursor(0); // Desativa o cursor
