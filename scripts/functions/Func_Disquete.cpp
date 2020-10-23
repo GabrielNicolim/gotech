@@ -35,7 +35,7 @@ main()
 		printf(" ");	
 	}
 	
-	disquete(10, 5);
+	disquete(20, 4);
 }
 
 void disquete(int ic, int il)
@@ -48,94 +48,121 @@ void disquete(int ic, int il)
 	gotoxy(ic, il); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	
-	// Linha 2
+	// Linha 2  - tracinho
 	gotoxy(ic, (il+1));
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	
-	for(int i = 0; i < 16; i++) 
+	for(int i = 0; i < 18; i++) 
 	{
-		if(i == 2 or i == 13) textcolor(8);
-		if(i > 2  and i < 13) 
+		if(i == 2 or i == 15) textcolor(8);
+		if(i > 2  and i < 15) 
 		{
-			if(i == 3) textcolor(8);
-			else if(i % 2 == 0) textcolor(0);
-			else textcolor(8);
+			textcolor(7);
+			if(i > 4 && i < 8) textcolor(0);
 		}
 		else textcolor(9);
 		putchar(219);
 	}
 	
 	textcolor(0);
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	
-	// Linha 3
+	// Linha 3  - tracinho
 	gotoxy(ic, (il+2));
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	
-	for(int i = 0; i < 16; i++) 
+	for(int i = 0; i < 18; i++) 
 	{
-		if(i == 2 or i == 13) textcolor(8);
-		if(i > 2  and i < 13) textcolor(7);
+		if(i == 2 or i == 15) textcolor(8);
+		if(i > 2  and i < 15) 
+		{
+			textcolor(7);
+			if(i > 4 && i < 8) textcolor(0);
+		}
 		else textcolor(9);
 		putchar(219);
 	}
 	
 	textcolor(0);
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	
 	// Linha 4
 	
 	gotoxy(ic, (il+3));
 	
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	textcolor(9);
-	for(int i = 0; i < 16; i++) putchar(219);
+	for(int i = 0; i < 18; i++) putchar(219);
 	textcolor(0);
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	
 	// Linha 5
 	
 	gotoxy(ic, (il+4));
-	
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	textcolor(9);
-	for(int i = 0; i < 16; i++) putchar(219);
+
+	for(int i = 0; i < 18; i++) putchar(219);
 	textcolor(0);
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	
-	//Linha 6
+	//Linha 6 - rodelinha com tracin
 	
 	gotoxy(ic, (il+5));
 	
-	printf("%c%c", 219, 219);
-	textcolor(9);
-	for(int i = 0; i < 16; i++) putchar(219);
+	printf("%c", 219);
+	for(int i = 0; i < 18; i++) 
+	{	
+		if(i>6 && i <11) 
+		{
+		textcolor(7);
+		if(i == 9) textcolor(8);
+		}
+		else textcolor(9);
+		putchar(219);
+		
+	}
 	textcolor(0);
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	
-	//Linha 7
+	//Linha 7 - rodelinha 
 	
 	gotoxy(ic, (il+6));
 	
-	printf("%c%c", 219, 219);
-	textcolor(9);
-	for(int i = 0; i < 16; i++) putchar(219);
+	printf("%c", 219);
+	for(int i = 0; i < 18; i++) 
+	{	
+		if(i>6 && i <11) textcolor(7);
+		else textcolor(9);
+		putchar(219);
+		
+	}
 	textcolor(0);
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	
 	// Linha 8
 	
 	gotoxy(ic, (il+7));
 	
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	textcolor(9);
-	for(int i = 0; i < 16; i++) putchar(219);
+	for(int i = 0; i < 18; i++) putchar(219);
 	textcolor(0);
-	printf("%c%c", 219, 219);
+	printf("%c", 219);
 	
-	// Linha 9 => Borda de baixo
+	// Linha 9
+	
+	gotoxy(ic, (il+8));
+	
+	printf("%c", 219);
+	textcolor(9);
+	for(int i = 0; i < 18; i++) putchar(219);
 	textcolor(0);
-	gotoxy(ic, (il+8)); 
+	printf("%c", 219);
+	
+	// Linha 10 => Borda de baixo
+	textcolor(0);
+	gotoxy(ic, (il+9)); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	
 }
