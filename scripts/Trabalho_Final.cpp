@@ -6,10 +6,9 @@
 #include <time.h>
 #include <string.h>
 
-#define col 120 
-#define lin 45
+#define cor_fundo 11
 
-text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, col, lin, 1, 1}; // Define os limites para linha (35) e coluna (80)
+text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 120, 45, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
 // Funções conio.c
 void textcolor(int newcolor);
@@ -43,16 +42,14 @@ main()
 void inicio() // Apresenta tela de inicio
 {	
 	system("cls");
-	borda(11, 1, col, lin); 
-	disquete((col/3) + 8, 4);
+	borda(cor_fundo, 1, 120, 45); 
+	disquete(48, 4);
 	menu_ini();
-	
-	getch(); // Remover
 }
 
 void menu_ini()
 {
-	int inic = (col/2) - 10, inil = (lin)/2; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
+	int inic = 50, inil = 18; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
 	
 	// Menu 
 	gotoxy(inic, inil); 	printf("Cadastro");
@@ -78,10 +75,19 @@ void menu_ini()
 	}
 }
 
-void sair()
+void sair() // Finaliza a execução do programa
 {
+	system("Cls");
+	borda(cor_fundo, 1, 120, 45);
+	
+	gotoxy(42, 17); printf("Obrigado por utilizar nosso programa!");
+	textcolor(cor_fundo);
+	
+	gotoxy(118, 40);
 	exit(1);
 }
+
+
 int navegar_menu(int ini, int fim, int p)
 {
 	cursor(0); // Desativa o cursor
@@ -119,26 +125,36 @@ int navegar_menu(int ini, int fim, int p)
 		
 	}while(true);
 }
+
 void borda(int cf, int cb, int lc, int ll) // (cor de fundo, cor da borda, limite de coluna, limite de linha)
 {
 	textbackground(cf); // Define cor do fundo
 	system("cls"); 
 	
-	textcolor(cb); // Define cor da borda
-	
-	// Cria a linha => Char 219
-	
-	for(int i = 0; i < ll; i++) // Realiza a criação de uma borda por toda a folha
+	for (int i = 9; i <= (lc - 8); i++) // Parte de cima da borda
 	{
-		for(int k = 0; k < lc; k++)
-		{
-			if(k == 0 || k == 1) putchar(219);
-			else if(k == (lc - 1) || k == (lc - 2)) putchar(219);
-			else if(i == 0) putchar(219);
-			else if(i == (ll - 1)) putchar(219);
-			else putchar(32);
-		}
+		textcolor(cb);
+		gotoxy(i,2);printf("%c",219);
 	}
+	for (int i = 9; i <= (lc - 8); i++) // Parte de baixo da borda 
+	{
+		textcolor(cb);
+		gotoxy(i,33);printf("%c",219);
+	}
+	for (int i=2; i <= 33; i++) // Borda esquerda 
+	{
+		textcolor(cb);
+		gotoxy(10,i);printf("%c",219);
+		gotoxy(9,i);printf("%c",219);
+	}
+	for (int i=2; i <= 33; i++) // Borda direita
+	{
+		textcolor(cb);
+		gotoxy(112,i);printf("%c",219);
+		gotoxy(111,i);printf("%c",219);
+	}
+	
+	printf("\n\n\n\n");
 }
 
 void disquete(int ic, int il)
