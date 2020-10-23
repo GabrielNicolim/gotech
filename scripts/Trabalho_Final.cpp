@@ -6,7 +6,9 @@
 #include <time.h>
 #include <string.h>
 
-#define cor_fundo 11
+#define cor_fundo 3
+#define cor_borda 1
+#define cor_texto 15
 
 text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 120, 45, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
@@ -41,17 +43,17 @@ main()
 
 void inicio() // Apresenta tela de inicio
 {	
-	system("cls");
-	borda(cor_fundo, 1, 120, 45); 
-	disquete(48, 4);
+	borda(cor_fundo, cor_borda, 120, 45); 
+	disquete(50, 6);
 	menu_ini();
 }
 
 void menu_ini()
 {
-	int inic = 50, inil = 18; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
+	int inic = 50, inil = 19; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
 	
 	// Menu 
+	textcolor(cor_texto);
 	gotoxy(inic, inil); 	printf("Cadastro");
 	gotoxy(inic, (inil+2)); printf("Pesquisa");
 	gotoxy(inic, (inil+4)); printf("Info do Sistema");
@@ -77,9 +79,9 @@ void menu_ini()
 
 void sair() // Finaliza a execução do programa
 {
-	system("Cls");
-	borda(cor_fundo, 1, 120, 45);
+	borda(cor_fundo, cor_borda, 120, 45);
 	
+	textcolor(cor_texto);
 	gotoxy(42, 17); printf("Obrigado por utilizar nosso programa!");
 	textcolor(cor_fundo);
 	
@@ -158,7 +160,8 @@ void borda(int cf, int cb, int lc, int ll) // (cor de fundo, cor da borda, limit
 }
 
 void disquete(int ic, int il)
-{	
+{
+	
 	// Linha 1 => Borda de cima
 	textcolor(0);
 	gotoxy(ic, il); 
