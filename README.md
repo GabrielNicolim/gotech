@@ -14,5 +14,3 @@
 <li><a href = "https://pt.wikipedia.org/wiki/Time.h">Time.h</a>
 <li><a href = "http://linguagemc.com.br/a-biblioteca-string-h/">String.h</a>
 <br>
-<hr>
-<br>
