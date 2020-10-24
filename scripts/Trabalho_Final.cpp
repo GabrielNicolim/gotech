@@ -1,4 +1,3 @@
-////////////////////////////////////////////////////
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -7,36 +6,42 @@
 #include <time.h>
 #include <string.h>
 
+// Versão 1.2
+#define versao 1.2
+
+// Definição de cores 
 #define cor_fundo 3
 #define cor_borda 1
 #define cor_texto 15
 #define cor_destaque 0
 
-text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 120, 45, 1, 1}; // Define os limites para linha (35) e coluna (80)
+text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 120, 40, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
 // Funções conio.c
 void textcolor(int newcolor);
 void textbackground(int newcolor);
 void gotoxy(int x, int y);
 void cursor (int x);
+void clreol(int x);
 
 // Funções de construção do programa
 
-//
-
+// Apresenta o menu e a versão
+void loading();
 // Apresenta tela de inicio
 void inicio(); 
 // Função utilizada para a borda
-void borda(int cf, int cb, int lc, int ll); // (cor de fundo, cor da borda, limite de coluna, limite de linha)
+void borda(int cf, int cb, int lc); // (cor de fundo, cor da borda, limite de coluna, limite de linha)
 // Função utilizada para a criar o disquete
 void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
-// Fução de construção do menu da tela inicial
-void menu_ini();
+
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
 
-
 // Menu 
+
+// Fução de construção do menu da tela inicial
+void menu_ini();
 
 // Função que finaliza a execução do programa no menu
 void sair();
@@ -44,17 +49,46 @@ void sair();
 // Função para apresentar as Informações do Sistema
 void info_de_sistema();
 
+// Função para gerar o sub menu de pesquisa
+void sub_menu();
+
+
 main()
 {
 	SetConsoleTitle("GoTech"); 		   // Define o nome do console
-    system("mode con:cols=120 lines=45");  // Define o tamanho do console
+    system("mode con:cols=120 lines=40");  // Define o tamanho do console
     
+    loading();
 	inicio(); // Função de construção da tela inicial
+}
+
+void loading()
+{
+	borda(cor_fundo, cor_borda, 120); 
+	cursor(0);
+	textcolor(cor_texto);
+	
+	// Apresentação de versão 
+	
+	gotoxy(99, 30); printf("Versao %.1f", versao);
+	
+	gotoxy(15, 30); printf("GoTech");
+	
+	gotoxy(38, 10); printf("Aguarde, estamos preparando tudo para voce!");
+	textcolor(RED); // Loading vermelho
+	for(int i = 0; i <= 52; i++)
+	{
+		gotoxy(32+i, 20);printf("%c", 219);
+		Sleep(20);
+	}
+	textcolor(cor_texto);
+	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar                               ");
+	Sleep(3000);
 }
 
 void inicio() // Apresenta tela de inicio
 {	
-	borda(cor_fundo, cor_borda, 120, 45); 
+	borda(cor_fundo, cor_borda, 120); 
 	disquete(50, 6);	
 	menu_ini();
 }
@@ -79,6 +113,7 @@ void menu_ini()
 		case 0:
 			break;
 		case 1:
+			sub_menu();
 			break;
 		case 2:
 			info_de_sistema();
@@ -89,18 +124,54 @@ void menu_ini()
 	}
 }
 
+void sub_menu()
+{
+	borda(cor_fundo, cor_borda, 120);
+	
+	int inic = 50, inil = 19; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
+	
+	// Menu 
+	textcolor(cor_texto);
+	gotoxy(inic, inil); 	printf("Geral");
+	gotoxy(inic, (inil+2)); printf("Pesquisa por Codigo");
+	gotoxy(inic, (inil+4)); printf("Pesquisa por Nome");
+	gotoxy(inic, (inil+6)); printf("Retornar ao Inicio");
+	
+	int escolha;
+	escolha = navegar_menu(inil, (inil + 6), (inic - 2));
+	
+	switch(escolha)
+	{
+		case 0:
+			break;
+		case 1:
+			
+			break;
+		case 2:
+			
+			break;
+		case 3:
+			inicio();
+			break;
+	}
+}
+
 void info_de_sistema() // Apresenta as informações do sistema
 {
-	borda(cor_fundo, cor_borda, 120, 45);
+	borda(cor_fundo, cor_borda, 120);
 
 	
-	int inix = 20, iniy = 10; // Controla o eixo x e y das informações
+	int inix = 20, iniy = 9; // Controla o eixo x e y das informações
 	
 	// Apresenta as informações do sistema
 	textcolor(0);
-//	textbackground(6);
 	gotoxy(54, 4);  printf("Info do Sistema");
 	textbackground(cor_fundo);
+	
+	textcolor(cor_destaque);
+	gotoxy(inix, iniy -2); printf("Empresa: ");
+	textcolor(cor_texto);
+	printf("GoTech");
 	
 	textcolor(cor_destaque);
 	gotoxy(inix, iniy);  printf("Nomes: ");
@@ -123,11 +194,20 @@ void info_de_sistema() // Apresenta as informações do sistema
 	printf("2020");
 	
 	textcolor(cor_destaque);
-	gotoxy(inix, iniy + 8);  printf("Professora: ");
+	gotoxy(inix, iniy + 8);  printf("Sobre o software: ");
 	textcolor(cor_texto);
-	printf("Ariane Scarelli");
+	printf("Nosso software, que hoje se encontra na versao %.1f, se destina a", versao);
+	gotoxy(inix, iniy + 10); printf("simular um sistema de gerenciamento de estoque de uma loja de informatica em C/C++.");
+	gotoxy(inix, iniy + 12); printf("Para a realizacao desse projeto utilizamos funcoes de cabecalho da conio.c e conio.h.");
+	gotoxy(inix, iniy + 14); printf("Podem ser registrados perifericos e pecas de computador.");
 	
-	gotoxy(inix, iniy + 16); printf("Pressione 0 para retornar ao menu"); 
+	textcolor(cor_destaque);
+	gotoxy(inix, iniy + 16); printf("Agradecimentos: ");
+	textcolor(cor_texto);
+	printf("Deixamos nosso agradecimento a professora Ariane Scarelli e ");
+	gotoxy(inix, iniy + 18); printf("Katia Zambombon, por compartilharem conosco parte de seus conhecimentos.");
+	
+	gotoxy(inix, iniy + 21); printf("Pressione 0 para retornar ao menu"); 
 	
 	char c;
 	
@@ -142,13 +222,13 @@ void info_de_sistema() // Apresenta as informações do sistema
 
 void sair() // Finaliza a execução do programa
 {
-	borda(cor_fundo, cor_borda, 120, 45);
+	borda(cor_fundo, cor_borda, 120);
 	
 	textcolor(cor_texto);
 	gotoxy(42, 17); printf("Obrigado por utilizar nosso programa!");
 	textcolor(cor_fundo);
 	
-	gotoxy(118, 40);
+	gotoxy(80, 37);
 	exit(1);
 }
 
@@ -184,8 +264,7 @@ int navegar_menu(int ini, int fim, int p)
 				if(aux > fim) aux = ini;
 					
 				gotoxy(p,aux);printf("%c", 62);
-				break;
-				
+				break;	
 			case 13:
 			return (aux - ini)/2; // Retorna o valor da opção seleciona => inicia em 0
 			break;	
@@ -194,7 +273,7 @@ int navegar_menu(int ini, int fim, int p)
 	}while(true);
 }
 
-void borda(int cf, int cb, int lc, int ll) // (cor de fundo, cor da borda, limite de coluna, limite de linha)
+void borda(int cf, int cb, int lc) // (cor de fundo, cor da borda, limite de coluna, limite de linha)
 {
 	textbackground(cf); // Define cor do fundo
 	system("cls"); 
@@ -393,5 +472,13 @@ void cursor (int x) { 	// Define se o cursor ira aparecer (1) ou não (0)
 			break;
 		}
 	}
+}
+
+void clreol(int x)
+{
+   for(int i=0; i < x; i++)
+           printf(" ");
+       for(int i=0; i < x; i++)
+           printf("\b");
 }
 
