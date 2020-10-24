@@ -21,6 +21,8 @@ void cursor (int x);
 
 // Funções de construção do programa
 
+//
+
 // Apresenta tela de inicio
 void inicio(); 
 // Função utilizada para a borda
@@ -31,6 +33,7 @@ void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
 void menu_ini();
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
+
 
 // Menu 
 
@@ -88,12 +91,13 @@ void menu_ini()
 void info_de_sistema() // Apresenta as informações do sistema
 {
 	borda(cor_fundo, cor_borda, 120, 45);
+
 	
-	int inix = 20, iniy = 12; // Controla o eixo x e y das informações
+	int inix = 20, iniy = 10; // Controla o eixo x e y das informações
 	
 	// Apresenta as informações do sistema
 	textcolor(0);
-	textbackground(6);
+//	textbackground(6);
 	gotoxy(54, 4);  printf("Info do Sistema");
 	textbackground(cor_fundo);
 	
@@ -122,7 +126,7 @@ void info_de_sistema() // Apresenta as informações do sistema
 	textcolor(cor_texto);
 	printf("Ariane Scarelli");
 	
-	gotoxy(inix, iniy + 14); printf("Pressione 0 para retornar ao menu"); 
+	gotoxy(inix, iniy + 16); printf("Pressione 0 para retornar ao menu"); 
 	
 	char c;
 	
