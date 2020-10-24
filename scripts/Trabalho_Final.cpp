@@ -22,6 +22,7 @@ void textcolor(int newcolor);
 void textbackground(int newcolor);
 void gotoxy(int x, int y);
 void cursor (int x);
+void clreol ();
 
 // Funções de construção do programa
 
@@ -30,7 +31,7 @@ void loading();
 // Apresenta tela de inicio
 void inicio(); 
 // Função utilizada para a borda
-void borda(int cf, int cb, int lc, int ll); // (cor de fundo, cor da borda, limite de coluna, limite de linha)
+void borda(int cf, int cb, int lc); // (cor de fundo, cor da borda, limite de coluna, limite de linha)
 // Função utilizada para a criar o disquete
 void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
 // Fução de construção do menu da tela inicial
@@ -58,7 +59,7 @@ main()
 
 void loading()
 {
-	borda(cor_fundo, cor_borda, 120, 45); 
+	borda(cor_fundo, cor_borda, 120); 
 	cursor(0);
 	textcolor(cor_texto);
 	
@@ -73,16 +74,16 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(32+i, 20);printf("%c", 219);
-		Sleep(50);
+		Sleep(0);
 	}
 	textcolor(cor_texto);
 	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar                               ");
-	Sleep(3000);
+	Sleep(0);
 }
 
 void inicio() // Apresenta tela de inicio
 {	
-	borda(cor_fundo, cor_borda, 120, 45); 
+	borda(cor_fundo, cor_borda, 120); 
 	disquete(50, 6);	
 	menu_ini();
 }
@@ -119,16 +120,20 @@ void menu_ini()
 
 void info_de_sistema() // Apresenta as informações do sistema
 {
-	borda(cor_fundo, cor_borda, 120, 45);
+	borda(cor_fundo, cor_borda, 120);
 
 	
-	int inix = 20, iniy = 10; // Controla o eixo x e y das informações
+	int inix = 20, iniy = 9; // Controla o eixo x e y das informações
 	
 	// Apresenta as informações do sistema
 	textcolor(0);
-//	textbackground(6);
 	gotoxy(54, 4);  printf("Info do Sistema");
 	textbackground(cor_fundo);
+	
+	textcolor(cor_destaque);
+	gotoxy(inix, iniy -2); printf("Empresa: ");
+	textcolor(cor_texto);
+	printf("GoTech");
 	
 	textcolor(cor_destaque);
 	gotoxy(inix, iniy);  printf("Nomes: ");
@@ -151,11 +156,20 @@ void info_de_sistema() // Apresenta as informações do sistema
 	printf("2020");
 	
 	textcolor(cor_destaque);
-	gotoxy(inix, iniy + 8);  printf("Professora: ");
+	gotoxy(inix, iniy + 8);  printf("Sobre o software: ");
 	textcolor(cor_texto);
-	printf("Ariane Scarelli");
+	printf("Nosso software, que hoje se encontra na versao %.1f, se destina a", versao);
+	gotoxy(inix, iniy + 10); printf("simular um sistema de gerenciamento de estoque de uma loja de informatica em C/C++.");
+	gotoxy(inix, iniy + 12); printf("Para a realizacao desse projeto utilizamos funcoes de cabecalho da conio.c e conio.h.");
+	gotoxy(inix, iniy + 14); printf("Podem ser registrados perifericos e pecas de computador.");
 	
-	gotoxy(inix, iniy + 16); printf("Pressione 0 para retornar ao menu"); 
+	textcolor(cor_destaque);
+	gotoxy(inix, iniy + 16); printf("Agradecimentos: ");
+	textcolor(cor_texto);
+	printf("Deixamos nosso agradecimento a professora Ariane Scarelli e ");
+	gotoxy(inix, iniy + 18); printf("Katia Zambombon, por compartilharem conosco parte de seus conhecimentos.");
+	
+	gotoxy(inix, iniy + 21); printf("Pressione 0 para retornar ao menu"); 
 	
 	char c;
 	
@@ -170,7 +184,7 @@ void info_de_sistema() // Apresenta as informações do sistema
 
 void sair() // Finaliza a execução do programa
 {
-	borda(cor_fundo, cor_borda, 120, 45);
+	borda(cor_fundo, cor_borda, 120);
 	
 	textcolor(cor_texto);
 	gotoxy(42, 17); printf("Obrigado por utilizar nosso programa!");
@@ -222,7 +236,7 @@ int navegar_menu(int ini, int fim, int p)
 	}while(true);
 }
 
-void borda(int cf, int cb, int lc, int ll) // (cor de fundo, cor da borda, limite de coluna, limite de linha)
+void borda(int cf, int cb, int lc) // (cor de fundo, cor da borda, limite de coluna, limite de linha)
 {
 	textbackground(cf); // Define cor do fundo
 	system("cls"); 
@@ -422,4 +436,21 @@ void cursor (int x) { 	// Define se o cursor ira aparecer (1) ou não (0)
 		}
 	}
 }
+
+void clreol ()
+{
+   COORD coord;
+   DWORD escrito;
+
+   coord.X = vActual.winleft+vActual.curx-1;
+   coord.Y = vActual.wintop+vActual.cury-1;
+   
+   FillConsoleOutputCharacter(GetStdHandle(STD_OUTPUT_HANDLE), ' ', 
+      vActual.screenwidth - vActual.curx + 1, coord, &escrito);
+   FillConsoleOutputAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+      vActual.attribute, vActual.screenwidth - vActual.curx + 1, 
+      coord, &escrito);
+   gotoxy(vActual.curx, vActual.cury);
+}
+
 
