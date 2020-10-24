@@ -26,6 +26,8 @@ void clreol(int x);
 
 // Funções de construção do programa
 
+// Função para gerar a parte visual do cadastro 
+void cadastro_visual();
 // Apresenta o menu e a versão
 void loading();
 // Apresenta tela de inicio
@@ -40,18 +42,36 @@ int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a po
 
 // Menu 
 
+// Recebe os dados de registro
+void cadastro_recebimento();
+
 // Fução de construção do menu da tela inicial
 void menu_ini();
-
-// Função que finaliza a execução do programa no menu
-void sair();
-
-// Função para apresentar as Informações do Sistema
-void info_de_sistema();
 
 // Função para gerar o sub menu de pesquisa
 void sub_menu();
 
+// Função para apresentar as Informações do Sistema
+void info_de_sistema();
+
+// Função que finaliza a execução do programa no menu
+void sair();
+
+struct produto
+{
+	int id
+	char nome[50];
+	int quantidade;
+	char tipo[1];
+	float preco_unitario;
+};
+
+
+gotoxy(x, y); printf("Id do produto: ");
+	gotoxy(x, y + 2); printf("Nome do Produo: ");
+	gotoxy(x, y + 4); printf("Quantidade: ");
+	gotoxy(x, y + 6); printf("Tipo: ");
+	gotoxy(x, y + 8); printf("Preco Unitario: ");
 
 main()
 {
@@ -79,11 +99,11 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(32+i, 20);printf("%c", 219);
-		Sleep(20);
+//		Sleep(20);
 	}
 	textcolor(cor_texto);
 	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar                               ");
-	Sleep(3000);
+//	Sleep(3000);
 }
 
 void inicio() // Apresenta tela de inicio
@@ -111,6 +131,7 @@ void menu_ini()
 	switch(escolha)
 	{
 		case 0:
+			cadastro_visual();
 			break;
 		case 1:
 			sub_menu();
@@ -122,6 +143,29 @@ void menu_ini()
 			sair();
 			break;
 	}
+}
+
+void cadastro_visual()
+{
+	int x = 20, y = 8;
+	borda(cor_fundo, cor_borda, 120);
+	
+	textcolor(cor_texto);
+	gotoxy(50, 4); printf("Cadastro de Produtos");
+	
+	gotoxy(x, y); printf("Id do produto: ");
+	gotoxy(x, y + 2); printf("Nome do Produo: ");
+	gotoxy(x, y + 4); printf("Quantidade: ");
+	gotoxy(x, y + 6); printf("Tipo: ");
+	gotoxy(x, y + 8); printf("Preco Unitario: ");
+	
+	cursor(1);
+	cadastro_recebimento();
+}
+
+void cadastro_recebimento()
+{
+	
 }
 
 void sub_menu()
