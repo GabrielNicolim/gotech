@@ -1,8 +1,8 @@
-# Trabalho_Ariane
+<h1 align = "center">Gerenciamento de Estoque</h1>
 
-<b>Tema: </b>Loja de Informática<br>
-<b>Integrantes: </b>Gabriel Nicolim e Felipe Lima <br>
-<b>Objetivo: </b>Gerenciamento de estoque<br>
+:computer: <b>Tema: </b>Loja de Informática<br>
+:rocket: <b>Integrantes: </b>Gabriel Nicolim e Felipe Lima <br>
+:dart: <b>Objetivo: </b>Gerenciamento de estoque<br>
 <hr>
 <b>Bibliotecas utilizadas: </b>
 <li><a href = "https://www.ime.usp.br/~pf/algoritmos/apend/stdio.h.html">Stdio.h</a>
