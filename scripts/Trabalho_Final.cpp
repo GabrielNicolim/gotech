@@ -9,6 +9,7 @@
 #define cor_fundo 3
 #define cor_borda 1
 #define cor_texto 15
+#define cor_destaque 0
 
 text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 120, 45, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
@@ -30,8 +31,14 @@ void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
 void menu_ini();
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
+
+// Menu 
+
 // Função que finaliza a execução do programa no menu
 void sair();
+
+// Função para apresentar as Informações do Sistema
+void info_de_sistema();
 
 main()
 {
@@ -44,12 +51,12 @@ main()
 void inicio() // Apresenta tela de inicio
 {	
 	borda(cor_fundo, cor_borda, 120, 45); 
-	disquete(50, 6);
+	disquete(50, 6);	
 	menu_ini();
 }
 
 void menu_ini()
-{
+{	
 	int inic = 50, inil = 19; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
 	
 	// Menu 
@@ -70,10 +77,61 @@ void menu_ini()
 		case 1:
 			break;
 		case 2:
+			info_de_sistema();
 			break;
 		case 3:
 			sair();
 			break;
+	}
+}
+
+void info_de_sistema() // Apresenta as informações do sistema
+{
+	borda(cor_fundo, cor_borda, 120, 45);
+	
+	int inix = 20, iniy = 12; // Controla o eixo x e y das informações
+	
+	// Apresenta as informações do sistema
+	textcolor(0);
+	textbackground(6);
+	gotoxy(54, 4);  printf("Info do Sistema");
+	textbackground(cor_fundo);
+	
+	textcolor(cor_destaque);
+	gotoxy(inix, iniy);  printf("Nomes: ");
+	textcolor(cor_texto);
+	printf("Gabriel Nicolim e Felipe Lima");
+	
+	textcolor(cor_destaque);
+	gotoxy(inix, iniy + 2);  printf("Numeros: ");
+	textcolor(cor_texto);
+	printf("8 e 6");
+	
+	textcolor(cor_destaque);
+	gotoxy(inix, iniy + 4);  printf("Turmas: ");
+	textcolor(cor_texto);
+	printf("71A");
+	
+	textcolor(cor_destaque);
+	gotoxy(inix, iniy + 6);  printf("Ano: ");
+	textcolor(cor_texto);
+	printf("2020");
+	
+	textcolor(cor_destaque);
+	gotoxy(inix, iniy + 8);  printf("Professora: ");
+	textcolor(cor_texto);
+	printf("Ariane Scarelli");
+	
+	gotoxy(inix, iniy + 14); printf("Pressione 0 para retornar ao menu"); 
+	
+	char c;
+	
+	while(true)
+	{
+		fflush(stdin); 
+		c =	getch();
+		
+		if(c == '0') inicio(); // Retorna ao inicio se a tecla 0 for pressionada
 	}
 }
 
@@ -98,8 +156,11 @@ int navegar_menu(int ini, int fim, int p)
 	
 	do
 	{
-		gotoxy(p,aux);printf("%c", 62);		
+		gotoxy(p,aux);printf("%c", 62);	
+			
+		fflush(stdin); 
 		c = getch();
+		
 		gotoxy(p,aux);printf(" ");
 		
 		switch(c) 
