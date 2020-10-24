@@ -98,7 +98,7 @@ struct estrutura
 	int quantidade;
 	char tipo[1];
 	float preco_unitario;
-	char excluido='n';
+	char excluido;
 }produto;
 
 
@@ -197,22 +197,20 @@ void cadastro_visual()
 					
 		cadastro_recebimento();
 		
-		gotoxy(x, y + 15); printf("Deseja realizar mais um cadastro? (S/N):  ");
+		gotoxy(x, y + 20); printf("Deseja realizar mais um cadastro? (S/N):  ");
 	
 		do{
 			fflush(stdin);
 			dnv = getche();
-			fflush(stdin);
-			if(dnv!='n' && dnv!='N' && dnv!='s' && dnv!='S')
+			if(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S')
 				{
 					gotoxy(x, y + 15); clreol(70); printf("Valor invalido! digite novamente (S/N): ");
 				}
-		}while(dnv!='n' && dnv!='N' && dnv!='s' && dnv!='S');
-		
-		
+		}while(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S');
 		
 		system("cls");
-	}while(dnv==1);
+	}while(dnv == 's' || dnv == 'S');
+	
 	system("cls");
 	inicio();
 }
@@ -227,6 +225,7 @@ void cadastro_recebimento()
 	gotoxy(x+12, y+4); scanf("%d",&produto.quantidade);		fflush(stdin);
 	gotoxy(x+6, y+6);  gets(produto.tipo);					fflush(stdin);
 	gotoxy(x+16, y+8); scanf("%d",&produto.preco_unitario);	fflush(stdin);
+	produto.excluido = 'n';
 	
 	char conf; // variavel de confirmação do loop seguinte
 	
@@ -237,31 +236,34 @@ void cadastro_recebimento()
 		fflush(stdin);
 		conf = getche();
 		fflush(stdin);
+		
 		if(conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N')    //verificação de valores
-			{
-				gotoxy(x+31,y+14); Sleep(500); clreol(2);
+		{
+			gotoxy(x+31,y+14); Sleep(500); clreol(2);
 				
-				gotoxy(x+13,y+13); printf("Digite um caractére válido!");
-			}
+			gotoxy(x+50,y+14); printf("Digite um caractere valido!");
+		}
    	}while( conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N' );
    	
    	if( conf == 's' || conf == 'S' )
-   		{
-	   			if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
-			{
-			    gotoxy(18,11); printf("Erro na escrita do arquivo");
-			}
-			else
-			{
-				fflush( fp );
-				fclose(fp);
-				system("cls");
-				borda(cor_fundo, cor_borda, 120);
-				textcolor(15);
-				gotoxy(18,11); printf("Dados salvos com sucesso!");
-			}
-			getch();
+   	{
+	   	if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
+		{
+			gotoxy(18,11); printf("Erro na escrita do arquivo");
 		}
+		else
+		{
+			fflush( fp );
+			fclose(fp);
+			system("cls");
+			borda(cor_fundo, cor_borda, 120);
+			textcolor(15);
+			gotoxy(18,11); printf("Dados salvos com sucesso!");
+		}
+		cursor(0);
+		Sleep(2000);
+		cursor(1);
+	}
 }
 
 void consulta_geral()
