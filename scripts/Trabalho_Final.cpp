@@ -26,31 +26,47 @@ void clreol(int x);
 
 // Funções de construção do programa
 
+// Função para gerar a parte visual do cadastro 
+void cadastro_visual();
 // Apresenta o menu e a versão
 void loading();
 // Apresenta tela de inicio
 void inicio(); 
 // Função utilizada para a borda
 void borda(int cf, int cb, int lc); // (cor de fundo, cor da borda, limite de coluna, limite de linha)
-// Função utilizada para a criar o disquete
+// Função utilizada para criar o disquete
 void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
+//// Função utilizada para criar uma lupinha
+void lupa(int ic, int il); // (coluna de inicio, linha de inicio)
 
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
 
 // Menu 
 
+// Recebe os dados de registro
+void cadastro_recebimento();
+
 // Fução de construção do menu da tela inicial
 void menu_ini();
 
-// Função que finaliza a execução do programa no menu
-void sair();
+// Função para gerar o sub menu de pesquisa
+void sub_menu();
 
 // Função para apresentar as Informações do Sistema
 void info_de_sistema();
 
-// Função para gerar o sub menu de pesquisa
-void sub_menu();
+// Função que finaliza a execução do programa no menu
+void sair();
+
+struct produto
+{
+	int id;
+	char nome[50];
+	int quantidade;
+	char tipo[1];
+	float preco_unitario;
+};
 
 
 main()
@@ -79,11 +95,11 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(32+i, 20);printf("%c", 219);
-		Sleep(20);
+//		Sleep(20);
 	}
 	textcolor(cor_texto);
 	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar                               ");
-	Sleep(3000);
+//	Sleep(3000);
 }
 
 void inicio() // Apresenta tela de inicio
@@ -111,6 +127,7 @@ void menu_ini()
 	switch(escolha)
 	{
 		case 0:
+			cadastro_visual();
 			break;
 		case 1:
 			sub_menu();
@@ -124,11 +141,57 @@ void menu_ini()
 	}
 }
 
+void cadastro_visual()
+{
+	int x = 20, y = 8, dnv=0;
+	borda(cor_fundo, cor_borda, 120);
+	
+	cursor(1);
+	do{
+		textcolor(cor_texto);
+		gotoxy(50, 4); printf("Cadastro de Produtos");
+		
+		gotoxy(x, y); printf("Id do produto: ");				clreol(20);
+		gotoxy(x, y + 2); printf("Nome do Produto: ");			clreol(50);
+		gotoxy(x, y + 4); printf("Quantidade: ");				clreol(10);
+		gotoxy(x, y + 6); printf("Tipo: ");						clreol(10);
+		gotoxy(x, y + 8); printf("Preco Unitario: ");			clreol(20);
+					
+		cadastro_recebimento();
+		
+		gotoxy(x, y + 15); printf("Deseja realizar mais um cadastro? (1-Sim 2-Nao):  ");
+	
+		do{
+			scanf("%d",&dnv);
+			if(dnv>2 || dnv<1)
+				{
+					gotoxy(x, y + 15); clreol(70); printf("Valor invalido! digite novamente (1-Sim 2-Nao): ");
+				}
+		}while(dnv>2 || dnv<1);
+	}while(dnv==1);
+	system("cls");
+	inicio();
+}
+
+void cadastro_recebimento()
+{
+	int x = 20, y = 8, aux;
+	produto teste1;
+	
+	gotoxy(x+15, y); scanf("%d",&aux); 					fflush(stdin);
+	gotoxy(x+16, y+2); gets(teste1.nome);					fflush(stdin);
+	gotoxy(x+12, y+4); scanf("%d",&teste1.quantidade);		fflush(stdin);
+	gotoxy(x+6, y+6);  gets(teste1.tipo);					fflush(stdin);
+	gotoxy(x+16, y+8); scanf("%d",&teste1.preco_unitario);	fflush(stdin);
+}
+
 void sub_menu()
 {
 	borda(cor_fundo, cor_borda, 120);
 	
 	int inic = 50, inil = 19; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
+	
+	lupa(43,4);
 	
 	// Menu 
 	textcolor(cor_texto);
@@ -143,12 +206,13 @@ void sub_menu()
 	switch(escolha)
 	{
 		case 0:
+			//tabela();
 			break;
 		case 1:
-			
+			//pesquisa();
 			break;
 		case 2:
-			
+			//pesquisa();
 			break;
 		case 3:
 			inicio();
@@ -429,6 +493,67 @@ void disquete(int ic, int il)
 	gotoxy(ic, (il+9)); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	
+}
+
+void lupa(int ic, int il)
+{
+	// Linha 1 - Borda Preta
+	textcolor(0);
+	gotoxy(ic+6, il); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);	
+	// Linha 2  
+	gotoxy(ic+3, il+1); printf("%c%c%c", 219, 219, 219);
+	gotoxy(ic+13, il+1); printf("%c%c%c", 219, 219, 219);
+	//linha 3
+	gotoxy(ic+1, il+2); printf("%c%c", 219, 219);
+	gotoxy(ic+16, il+2); printf("%c%c", 219, 219);	
+	//linha 4
+	gotoxy(ic, il+3);  printf("%c", 219);
+	gotoxy(ic+18, il+3); printf("%c", 219);	
+	//linha 5
+	gotoxy(ic, il+4);	 printf("%c", 219);
+	gotoxy(ic+18, il+4); printf("%c", 219);	
+	//linha 6
+	gotoxy(ic, il+5);  printf("%c", 219);
+	gotoxy(ic+18, il+5); printf("%c", 219);	
+	//linha 7
+	gotoxy(ic+1, il+6); printf("%c%c", 219, 219);
+	gotoxy(ic+16, il+6); printf("%c%c", 219, 219);	
+	// Linha 8  
+	gotoxy(ic+3, il+7); printf("%c%c%c", 219, 219, 219);
+	gotoxy(ic+13, il+7); printf("%c%c%c", 219, 219, 219);
+	// Linha 9 
+	gotoxy(ic+6, il+8); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	
+	//Interior Lupa
+	textcolor(3);
+	gotoxy(ic+6, il+1); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+3, il+2); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+1, il+3); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+1, il+4); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+1, il+5); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+3, il+6); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+6, il+7); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	//brilhinho
+	textcolor(15);
+	gotoxy(ic+3, il+4); printf("%c", 219);
+	gotoxy(ic+4, il+5); printf("%c%c", 219, 219);
+	gotoxy(ic+7, il+6); printf("%c", 219);
+	
+	//cabo
+	textcolor(BLACK);
+	gotoxy(ic+18, il+5); printf("%c%c%c", 219, 219, 219);
+	gotoxy(ic+18, il+6); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+16, il+7); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+18, il+8); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+21, il+9); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+24, il+10);printf("%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+26, il+10);printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+26, il+11);printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	
+	
+	gotoxy(ic+25, il+15);
+	
+	// Acabou :D
 }
 
 void textcolor(int newcolor) // Define a cor do texto
