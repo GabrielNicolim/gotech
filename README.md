@@ -1,10 +1,13 @@
-<h2 align = "center">Gerenciamento de Estoque</h2>
+<h1 align = "center">Gerenciamento de Estoque</h1>
 
+<br>
+<h3>Sobre o projeto</h3>
+<br>
 :computer: <b>Tema: </b>Loja de Informática<br>
 :rocket: <b>Integrantes: </b>Gabriel Nicolim e Felipe Lima <br>
 :dart: <b>Objetivo: </b>Gerenciamento de estoque<br>
 <hr>
-<b>Bibliotecas utilizadas: </b>
+<h3>Bibliotecas utilizadas: </h3>
 <li><a href = "https://www.ime.usp.br/~pf/algoritmos/apend/stdio.h.html">Stdio.h</a>
 <li><a href = "https://www.programmingsimplified.com/c/conio.h">Conio.h</a>
 <li><a href = "https://www.ime.usp.br/~pf/algoritmos/apend/stdlib.h.html">Stdlib.h</a>
