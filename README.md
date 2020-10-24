@@ -1,8 +1,6 @@
 <h1 align = "center">Gerenciamento de Estoque</h1>
 
-<br>
 <h3>Sobre o projeto</h3>
-<br>
 :computer: <b>Tema: </b>Loja de Informática<br>
 :rocket: <b>Integrantes: </b>Gabriel Nicolim e Felipe Lima <br>
 :dart: <b>Objetivo: </b>Gerenciamento de estoque<br>
