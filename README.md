@@ -1,4 +1,4 @@
-<h1 align = "center">Gerenciamento de Estoque</h1>
+<h2 align = "center">Gerenciamento de Estoque</h2>
 
 :computer: <b>Tema: </b>Loja de Informática<br>
 :rocket: <b>Integrantes: </b>Gabriel Nicolim e Felipe Lima <br>
