@@ -6,8 +6,8 @@
 #include <time.h>
 #include <string.h>
 
-// Versão 1.2
-#define versao 1.2
+// Versão 1.5
+#define versao 1.5
 
 // Definição de cores 
 #define cor_fundo 3
@@ -34,8 +34,18 @@ void loading();
 void inicio(); 
 // Função utilizada para a borda
 void borda(int cf, int cb, int lc); // (cor de fundo, cor da borda, limite de coluna, limite de linha)
-// Função utilizada para a criar o disquete
+// Função utilizada para criar o disquete
 void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
+// Função utilizada para criar uma lupinha
+void lupa(int ic, int il); // (coluna de inicio, linha de inicio)
+// Função para fazer a consulta dos dados já salvos
+void consulta_geral();
+// Função para apagar dados do .bin por id
+void apaga_dados();
+// Função para gerar uma tabela
+void gera_tabela(int li);  //
+//Função para colocar os dados na tabela
+void completa_tabela(int linha);
 
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
@@ -57,21 +67,40 @@ void info_de_sistema();
 // Função que finaliza a execução do programa no menu
 void sair();
 
-struct produto
+//Ponteiro para arquivo
+FILE *fp;	
+
+void abrir_arquivo()
 {
-	int id
+	if((fp = fopen("estoque.bin", "ab+")) == NULL) 
+	{
+		gotoxy(18,11);printf("Erro na abertura do arquivo"); //caso haja um problema com o arquivo
+		exit(1);
+	}
+}
+
+int abrir_arquivo_alterar()
+{
+	if((fp = fopen("estoque.bin", "rb+")) == NULL) 
+	{
+		gotoxy(18,11);printf("Nao foram encontrados dados, cadastre algo!");
+		getch();
+		return 1;
+	}
+	else
+		return 0;
+}
+
+struct estrutura
+{
+	int id;
 	char nome[50];
 	int quantidade;
 	char tipo[1];
 	float preco_unitario;
-};
+	char excluido;
+}produto;
 
-
-gotoxy(x, y); printf("Id do produto: ");
-	gotoxy(x, y + 2); printf("Nome do Produo: ");
-	gotoxy(x, y + 4); printf("Quantidade: ");
-	gotoxy(x, y + 6); printf("Tipo: ");
-	gotoxy(x, y + 8); printf("Preco Unitario: ");
 
 main()
 {
@@ -148,53 +177,300 @@ void menu_ini()
 void cadastro_visual()
 {
 	int x = 20, y = 8;
-	borda(cor_fundo, cor_borda, 120);
-	
-	textcolor(cor_texto);
-	gotoxy(50, 4); printf("Cadastro de Produtos");
-	
-	gotoxy(x, y); printf("Id do produto: ");
-	gotoxy(x, y + 2); printf("Nome do Produo: ");
-	gotoxy(x, y + 4); printf("Quantidade: ");
-	gotoxy(x, y + 6); printf("Tipo: ");
-	gotoxy(x, y + 8); printf("Preco Unitario: ");
+	char dnv='n';
+	abrir_arquivo();
 	
 	cursor(1);
-	cadastro_recebimento();
+	do{
+		
+		borda(cor_fundo, cor_borda, 120);
+	
+		cursor(1);
+		textcolor(cor_texto);
+		gotoxy(50, 4); printf("Cadastro de Produtos");
+		
+		gotoxy(x, y); printf("Id do produto: ");				
+		gotoxy(x, y + 2); printf("Nome do Produto: ");		
+		gotoxy(x, y + 4); printf("Quantidade: ");			
+		gotoxy(x, y + 6); printf("Tipo: ");					
+		gotoxy(x, y + 8); printf("Preco Unitario: ");		
+					
+		cadastro_recebimento();
+		
+		gotoxy(x, y + 20); printf("Deseja realizar mais um cadastro? (S/N):  ");
+	
+		do{
+			fflush(stdin);
+			dnv = getche();
+			if(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S')
+				{
+					gotoxy(x, y + 15); clreol(70); printf("Valor invalido! digite novamente (S/N): ");
+				}
+		}while(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S');
+		
+		system("cls");
+	}while(dnv == 's' || dnv == 'S');
+	
+	system("cls");
+	inicio();
 }
 
 void cadastro_recebimento()
 {
+	int x = 20, y = 8;
 	
+	fflush(stdin);
+	gotoxy(x+15, y); scanf("%d",&produto.id); 				fflush(stdin);
+	gotoxy(x+17, y+2); gets(produto.nome);					fflush(stdin);
+	gotoxy(x+12, y+4); scanf("%d",&produto.quantidade);		fflush(stdin);
+	gotoxy(x+6, y+6);  gets(produto.tipo);					fflush(stdin);
+	gotoxy(x+16, y+8); scanf("%d",&produto.preco_unitario);	fflush(stdin);
+	produto.excluido = 'n';
+	
+	char conf; // variavel de confirmação do loop seguinte
+	
+	gotoxy(x, y+14); printf("Deseja salvar os dados? (S/N): ");
+	
+	do{
+       	gotoxy(x+31,y+14); 
+		fflush(stdin);
+		conf = getche();
+		fflush(stdin);
+		
+		if(conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N')    //verificação de valores
+		{
+			gotoxy(x+31,y+14); Sleep(500); clreol(2);
+				
+			gotoxy(x+50,y+14); printf("Digite um caractere valido!");
+		}
+   	}while( conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N' );
+   	
+   	if( conf == 's' || conf == 'S' )
+   	{
+	   	if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
+		{
+			gotoxy(18,11); printf("Erro na escrita do arquivo");
+		}
+		else
+		{
+			fflush( fp );
+			fclose(fp);
+			system("cls");
+			borda(cor_fundo, cor_borda, 120);
+			textcolor(15);
+			gotoxy(18,11); printf("Dados salvos com sucesso!");
+		}
+		cursor(0);
+		Sleep(2000);
+		cursor(1);
+	}
+}
+
+void consulta_geral()
+{
+	int ir_proxima=0, sair, linha = 7;
+	
+	abrir_arquivo();
+	
+	rewind(fp); // seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")
+	
+	gera_tabela(5);
+	
+	do
+	{
+		if(fread(&produto, sizeof(produto), 1, fp) == 1) {
+			if(produto.excluido == 'n') {
+				ir_proxima++;
+				completa_tabela(linha);
+				linha+=2;
+				if(ir_proxima == 12)
+				{
+					ir_proxima = 0;
+					textcolor(0);
+					gotoxy(20, 31); printf("Deseja ir para a proxima pagina (S-Sim/N-Nao): ");
+					char pag = '0';
+					while(pag != 'S' && pag != 's' && pag != 'N' && pag != 'n' && pag != '\r')
+					{
+						if(pag != 'S' && pag != 's' && pag != 'N' && pag != 'n' && pag != '\r')
+							{
+								gotoxy(20,32); printf("Digite um valor válido!");
+							}
+						gotoxy(68,31); clreol(2); pag = getche();
+					}
+					if(pag == 's' || pag == 'S')
+					{
+						system("cls");
+						linha = 6;
+						gera_tabela(5);
+					}
+					else
+					{
+						system("cls");
+						break;
+					}
+				}
+			}
+		}
+	}while ( !feof(fp) );
+	
+	gotoxy(20,31); printf("Pressione uma tecla para voltar ao menu...");
+	getch();
+	fflush(stdin);	
+	system("cls");
+	textcolor(15);
+	inicio();
+}
+
+void gera_tabela(int li)
+{
+	int ci=20;
+	system("cls");
+	borda(cor_fundo, cor_borda, 120);
+	
+	textcolor(15);
+	gotoxy(ci,4);	printf ("+---------------------------------------------------------------------------------+");
+	gotoxy(ci,5);	printf ("|   ID   |      Nome         |  Preço Unitário  |    Quantidade   |     Tipo      |");
+	gotoxy(ci,6);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,7);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,8);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,9);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,10);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,11);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,12);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,13);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,14);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,15);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,16);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,17);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,18);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,19);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,20);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,21);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,22);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,23);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,24);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,25);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,26);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,27);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,28);	printf ("|---------------------------------------------------------------------------------|");
+	gotoxy(ci,29);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,30);	printf ("+---------------------------------------------------------------------------------+");
+	
+}
+
+void completa_tabela(int linha)
+{
+	gotoxy(24,linha);  printf("%d", produto.id);
+	gotoxy(31,linha); printf("%s", produto.nome);
+	//gotoxy(ci+30,li);printf("%s", produto.marca);
+	gotoxy(51,linha); printf("%.2f", produto.preco_unitario);
+	gotoxy(71,linha); printf("%d", produto.quantidade);
+	gotoxy(89,linha); printf("%s", produto.tipo);
+	gotoxy(1,60);
+}
+
+void excluir_dados() //exclusao lógica
+{
+	
+	system("cls");
+	abrir_arquivo_alterar();
+	borda(cor_fundo, cor_borda, 120);
+	textcolor(15); 
+	int aux_codigo,F;
+	long fposicao;
+	char conf;
+	//gotoxy(20,15); printf("Deseja excluir apenas um dado ou o programa todo?");
+	//sdsdsds
+	
+	do{	
+	    gotoxy(20,7); printf("Digite o codigo do produto a ser excluido (digite zero para encerrar): ");
+	    scanf("%d", &aux_codigo );
+	    if (aux_codigo!=0)
+	    {
+			F = 0;
+			rewind(fp);
+		    do
+		    {
+				fread( &produto,sizeof(produto),1,fp);
+				if ( produto.id == aux_codigo && produto.excluido == 'n' ) //Se houver um produto com o id e que não foi excluído
+				{
+			   		F = 1;
+			   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
+			   		gotoxy(20,4);	printf ("|   ID   |      Nome         |  Preço Unitário  |    Quantidade   |     Tipo      |");
+			   		completa_tabela(5); //Apresenta-se ao usuário o registro a ser excluído
+				   	gotoxy(25,22); printf("Confirma exclusao ? (S/N): ");
+				   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
+					fflush(stdin);
+					do 
+				   	{
+				    	gotoxy(54,22); conf = getche();
+				   	}while( conf != 's' && conf != 'S' &&
+					   conf != 'n' && conf != 'N' );
+				   
+				   	if( conf == 's' || conf == 'S' )
+				   	{
+				   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
+						fseek (fp,fposicao-(sizeof(produto)),SEEK_SET); 	//em stdio.h
+																			//SEEK_SET indica o início do arquivo
+						produto.excluido='s'; /*atribuição de 's' para o campo excluído para indicar 
+							 			que o registro foi excluído ou desativado (exclusão lógica) */
+						if(fwrite (&produto,sizeof(produto),1,fp)==1)
+						{
+							fflush (fp);
+							gotoxy(25,24);printf("Cadastro excluido com sucesso!");
+							getch();
+							system("cls");
+						}	
+				   	}
+				}
+			} while ((!F) && (!feof(fp)));  	
+		} 
+		if (F==0 && aux_codigo!=0)
+		{
+			gotoxy(20,15);printf("****** C¢digo nao encontrado! Voltando ao menu! ******");
+			getch();
+		}
+		break;
+	}while(aux_codigo!=0);
+	Sleep(1000);
+	system("cls");
+	inicio();
 }
 
 void sub_menu()
 {
 	borda(cor_fundo, cor_borda, 120);
 	
-	int inic = 50, inil = 19; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
+	int inic = 45, inil = 19; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
+	
+	lupa(43,4);
 	
 	// Menu 
 	textcolor(cor_texto);
 	gotoxy(inic, inil); 	printf("Geral");
-	gotoxy(inic, (inil+2)); printf("Pesquisa por Codigo");
-	gotoxy(inic, (inil+4)); printf("Pesquisa por Nome");
-	gotoxy(inic, (inil+6)); printf("Retornar ao Inicio");
+	gotoxy(inic, (inil+2)); printf("Pesquisa por Codigo (não feito ainda)");
+	gotoxy(inic, (inil+4)); printf("Pesquisa por Nome (não feito ainda)");
+	gotoxy(inic, (inil+6)); printf("Excluir dados");
+	gotoxy(inic, (inil+8)); printf("Retornar ao Inicio");
 	
 	int escolha;
-	escolha = navegar_menu(inil, (inil + 6), (inic - 2));
+	escolha = navegar_menu(inil, (inil + 8), (inic - 2));
 	
 	switch(escolha)
 	{
 		case 0:
+			consulta_geral();
 			break;
 		case 1:
-			
+			//pesquisa();
 			break;
 		case 2:
-			
+			//pesquisa();
 			break;
 		case 3:
+			excluir_dados();
+			break;
+		case 4:
 			inicio();
 			break;
 	}
@@ -473,6 +749,67 @@ void disquete(int ic, int il)
 	gotoxy(ic, (il+9)); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	
+}
+
+void lupa(int ic, int il)
+{
+	// Linha 1 - Borda Preta
+	textcolor(0);
+	gotoxy(ic+6, il); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);	
+	// Linha 2  
+	gotoxy(ic+3, il+1); printf("%c%c%c", 219, 219, 219);
+	gotoxy(ic+13, il+1); printf("%c%c%c", 219, 219, 219);
+	//linha 3
+	gotoxy(ic+1, il+2); printf("%c%c", 219, 219);
+	gotoxy(ic+16, il+2); printf("%c%c", 219, 219);	
+	//linha 4
+	gotoxy(ic, il+3);  printf("%c", 219);
+	gotoxy(ic+18, il+3); printf("%c", 219);	
+	//linha 5
+	gotoxy(ic, il+4);	 printf("%c", 219);
+	gotoxy(ic+18, il+4); printf("%c", 219);	
+	//linha 6
+	gotoxy(ic, il+5);  printf("%c", 219);
+	gotoxy(ic+18, il+5); printf("%c", 219);	
+	//linha 7
+	gotoxy(ic+1, il+6); printf("%c%c", 219, 219);
+	gotoxy(ic+16, il+6); printf("%c%c", 219, 219);	
+	// Linha 8  
+	gotoxy(ic+3, il+7); printf("%c%c%c", 219, 219, 219);
+	gotoxy(ic+13, il+7); printf("%c%c%c", 219, 219, 219);
+	// Linha 9 
+	gotoxy(ic+6, il+8); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	
+	//Interior Lupa
+	textcolor(3);
+	gotoxy(ic+6, il+1); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+3, il+2); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+1, il+3); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+1, il+4); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+1, il+5); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+3, il+6); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+6, il+7); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	//brilhinho
+	textcolor(15);
+	gotoxy(ic+3, il+4); printf("%c", 219);
+	gotoxy(ic+4, il+5); printf("%c%c", 219, 219);
+	gotoxy(ic+7, il+6); printf("%c", 219);
+	
+	//cabo
+	textcolor(BLACK);
+	gotoxy(ic+18, il+5); printf("%c%c%c", 219, 219, 219);
+	gotoxy(ic+18, il+6); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+16, il+7); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+18, il+8); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+21, il+9); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+24, il+10);printf("%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+26, il+10);printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+26, il+11);printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	
+	
+	gotoxy(ic+25, il+15);
+	
+	// Acabou :D
 }
 
 void textcolor(int newcolor) // Define a cor do texto
