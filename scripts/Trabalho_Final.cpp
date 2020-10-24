@@ -1,4 +1,3 @@
-////////////////////////////////////////////////////
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -7,12 +6,16 @@
 #include <time.h>
 #include <string.h>
 
+// Versão 1.2
+#define versao 1.2
+
+// Definição de cores 
 #define cor_fundo 3
 #define cor_borda 1
 #define cor_texto 15
 #define cor_destaque 0
 
-text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 120, 45, 1, 1}; // Define os limites para linha (35) e coluna (80)
+text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 120, 40, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
 // Funções conio.c
 void textcolor(int newcolor);
@@ -22,8 +25,8 @@ void cursor (int x);
 
 // Funções de construção do programa
 
-//
-
+// Apresenta o menu e a versão
+void loading();
 // Apresenta tela de inicio
 void inicio(); 
 // Função utilizada para a borda
@@ -47,9 +50,34 @@ void info_de_sistema();
 main()
 {
 	SetConsoleTitle("GoTech"); 		   // Define o nome do console
-    system("mode con:cols=120 lines=45");  // Define o tamanho do console
+    system("mode con:cols=120 lines=40");  // Define o tamanho do console
     
+    loading();
 	inicio(); // Função de construção da tela inicial
+}
+
+void loading()
+{
+	borda(cor_fundo, cor_borda, 120, 45); 
+	cursor(0);
+	textcolor(cor_texto);
+	
+	// Apresentação de versão 
+	
+	gotoxy(99, 30); printf("Versao %.1f", versao);
+	
+	gotoxy(15, 30); printf("GoTech");
+	
+	gotoxy(38, 10); printf("Aguarde, estamos preparando tudo para voce!");
+	textcolor(RED); // Loading vermelho
+	for(int i = 0; i <= 52; i++)
+	{
+		gotoxy(32+i, 20);printf("%c", 219);
+		Sleep(50);
+	}
+	textcolor(cor_texto);
+	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar                               ");
+	Sleep(3000);
 }
 
 void inicio() // Apresenta tela de inicio
@@ -148,7 +176,7 @@ void sair() // Finaliza a execução do programa
 	gotoxy(42, 17); printf("Obrigado por utilizar nosso programa!");
 	textcolor(cor_fundo);
 	
-	gotoxy(118, 40);
+	gotoxy(80, 37);
 	exit(1);
 }
 
