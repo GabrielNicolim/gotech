@@ -22,7 +22,7 @@ void textcolor(int newcolor);
 void textbackground(int newcolor);
 void gotoxy(int x, int y);
 void cursor (int x);
-void clreol ();
+void clreol(int x);
 
 // Funções de construção do programa
 
@@ -34,19 +34,24 @@ void inicio();
 void borda(int cf, int cb, int lc); // (cor de fundo, cor da borda, limite de coluna, limite de linha)
 // Função utilizada para a criar o disquete
 void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
-// Fução de construção do menu da tela inicial
-void menu_ini();
+
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
 
-
 // Menu 
+
+// Fução de construção do menu da tela inicial
+void menu_ini();
 
 // Função que finaliza a execução do programa no menu
 void sair();
 
 // Função para apresentar as Informações do Sistema
 void info_de_sistema();
+
+// Função para gerar o sub menu de pesquisa
+void sub_menu();
+
 
 main()
 {
@@ -74,11 +79,11 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(32+i, 20);printf("%c", 219);
-		Sleep(0);
+		Sleep(20);
 	}
 	textcolor(cor_texto);
 	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar                               ");
-	Sleep(0);
+	Sleep(3000);
 }
 
 void inicio() // Apresenta tela de inicio
@@ -108,12 +113,45 @@ void menu_ini()
 		case 0:
 			break;
 		case 1:
+			sub_menu();
 			break;
 		case 2:
 			info_de_sistema();
 			break;
 		case 3:
 			sair();
+			break;
+	}
+}
+
+void sub_menu()
+{
+	borda(cor_fundo, cor_borda, 120);
+	
+	int inic = 50, inil = 19; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
+	
+	// Menu 
+	textcolor(cor_texto);
+	gotoxy(inic, inil); 	printf("Geral");
+	gotoxy(inic, (inil+2)); printf("Pesquisa por Codigo");
+	gotoxy(inic, (inil+4)); printf("Pesquisa por Nome");
+	gotoxy(inic, (inil+6)); printf("Retornar ao Inicio");
+	
+	int escolha;
+	escolha = navegar_menu(inil, (inil + 6), (inic - 2));
+	
+	switch(escolha)
+	{
+		case 0:
+			break;
+		case 1:
+			
+			break;
+		case 2:
+			
+			break;
+		case 3:
+			inicio();
 			break;
 	}
 }
@@ -226,8 +264,7 @@ int navegar_menu(int ini, int fim, int p)
 				if(aux > fim) aux = ini;
 					
 				gotoxy(p,aux);printf("%c", 62);
-				break;
-				
+				break;	
 			case 13:
 			return (aux - ini)/2; // Retorna o valor da opção seleciona => inicia em 0
 			break;	
@@ -437,20 +474,11 @@ void cursor (int x) { 	// Define se o cursor ira aparecer (1) ou não (0)
 	}
 }
 
-void clreol ()
+void clreol(int x)
 {
-   COORD coord;
-   DWORD escrito;
-
-   coord.X = vActual.winleft+vActual.curx-1;
-   coord.Y = vActual.wintop+vActual.cury-1;
-   
-   FillConsoleOutputCharacter(GetStdHandle(STD_OUTPUT_HANDLE), ' ', 
-      vActual.screenwidth - vActual.curx + 1, coord, &escrito);
-   FillConsoleOutputAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-      vActual.attribute, vActual.screenwidth - vActual.curx + 1, 
-      coord, &escrito);
-   gotoxy(vActual.curx, vActual.cury);
+   for(int i=0; i < x; i++)
+           printf(" ");
+       for(int i=0; i < x; i++)
+           printf("\b");
 }
-
 
