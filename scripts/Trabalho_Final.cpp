@@ -540,15 +540,11 @@ void consulta_id()
 {	
 
 	char op;
-	int proxima_tela = 0, linha = 6, sair = 0;	
+	int proxima_tela = 0, linha = 0, sair = 0;	
 	abrir_arquivo();
 	op = 'a';
 	int k=0;
 	
-
-
-
-
 
 
 	// Construção visual
@@ -563,10 +559,11 @@ void consulta_id()
 	textcolor(cor_texto);
 	do
 	{
+		rewind(fp);
 		aux = valida_id_consulta(aux);
 		
-		if(aux == 0) break;
-		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
+		if(aux == 0) break; // Se digitar 0 
+		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario => Ex: "01" ou "12pewra"
 		{
 			textcolor(RED);
 			gotoxy(53, 24); printf("Id invalido!");
@@ -585,8 +582,8 @@ void consulta_id()
 					k = 1;
 					system("cls");
 					break;
-					
-				}				
+				}		
+				linha++;		
 			}
 			if(k == 0)
 			{
