@@ -1,5 +1,5 @@
 /* 
-   	Função para criar o disquete
+   	Função para criar o logo
 	
 	- passe como parâmetro (a coluna de inicio, a linha de inicio)
 	
