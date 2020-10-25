@@ -1,3 +1,5 @@
+//by Felipe Lima e Gabriel Nicolim
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -6,8 +8,8 @@
 #include <time.h>
 #include <string.h>
 
-// Versão 1.5
-#define versao 1.5
+// Versão 1.7
+#define versao 1.7
 
 // Definição de cores 
 #define cor_fundo 3
