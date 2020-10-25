@@ -26,7 +26,7 @@ void gotech(int ic, int il);
 
 main()
 {
-	SetConsoleTitle("Func_gotech"); 		 // Define o nome do console
+	SetConsoleTitle("Func_logo"); 		 // Define o nome do console
     system("mode con:cols=80 lines=28");  // Define o tamanho do console
 	
 	for(int i = 0; i < 28; i++)
@@ -42,7 +42,7 @@ void gotech(int ic, int il)
 {
 	textbackground(15);
 	system("cls");
-
+	textcolor(0);
 	// Linha 1 do texto
 	gotoxy(ic+1,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+7,il);	printf("%c",187);
 	gotoxy(ic+10,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+16,il);	printf("%c",187);	
