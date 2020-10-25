@@ -140,7 +140,12 @@ void loading()
 void inicio() // Apresenta tela de inicio
 {	
 	borda(cor_fundo, cor_borda, 120); 
-	disquete(50, 6);	
+	//disquete(83, 6);
+	//logo(20, 8);
+	
+	disquete(18, 6);
+	logo(48, 8);
+		
 	menu_ini();
 }
 
@@ -227,7 +232,7 @@ void cadastro_recebimento()
 	gotoxy(x+17, y+2); gets(produto.nome);					fflush(stdin);
 	gotoxy(x+12, y+4); scanf("%d",&produto.quantidade);		fflush(stdin);
 	gotoxy(x+6, y+6);  gets(produto.tipo);					fflush(stdin);
-	gotoxy(x+16, y+8); scanf("%d",&produto.preco_unitario);	fflush(stdin);
+	gotoxy(x+16, y+8); scanf("%f",&produto.preco_unitario);	fflush(stdin);
 	produto.excluido = false;
 	
 	char conf; // variavel de confirmação do loop seguinte
@@ -760,8 +765,8 @@ void disquete(int ic, int il)
 
 void lupa(int ic, int il)
 {
-	// Linha 1 - Borda Preta
 	textcolor(0);
+	// Linha 1 - Borda Preta
 	gotoxy(ic+6, il); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);	
 	// Linha 2  
 	gotoxy(ic+3, il+1); printf("%c%c%c", 219, 219, 219);
@@ -821,6 +826,10 @@ void lupa(int ic, int il)
 
 void logo(int ic, int il)
 {
+	textcolor(0);
+	
+	gotoxy(ic - 2, il + 6); for(int i = 0; i <= 58; i++) printf("_");
+		
 	// Linha 1 do texto
 	gotoxy(ic+1,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+7,il);	printf("%c",187);
 	gotoxy(ic+10,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+16,il);	printf("%c",187);	
