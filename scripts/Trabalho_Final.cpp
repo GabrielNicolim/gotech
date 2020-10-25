@@ -67,6 +67,9 @@ void cadastro_recebimento();
 
 // Fução de construção do menu da tela inicial
 void menu_ini();
+/* Funções do submenu */
+void consulta_codigo(); // Encontra o produto pelo id
+
 
 // Função para gerar o sub menu de pesquisa
 void sub_menu();
@@ -76,6 +79,13 @@ void info_de_sistema();
 
 // Função que finaliza a execução do programa no menu
 void sair();
+
+// Funções de checagem
+
+// Função para validar o nome consultado
+void valida_nome_consulta(char tipo_consulta[40]);
+// Função para validar código consultado
+void valida_codigo_consulta(int *aux_codigo);
 
 //Ponteiro para arquivo
 FILE *fp;	
@@ -105,7 +115,7 @@ int abrir_arquivo_alterar()
 
 struct estrutura
 {
-	int id;
+	long id;
 	char nome[50];
 	int quantidade;
 	char tipo[1];
@@ -361,12 +371,10 @@ void consulta_geral()
 		}
 	}while ( !feof(fp) );
 	
-	gotoxy(20,31); printf("Pressione uma tecla para voltar ao menu...");
+	gotoxy(20,31); printf("Pressione uma tecla para voltar ao menu de pesquisa...");
 	getch();
 	fflush(stdin);	
-	system("cls");
-	textcolor(15);
-	inicio();
+	sub_menu();
 }
 
 void gera_tabela(int li)
@@ -510,7 +518,7 @@ void sub_menu()
 			consulta_geral();
 			break;
 		case 1:
-			//pesquisa();
+			consulta_codigo();
 			break;
 		case 2:
 			//pesquisa();
@@ -522,6 +530,103 @@ void sub_menu()
 			inicio();
 			break;
 	}
+}
+
+void consulta_codigo()
+{	
+	char op;
+	int proxima_tela = 0, linha = 6, sair = 0;	
+	abrir_arquivo();
+	op = 'a';
+	int k=0;
+	int codi; // Armazena código do produto
+		 
+	do
+	{
+		rewind(fp);
+		k = 0;
+		system("cls");
+		
+		gotoxy(28,2); printf("Busca por codigo");
+		gotoxy(15,4); printf("Digite o codigo (para encerrar digite 0): ");
+		
+		gotoxy(57,4); valida_codigo_consulta(&codi);
+		if(codi == 0) sub_menu();
+		else
+		{
+			while( !feof(fp) )
+			{
+				if(fread(&produto, sizeof(produto), 1, fp) == 1 && produto.excluido == 'n' && produto.id == codi)
+				{					
+					completa_tabela(linha);
+					gotoxy(20,24);printf("Pressione uma tecla para continuar...");
+					cursor(0);
+					getch();
+					k = 1;
+					system("cls");
+					break;
+					
+				}				
+			}
+			if(k == 0)
+			{
+				gotoxy(21,23);printf("-----> Codigo inexistente! <-----");
+				gotoxy(21,24);printf("Pressione uma tecla para redigitar");
+				getch();
+				
+			}
+		}
+	}while(k == 0);	
+}
+
+void valida_nome_consulta(char tipo_consulta[40])
+{
+	int num, k;
+	do
+	{
+		k = 1; 
+		gotoxy(32, 4); gets(tipo_consulta); 
+		num = strlen(tipo_consulta);
+		if(num == 0)
+		{
+			k = 0;
+		}
+		else
+		{
+			for(int i = 0; i < num; i++)
+			{
+				if(tipo_consulta[i] > '1' && tipo_consulta[i] <= '9')
+				{			
+					k = 0;
+				}
+			}
+		}
+	}while(k != 1);
+}	
+
+void valida_codigo_consulta(int *aux_codigo)
+{
+	
+	int flag = 0;
+	char bat[30];
+	do{
+		char al[10];
+		strcpy(al, "0123456789");
+		gets(bat);
+		for(int i = 0; i < 30; i++)
+		{
+			for(int j = 0; j < 10; j++)
+			{
+				if(bat[i] == al[j])
+				{
+					flag = 1; 
+				//	printf ("codigo nao existente!!");
+					break;
+				}
+			}
+		}
+	}while(flag != 1);
+	*aux_codigo = atoi(bat);
 }
 
 void info_de_sistema() // Apresenta as informações do sistema
