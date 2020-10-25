@@ -128,11 +128,11 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(32+i, 20);printf("%c", 219);
-//		Sleep(20);
+		Sleep(20);
 	}
 	textcolor(cor_texto);
 	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar                               ");
-//	Sleep(3000);
+	Sleep(3000);
 }
 
 void inicio() // Apresenta tela de inicio
@@ -204,14 +204,14 @@ void cadastro_visual()
 			dnv = getche();
 			if(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S')
 				{
-					gotoxy(x, y + 15); clreol(70); printf("Valor invalido! digite novamente (S/N): ");
+					Sleep(2000);
+					gotoxy(x, y + 20); clreol(70); printf("Valor invalido! digite novamente (S/N): ");
 				}
 		}while(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S');
 		
 		system("cls");
 	}while(dnv == 's' || dnv == 'S');
 	
-	system("cls");
 	inicio();
 }
 
@@ -242,6 +242,8 @@ void cadastro_recebimento()
 			gotoxy(x+31,y+14); Sleep(500); clreol(2);
 				
 			gotoxy(x+50,y+14); printf("Digite um caractere valido!");
+			Sleep(2000);
+			gotoxy(x + 49, y + 14); clreol(30);
 		}
    	}while( conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N' );
    	
@@ -249,7 +251,9 @@ void cadastro_recebimento()
    	{
 	   	if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
 		{
-			gotoxy(18,11); printf("Erro na escrita do arquivo");
+			textcolor(RED);
+			gotoxy(x+50,y+14); printf("Erro na escrita do arquivo");
+			textcolor(cor_texto);
 		}
 		else
 		{
@@ -257,7 +261,7 @@ void cadastro_recebimento()
 			fclose(fp);
 			system("cls");
 			borda(cor_fundo, cor_borda, 120);
-			textcolor(15);
+			textcolor(cor_texto);
 			gotoxy(18,11); printf("Dados salvos com sucesso!");
 		}
 		cursor(0);
@@ -292,9 +296,9 @@ void consulta_geral()
 					while(pag != 'S' && pag != 's' && pag != 'N' && pag != 'n' && pag != '\r')
 					{
 						if(pag != 'S' && pag != 's' && pag != 'N' && pag != 'n' && pag != '\r')
-							{
-								gotoxy(20,32); printf("Digite um valor válido!");
-							}
+						{
+							gotoxy(20,32); printf("Digite um valor válido!");
+						}
 						gotoxy(68,31); clreol(2); pag = getche();
 					}
 					if(pag == 's' || pag == 'S')
@@ -317,7 +321,7 @@ void consulta_geral()
 	getch();
 	fflush(stdin);	
 	system("cls");
-	textcolor(15);
+	textcolor(cor_texto);
 	inicio();
 }
 
@@ -327,7 +331,7 @@ void gera_tabela(int li)
 	system("cls");
 	borda(cor_fundo, cor_borda, 120);
 	
-	textcolor(15);
+	textcolor(cor_texto);
 	gotoxy(ci,4);	printf ("+---------------------------------------------------------------------------------+");
 	gotoxy(ci,5);	printf ("|   ID   |      Nome         |  Preço Unitário  |    Quantidade   |     Tipo      |");
 	gotoxy(ci,6);	printf ("|---------------------------------------------------------------------------------|");
@@ -375,7 +379,7 @@ void excluir_dados() //exclusao lógica
 	system("cls");
 	abrir_arquivo_alterar();
 	borda(cor_fundo, cor_borda, 120);
-	textcolor(15); 
+	textcolor(cor_texto); 
 	int aux_codigo,F;
 	long fposicao;
 	char conf;
@@ -433,7 +437,6 @@ void excluir_dados() //exclusao lógica
 		break;
 	}while(aux_codigo!=0);
 	Sleep(1000);
-	system("cls");
 	inicio();
 }
 
