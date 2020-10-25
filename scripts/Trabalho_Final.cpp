@@ -36,6 +36,8 @@ void inicio();
 void borda(int cf, int cb, int lc); // (cor de fundo, cor da borda, limite de coluna, limite de linha)
 // Função utilizada para criar o disquete
 void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
+// Função para criar a logo GoTech
+void logo(int ic, int il);
 // Função utilizada para criar uma lupinha
 void lupa(int ic, int il); // (coluna de inicio, linha de inicio)
 // Função para fazer a consulta dos dados já salvos
@@ -98,7 +100,7 @@ struct estrutura
 	int quantidade;
 	char tipo[1];
 	float preco_unitario;
-	char excluido;
+	bool excluido;
 }produto;
 
 
@@ -128,11 +130,11 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(32+i, 20);printf("%c", 219);
-		Sleep(20);
+		Sleep(10);
 	}
 	textcolor(cor_texto);
 	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar                               ");
-	Sleep(3000);
+	Sleep(2000);
 }
 
 void inicio() // Apresenta tela de inicio
@@ -212,6 +214,7 @@ void cadastro_visual()
 		system("cls");
 	}while(dnv == 's' || dnv == 'S');
 	
+	system("cls");
 	inicio();
 }
 
@@ -225,7 +228,7 @@ void cadastro_recebimento()
 	gotoxy(x+12, y+4); scanf("%d",&produto.quantidade);		fflush(stdin);
 	gotoxy(x+6, y+6);  gets(produto.tipo);					fflush(stdin);
 	gotoxy(x+16, y+8); scanf("%d",&produto.preco_unitario);	fflush(stdin);
-	produto.excluido = 'n';
+	produto.excluido = false;
 	
 	char conf; // variavel de confirmação do loop seguinte
 	
@@ -258,10 +261,10 @@ void cadastro_recebimento()
 		else
 		{
 			fflush( fp );
-			fclose(fp);
+			//fclose(fp);  
 			system("cls");
 			borda(cor_fundo, cor_borda, 120);
-			textcolor(cor_texto);
+			textcolor(15);
 			gotoxy(18,11); printf("Dados salvos com sucesso!");
 		}
 		cursor(0);
@@ -283,7 +286,7 @@ void consulta_geral()
 	do
 	{
 		if(fread(&produto, sizeof(produto), 1, fp) == 1) {
-			if(produto.excluido == 'n') {
+			if(produto.excluido == false) {
 				ir_proxima++;
 				completa_tabela(linha);
 				linha+=2;
@@ -321,7 +324,7 @@ void consulta_geral()
 	getch();
 	fflush(stdin);	
 	system("cls");
-	textcolor(cor_texto);
+	textcolor(15);
 	inicio();
 }
 
@@ -331,7 +334,7 @@ void gera_tabela(int li)
 	system("cls");
 	borda(cor_fundo, cor_borda, 120);
 	
-	textcolor(cor_texto);
+	textcolor(15);
 	gotoxy(ci,4);	printf ("+---------------------------------------------------------------------------------+");
 	gotoxy(ci,5);	printf ("|   ID   |      Nome         |  Preço Unitário  |    Quantidade   |     Tipo      |");
 	gotoxy(ci,6);	printf ("|---------------------------------------------------------------------------------|");
@@ -379,7 +382,7 @@ void excluir_dados() //exclusao lógica
 	system("cls");
 	abrir_arquivo_alterar();
 	borda(cor_fundo, cor_borda, 120);
-	textcolor(cor_texto); 
+	textcolor(15); 
 	int aux_codigo,F;
 	long fposicao;
 	char conf;
@@ -396,7 +399,7 @@ void excluir_dados() //exclusao lógica
 		    do
 		    {
 				fread( &produto,sizeof(produto),1,fp);
-				if ( produto.id == aux_codigo && produto.excluido == 'n' ) //Se houver um produto com o id e que não foi excluído
+				if ( produto.id == aux_codigo && produto.excluido == false ) //Se houver um produto com o id e que não foi excluído
 				{
 			   		F = 1;
 			   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
@@ -416,7 +419,7 @@ void excluir_dados() //exclusao lógica
 				   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
 						fseek (fp,fposicao-(sizeof(produto)),SEEK_SET); 	//em stdio.h
 																			//SEEK_SET indica o início do arquivo
-						produto.excluido='s'; /*atribuição de 's' para o campo excluído para indicar 
+						produto.excluido= true; /*atribuição de 's' para o campo excluído para indicar 
 							 			que o registro foi excluído ou desativado (exclusão lógica) */
 						if(fwrite (&produto,sizeof(produto),1,fp)==1)
 						{
@@ -437,6 +440,7 @@ void excluir_dados() //exclusao lógica
 		break;
 	}while(aux_codigo!=0);
 	Sleep(1000);
+	system("cls");
 	inicio();
 }
 
@@ -550,7 +554,7 @@ void sair() // Finaliza a execução do programa
 	textcolor(cor_texto);
 	gotoxy(42, 17); printf("Obrigado por utilizar nosso programa!");
 	textcolor(cor_fundo);
-	
+	fclose(fp);
 	gotoxy(80, 37);
 	exit(1);
 }
@@ -815,6 +819,69 @@ void lupa(int ic, int il)
 	// Acabou :D
 }
 
+void logo(int ic, int il)
+{
+	// Linha 1 do texto
+	gotoxy(ic+1,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+7,il);	printf("%c",187);
+	gotoxy(ic+10,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+16,il);	printf("%c",187);	
+	gotoxy(ic+18,il);	printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);	gotoxy(ic+25,il);	printf("%c",187);
+	gotoxy(ic+27,il);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);		gotoxy(ic+34,il);	printf("%c",187);
+	gotoxy(ic+38,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+44,il);	printf("%c",187);
+	gotoxy(ic+46,il);	printf("%c%c",219,219);										gotoxy(ic+48,il);	printf("%c",187);
+	gotoxy(ic+51,il);	printf("%c%c",219,219);										gotoxy(ic+53,il);	printf("%c",187);
+	
+	//linha 2
+	gotoxy(ic,il+1);	printf("%c%c",219,219);		gotoxy(ic+2,il+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
+	gotoxy(ic+9,il+1);	printf("%c%c",219,219);		gotoxy(ic+11,il+1);	printf("%c%c%c%c",201,205,205,205);
+	gotoxy(ic+15,il+1);	printf("%c%c",219,219);		gotoxy(ic+17,il+1);	printf("%c",187);
+	gotoxy(ic+21,il+1);	printf("%c%c",219,219);		gotoxy(ic+18,il+1);	printf("%c%c%c",200,205,205);
+	gotoxy(ic+27,il+1);	printf("%c%c",219,219);		gotoxy(ic+23,il+1);	printf("%c%c%c",201,205,188);
+	gotoxy(ic+37,il+1);	printf("%c%c",219,219);		gotoxy(ic+29,il+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
+	gotoxy(ic+46,il+1);	printf("%c%c",219,219);		gotoxy(ic+39,il+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
+	gotoxy(ic+51,il+1);	printf("%c%c",219,219);		gotoxy(ic+48,il+1);	printf("%c",186);		gotoxy(ic+53,il+1);	printf("%c",186);
+		
+	//linha 3
+	gotoxy(ic,il+2);	printf("%c%c",219,219);									gotoxy(ic+2,il+2);	printf("%c",186);
+	gotoxy(ic+5,il+2);	printf("%c%c%c",219,219,219);							gotoxy(ic+8,il+2);	printf("%c",187);
+	gotoxy(ic+9,il+2);	printf("%c%c",219,219);									gotoxy(ic+11,il+2);	printf("%c",186);
+	gotoxy(ic+15,il+2);	printf("%c%c",219,219);									gotoxy(ic+17,il+2);	printf("%c",186);
+	gotoxy(ic+21,il+2);	printf("%c%c",219,219);									gotoxy(ic+23,il+2);	printf("%c",186);
+	gotoxy(ic+27,il+2);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic+33,il+2);	printf("%c",187);
+	gotoxy(ic+37,il+2);	printf("%c%c",219,219);									gotoxy(ic+39,il+2);	printf("%c",186);
+	gotoxy(ic+46,il+2);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);	gotoxy(ic+53,il+2);	printf("%c",186);
+	
+	//linha 4
+	gotoxy(ic,il+3);	printf("%c%c",219,219);		gotoxy(ic+2,il+3);	printf("%c",186);
+	gotoxy(ic+6,il+3);	printf("%c%c",219,219);		gotoxy(ic+8,il+3);	printf("%c",186);
+	gotoxy(ic+9,il+3);	printf("%c%c",219,219);		gotoxy(ic+11,il+3);	printf("%c",186);
+	gotoxy(ic+15,il+3);	printf("%c%c",219,219);		gotoxy(ic+17,il+3);	printf("%c",186);
+	gotoxy(ic+21,il+3);	printf("%c%c",219,219);		gotoxy(ic+23,il+3);	printf("%c",186);
+	gotoxy(ic+27,il+3);	printf("%c%c",219,219);		gotoxy(ic+29,il+3);	printf("%c%c%c%c%c",201,205,205,205,188);
+	gotoxy(ic+37,il+3);	printf("%c%c",219,219);		gotoxy(ic+39,il+3);	printf("%c",186);
+	gotoxy(ic+46,il+3);	printf("%c%c",219,219);		gotoxy(ic+48,il+3);	printf("%c%c%c",201,205,205);
+	gotoxy(ic+51,il+3);	printf("%c%c",219,219);		gotoxy(ic+53,il+3);	printf("%c",186);
+		
+	//linha 5
+	gotoxy(ic+1,il+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic,il+4);	printf("%c",200);
+	gotoxy(ic+10,il+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic+7,il+4);	printf("%c%c%c",201,188,200);
+	gotoxy(ic+21,il+4);	printf("%c%c",219,219);									gotoxy(ic+16,il+4);	printf("%c%c",201,188);
+	gotoxy(ic+27,il+4);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);	gotoxy(ic+23,il+4);	printf("%c",186);
+	gotoxy(ic+38,il+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic+34,il+4);	printf("%c",187);
+	gotoxy(ic+46,il+4);	printf("%c%c",219,219);									gotoxy(ic+37,il+4);	printf("%c",200);
+	gotoxy(ic+51,il+4);	printf("%c%c",219,219);									gotoxy(ic+44,il+4);	printf("%c",187);
+	gotoxy(ic+48,il+4);	printf("%c",186);										gotoxy(ic+53,il+4);	printf("%c",186);
+	
+	//linha 6
+		
+	gotoxy(ic+1,il+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
+	gotoxy(ic+10,il+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
+	gotoxy(ic+21,il+5);	printf("%c%c%c",200,205,188);
+	gotoxy(ic+27,il+5);	printf("%c%c%c%c%c%c%c%c",200,205,205,205,205,205,205,188);
+	gotoxy(ic+38,il+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
+	gotoxy(ic+46,il+5);	printf("%c%c%c",200,205,188);
+	gotoxy(ic+51,il+5);	printf("%c%c%c",200,205,188);
+}
+
 void textcolor(int newcolor) // Define a cor do texto
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -858,11 +925,11 @@ void cursor (int x) { 	// Define se o cursor ira aparecer (1) ou não (0)
 	}
 }
 
-void clreol(int x)
+void clreol(int x)  //função customizada e mais versátil para o programa do clreol da conio.h
 {
    for(int i=0; i < x; i++)
-           printf(" ");
+           printf(" ");         //preenche com "vazio/em branco" X espaços escolhidos
        for(int i=0; i < x; i++)
-           printf("\b");
+           printf("\b");		//volta X vezes o cursor para trás para a posição original após limpar a linha
 }
 
