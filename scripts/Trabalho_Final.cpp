@@ -572,26 +572,9 @@ void consulta_id()
 		} 
 		else if(aux == 3)
 		{
-			while( !feof(fp) )
-			{
-				if(fread(&produto, sizeof(produto), 1, fp) == 1 && produto.excluido == 'n' && produto.id == id_busca)
-				{					
-					gera_tabela(linha);
-					gotoxy(20,24);printf("Pressione uma tecla para continuar...");
-					getch();
-					k = 1;
-					system("cls");
-					break;
-				}		
-				linha++;		
-			}
-			if(k == 0)
-			{
-				gotoxy(21,23);printf("-----> Codigo inexistente! <-----");
-				gotoxy(21,24);printf("Pressione uma tecla para redigitar");
-				getch();
-				
-			}
+			
+			
+			
 		}
 		
 	}while(true);
