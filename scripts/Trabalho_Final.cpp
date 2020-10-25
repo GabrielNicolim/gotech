@@ -1,5 +1,3 @@
-//by Felipe Lima e Gabriel Nicolim
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -8,8 +6,8 @@
 #include <time.h>
 #include <string.h>
 
-// Versão 1.7
-#define versao 1.7
+// Versão 1.5
+#define versao 1.5
 
 // Definição de cores 
 #define cor_fundo 3
@@ -174,8 +172,8 @@ void inicio() // Apresenta tela de inicio
 			logo(32, 8); // logo
 			break;
 		case 3:
-			ram(37, 5); // Ram + logo
-			logo(32, 11);
+			ram(37, 4); // Ram + logo
+			logo(32, 10);
 			break;
 		case 4:
 			mobo(83, 6); // placa mae + logo
@@ -847,14 +845,14 @@ void lupa(int ic, int il)
 	
 	//cabo
 	textcolor(BLACK);
-	gotoxy(ic+18, il+5); printf("%c%c%c", 219, 219, 219);
-	gotoxy(ic+18, il+6); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+16, il+7); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+18, il+8); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+21, il+9); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+24, il+10);printf("%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+26, il+10);printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+26, il+11);printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+18, il+5); printf("%c", 219);
+	gotoxy(ic+18, il+6); printf("%c%c%c", 219, 219, 219);
+	gotoxy(ic+16, il+7); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+18, il+8); printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+21, il+9); printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+24, il+10);printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+26, il+10);printf("%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+26, il+11);printf("%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
 	
 	
 	gotoxy(ic+25, il+15);
