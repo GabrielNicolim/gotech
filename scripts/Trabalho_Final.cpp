@@ -56,6 +56,8 @@ void apaga_dados();
 void gera_tabela(int li);  //
 //Função para colocar os dados na tabela
 void completa_tabela(int linha);
+// Função para a geração de tabela de tipos
+void tabela_tipos(int x, int y);
 
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
@@ -416,6 +418,8 @@ void gera_tabela(int li)
 	gotoxy(ci,29);	printf ("|        |                   |                  |                 |               |");
 	gotoxy(ci,30);	printf ("+---------------------------------------------------------------------------------+");
 	
+//	gotoxy(20,35); printf("1 - hbihw 2 - 3ijosgubiowsb 3 - bviwbsodbnobn 4- pnaoedbniobwsiocbow 5 - nbsaovbnwso");
+//	gotoxy(20,36); printf("1 - hbihw 2 - 3ijosgubiowsb 3 - bviwbsodbnobn 4- pnaoedbniobwsiocbow 5 - nbsaovbnwso");
 }
 
 void completa_tabela(int linha)
@@ -540,11 +544,15 @@ void consulta_id()
 {	
 
 	char op;
-	int proxima_tela = 0, linha = 0, sair = 0;	
+	int proxima_tela = 0, linha = 6, sair = 0;	
 	abrir_arquivo();
 	op = 'a';
 	int k=0;
 	
+
+
+
+
 
 
 	// Construção visual
@@ -559,11 +567,10 @@ void consulta_id()
 	textcolor(cor_texto);
 	do
 	{
-		rewind(fp);
 		aux = valida_id_consulta(aux);
 		
-		if(aux == 0) break; // Se digitar 0 
-		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario => Ex: "01" ou "12pewra"
+		if(aux == 0) break;
+		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
 		{
 			textcolor(RED);
 			gotoxy(53, 24); printf("Id invalido!");
@@ -572,9 +579,26 @@ void consulta_id()
 		} 
 		else if(aux == 3)
 		{
-			
-			
-			
+			while( !feof(fp) )
+			{
+				if(fread(&produto, sizeof(produto), 1, fp) == 1 && produto.excluido == 'n' && produto.id == id_busca)
+				{					
+					gera_tabela(linha);
+					gotoxy(20,24);printf("Pressione uma tecla para continuar...");
+					getch();
+					k = 1;
+					system("cls");
+					break;
+					
+				}				
+			}
+			if(k == 0)
+			{
+				gotoxy(21,23);printf("-----> Codigo inexistente! <-----");
+				gotoxy(21,24);printf("Pressione uma tecla para redigitar");
+				getch();
+				
+			}
 		}
 		
 	}while(true);
@@ -1443,6 +1467,11 @@ void mobo(int ic, int il)
 	textcolor(0);
 	
 	gotoxy((ic+10), (il+10));	// tirar o exit do programa de perto
+}
+
+void tabela_tipos(int x, int y)
+{
+	gotoxy(x, y);
 }
 
 void textcolor(int newcolor) // Define a cor do texto
