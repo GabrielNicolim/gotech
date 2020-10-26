@@ -28,6 +28,8 @@ void clreol(int x);
 
 // Função para gerar a parte visual do cadastro 
 void cadastro_visual();
+// Função
+void tipo_tabela();
 // Apresenta o menu e a versão
 void loading();
 // Apresenta tela de inicio
@@ -56,7 +58,10 @@ void apaga_dados();
 void gera_tabela(int li);  //
 //Função para colocar os dados na tabela
 void completa_tabela(int linha);
-
+// Valida id no registro
+int valida_id_recebimento();
+// Valida quantidade no registro
+int valida_quantidade_recebimento();
 
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
@@ -84,18 +89,15 @@ void sair();
 
 // Funções de checagem
 
+// Função para validar o nome consultado
+void valida_nome_consulta(char tipo_consulta[40]);
 // Função para validar código consultado
-int valida_id_consulta();
-// Valida id no registro
-int valida_id_recebimento();
-// Valida quantidade no registro
-int valida_quantidade_recebimento();
-// Va
+int valida_id_consulta(int *id_busca);
+
 //Ponteiro para arquivo
 FILE *fp;	
 
 int random_menu; // Var que armazena numero aleatório ente 0 e 4 para gerar um menu diferente 
-int id_busca; // Armazena id digitado pelu usuário durante a busca
 
 void abrir_arquivo()
 {
@@ -242,6 +244,7 @@ void cadastro_visual()
 	do{
 		
 		borda();
+		tipo_tabela();
 	
 		cursor(1);
 		textcolor(cor_destaque);
@@ -388,54 +391,54 @@ int valida_id_recebimento()
 {
 	char id[30];
 	int tam;
-	int k = 0, c = 0;
+	int k = 0, c = 0;  //variáveis auxiliares
 	
 	fflush(stdin);
 	
 	do
 	{
-		k = 1;
+		k = 1;  
 		c = 0;
 		
-		gets(id);
-		tam = strlen(id);
+		gets(id); //pega o id do usuário
+		tam = strlen(id); // passa para tam o tamanho da string id
 		
-		if(tam == 0)
+		if(tam == 0) // se apenar for apertado enter (tamanho 0) volta para onde estava
 		{
 			gotoxy(39,8);
-			k = 0;
+			k = 0;   //para fazer o laço de repetição continiar rodando
 		} 
-		else if(id[0] == '0')
+		else if(id[0] == '0')  //se digitado 0 volta para o menu
 		{
 			cursor(0);
 			textbackground(12);
 			gotoxy(52, 35);
-			printf("Voltando ao menu");
-			Sleep(3500);
+			printf("Voltando ao menu");		
+			Sleep(2500);
 			inicio();
 		} 
 		else 
 		{
-			for(int i = 0; i < tam; i++) 
+			for(int i = 0; i < tam; i++)  //checa por toda a string se os caracteres digitados são apenas números
 			{
 				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
 				{
-					c = 1;
+					c = 1;		//define se é o ID é inválido (1=não)
 					break;
 				}
 				else
 				{
-					k = 1;
-					c = 0;
+					k = 1; 		//terminar laço de repetição se ID estiver tudo ok
+					c = 0;		//define que o ID é valido (0=sim)
 				} 
 			}	
 			
-			if(c == 1)
+			if(c == 1)  //se o id for invalido
 			{
-				k = 0;
+				k = 0;  //continua no laço
 				
 				textbackground(cor_fundo);
-				gotoxy(39, 8); clreol(72);
+				gotoxy(39, 8); clreol(72);			//joga erro na cara
 				textbackground(12);
 				gotoxy(39, 8); printf("[ERRO] ID invalido");
 				Sleep(2500);
@@ -447,7 +450,7 @@ int valida_id_recebimento()
 		}
 	}while(k == 0);
 	
-	return atoi(id);
+	return atoi(id); //retorna id que era string em forma de int
 }
 
 void consulta_geral()
@@ -459,6 +462,7 @@ void consulta_geral()
 	rewind(fp); // seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")
 	
 	gera_tabela(5);
+	tipo_tabela();
 	
 	do
 	{
@@ -662,13 +666,13 @@ void sub_menu()
 
 void consulta_id()
 {	
-
 	char op;
 	int proxima_tela = 0, linha = 6, sair = 0;	
 	abrir_arquivo();
 	op = 'a';
 	int k=0;
 	
+	int id_busca; // Armazena id digitado pelu usuário durante a busca
 
 
 
@@ -687,7 +691,7 @@ void consulta_id()
 	textcolor(cor_texto);
 	do
 	{
-		aux = valida_id_consulta();
+		aux = valida_id_consulta(&id_busca);
 		
 		if(aux == 0) break;
 		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
@@ -726,28 +730,56 @@ void consulta_id()
 	sub_menu();
 }
 
-int valida_id_consulta()
+int valida_id_consulta(int *id_busca)  //checa se o id digitado está dentro do rage de numeros apenas
 {
 	char id[30];
 	int tam;
 	
 	do
 	{
-		gets(id);
-		tam = strlen(id);
+		gets(id); // vai pegar a string do usuário
+		tam = strlen(id); //pega o tamanho da string
 		
-		if(id[0] == '0') 
+		if(id[0] == '0')   //se for digitado 0 e enter
 		{
-			if(tam > 1) return 1;
-			else return 0;
+			if(tam > 1) 
+			return 1; //diz que o valor é inválido
+			else return 0; //valor é valido e retorna o submenu
 		}
-		else for(int i = 0; i < tam; i++) if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') return 1;
-		break;	
+		else for(int i = 0; i < tam; i++) 
+				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
+					return 1; //diz que o valor é inválido
+			break;	
 		
 	}while(true);
 	
-	id_busca = atoi(id);
-	return 3;
+	*id_busca = atoi(id);
+	return 3;  //3 = está dentro do permitido
+}
+
+void valida_nome_consulta(char tipo_consulta[40])  //
+{
+	int num, k;
+	do
+	{
+		k = 1; 
+		gotoxy(32, 4); gets(tipo_consulta); 
+		num = strlen(tipo_consulta);
+		if(num == 0)
+		{
+			k = 0;
+		}
+		else
+		{
+			for(int i = 0; i < num; i++)
+			{
+				if(tipo_consulta[i] > '1' && tipo_consulta[i] <= '9')
+				{			
+					k = 0;
+				}
+			}
+		}
+	}while(k != 1);
 }	
 
 void info_de_sistema() // Apresenta as informações do sistema
@@ -1564,6 +1596,14 @@ void mobo(int ic, int il)
 	textcolor(0);
 	
 	gotoxy((ic+10), (il+10));	// tirar o exit do programa de perto
+}
+
+void tipo_tabela()
+{
+	textcolor(cor_texto);
+	gotoxy(38,37);	printf(" P - Periferico       G - Gpu      C - Cpu");
+	gotoxy(38,38);	printf(" M - Mobo             F - Fonte    W - Cabos");
+	gotoxy(38,39);	printf(" A - Armazenamento    R - Ram      O - Outros");
 }
 
 void textcolor(int newcolor) // Define a cor do texto
