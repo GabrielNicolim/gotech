@@ -56,10 +56,7 @@ void apaga_dados();
 void gera_tabela(int li);  //
 //Função para colocar os dados na tabela
 void completa_tabela(int linha);
-// Valida id no registro
-int valida_id_recebimento();
-// Valida quantidade no registro
-int valida_quantidade_recebimento();
+
 
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
@@ -87,11 +84,13 @@ void sair();
 
 // Funções de checagem
 
-// Função para validar o nome consultado
-void valida_nome_consulta(char tipo_consulta[40]);
 // Função para validar código consultado
 int valida_id_consulta();
-
+// Valida id no registro
+int valida_id_recebimento();
+// Valida quantidade no registro
+int valida_quantidade_recebimento();
+// Va
 //Ponteiro para arquivo
 FILE *fp;	
 
@@ -749,31 +748,6 @@ int valida_id_consulta()
 	
 	id_busca = atoi(id);
 	return 3;
-}
-
-void valida_nome_consulta(char tipo_consulta[40])
-{
-	int num, k;
-	do
-	{
-		k = 1; 
-		gotoxy(32, 4); gets(tipo_consulta); 
-		num = strlen(tipo_consulta);
-		if(num == 0)
-		{
-			k = 0;
-		}
-		else
-		{
-			for(int i = 0; i < num; i++)
-			{
-				if(tipo_consulta[i] > '1' && tipo_consulta[i] <= '9')
-				{			
-					k = 0;
-				}
-			}
-		}
-	}while(k != 1);
 }	
 
 void info_de_sistema() // Apresenta as informações do sistema
