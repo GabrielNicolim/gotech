@@ -6,8 +6,8 @@
 #include <time.h>
 #include <string.h>
 
-// Versão 1.8
-#define versao 1.8
+// Versão 1.7
+#define versao 1.7
 
 // Definição de cores 
 #define cor_fundo 3
@@ -86,7 +86,7 @@ void sair();
 // Funções de checagem
 
 // Função para validar código consultado
-int valida_id_consulta();
+int valida_id_consulta(int *id_final);
 
 // Validações + Registro
 
@@ -96,13 +96,15 @@ void valida_id_recebimento();
 void valida_quantidade_recebimento();
 // Valida nome no registro
 void valida_nome_recebimento();
-
+// Valida tipo digitado
+void valida_tipo_recebimento();
+// Valida preço digitado
+void valida_preco_recebimento();
 
 //Ponteiro para arquivo
 FILE *fp;	
 
 int random_menu; // Var que armazena numero aleatório ente 0 e 4 para gerar um menu diferente 
-int id_busca; // Armazena id digitado pelu usuário durante a busca
 
 void abrir_arquivo()
 {
@@ -130,7 +132,7 @@ struct estrutura
 	long id;
 	char nome[50];
 	int quantidade;
-	char tipo[1];
+	char tipo;
 	float preco_unitario;
 	bool excluido;
 }produto;
@@ -292,8 +294,8 @@ void cadastro_recebimento()
 	gotoxy(x, y);   valida_id_recebimento();
 	gotoxy(x, y+2); valida_nome_recebimento();				
 	gotoxy(x, y+4); valida_quantidade_recebimento(); 
-	gotoxy(x, y+6);//  gets(produto.tipo);					fflush(stdin);
-	gotoxy(x, y+8); //scanf("%f",&produto.preco_unitario);	fflush(stdin);
+	gotoxy(x, y+6); valida_tipo_recebimento();
+	gotoxy(x, y+8); valida_preco_recebimento();
 	produto.excluido = false;
 	
 	char conf; // variavel de confirmação do loop seguinte
@@ -334,6 +336,61 @@ void cadastro_recebimento()
 		Sleep(2000);
 		cursor(1);
 	}
+}
+
+void valida_preco_recebimento()
+{
+	float aux;
+	do
+	{
+		scanf("%f", &aux);
+		
+		if(aux > -1) break;
+		else
+		{
+			textbackground(cor_fundo);
+			gotoxy(39, 16); clreol(72);
+			textbackground(12);
+			gotoxy(39, 16); printf("[ERRO] Valor invalida");			
+			Sleep(2500);
+			textbackground(cor_fundo);
+			gotoxy(39, 16); clreol(72);
+			gotoxy(39, 16);	
+		}
+		
+	}while(true);
+	
+	produto.preco_unitario = aux;
+	
+	fflush(stdin);
+}
+
+void valida_tipo_recebimento()
+{
+ 	char aux;
+ 	
+ 	fflush(stdin);
+ 	
+ 	do
+ 	{
+ 		aux = getche();
+		
+		if(aux == 'p' || aux == 'P' || aux == 'g' || aux == 'G' || aux == 'c' || aux == 'C' || aux == 'm' || aux == 'M' || aux == 'f' || aux == 'F' || aux == 'w' || aux == 'W' || aux == 'a' || aux == 'A' || aux == 'r' || aux == 'R' || aux == 'o' || aux == 'O') break;
+		else
+		{
+			textbackground(cor_fundo);
+			gotoxy(39, 14); clreol(72);
+			textbackground(12);
+			gotoxy(39, 14); printf("[ERRO] Tipo invalido");			
+			Sleep(2500);
+			textbackground(cor_fundo);
+			gotoxy(39, 14); clreol(72);
+			gotoxy(39, 14);
+		}
+		
+	}while(true);
+	
+	produto.tipo = aux;
 }
 
 void valida_nome_recebimento()
@@ -481,7 +538,7 @@ void valida_id_recebimento()
 			textbackground(12);
 			gotoxy(52, 35);
 			printf("Voltando ao menu");
-			Sleep(3500);
+			Sleep(2500);
 			inicio();
 		} 
 		else 
@@ -554,7 +611,7 @@ void consulta_geral()
 					if(pag == 's' || pag == 'S')
 					{
 						system("cls");
-						linha = 7;
+						linha = 6;
 						gera_tabela(5);
 					}
 					else
@@ -627,7 +684,7 @@ void completa_tabela(int linha)
 	//gotoxy(ci+30,li);printf("%s", produto.marca);
 	gotoxy(51,linha); printf("%.2f", produto.preco_unitario);
 	gotoxy(71,linha); printf("%d", produto.quantidade);
-	gotoxy(89,linha); printf("%s", produto.tipo);
+	gotoxy(89,linha); printf("%c", produto.tipo);
 	gotoxy(1,60);
 }
 
@@ -760,12 +817,14 @@ void consulta_id()
 	
 	int x = 20, y = 12;
 	int aux = 0;
+	int id_busca; // Armazena id digitado pelu usuário durante a busca
+	
 	gotoxy(x, y); printf("Digite o Id (0 para sair): ");
 	
 	textcolor(cor_texto);
 	do
 	{
-		aux = valida_id_consulta();
+		aux = valida_id_consulta(&id_busca);
 		
 		if(aux == 0) break;
 		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
@@ -804,7 +863,7 @@ void consulta_id()
 	sub_menu();
 }
 
-int valida_id_consulta()
+int valida_id_consulta(int *id_final)
 {
 	char id[30];
 	int tam;
@@ -824,7 +883,7 @@ int valida_id_consulta()
 		
 	}while(true);
 	
-	id_busca = atoi(id);
+	*id_final = atoi(id);
 	return 3;
 }	
 
