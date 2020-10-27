@@ -346,7 +346,7 @@ void valida_nome_recebimento()
 		cont = 0;
 		c = 0;
 		cont_aux_final = 0;
-	//	k = 0;
+		k = 0;
 		
 		gets(aux);
 		tam = strlen(aux);
@@ -356,22 +356,27 @@ void valida_nome_recebimento()
 		{
 			for(int i = 0; i < tam; i++)
 			{
-			//	if(k == 0)
-		//		{
+				if(k == 0)
+				{
 					if(aux[i] != char(32))
 					{
-					aux_string_final[cont_aux_final] = aux[i];
-					c = 1;
-					cont_aux_final++;
-					k = 1;
+						aux_string_final[cont_aux_final] = aux[i];
+						c = 1;
+						cont_aux_final++;
+						k = 1;
 					} 
 					else
 					{
 						c = 0;
 						cont++;
 					}	 
-		//		}
-						
+				}
+				else 
+				{
+					aux_string_final[cont_aux_final] = aux[i];
+					c = 1;
+					cont_aux_final++;
+				}			
 			}	
 		}
 		
@@ -379,6 +384,9 @@ void valida_nome_recebimento()
 		else gotoxy(39, 10);	
 		
 	}while(true);
+	
+	for(int i = 0; i < strlen(aux_string_final); i++)
+	if((aux_string_final[i] < char(48) || aux_string_final[i] > char(57) ) && (aux_string_final[i] < char(65) || aux_string_final[i] > char(90))  && (aux_string_final[i] < char(97) || aux_string_final[i] > char(122))) aux_string_final[i] = ' ';
 	
 	gotoxy(39, 10); clreol((cont + tam));
 	strcpy(produto.nome, aux_string_final); 
