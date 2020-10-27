@@ -56,6 +56,8 @@ void apaga_dados();
 void gera_tabela(int li);  //
 //Função para colocar os dados na tabela
 void completa_tabela(int linha);
+// Função para gerar tabela de tipo 
+void tipo_tabela();
 
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
@@ -247,7 +249,9 @@ void cadastro_visual()
 	do{
 		
 		borda();
-	
+		tipo_tabela();
+		gotoxy(20,31); printf("Digite 0 no campo de ID para retornar ao menu");
+		
 		cursor(1);
 		textcolor(cor_destaque);
 		gotoxy(50, 4); printf("Cadastro de Produtos");
@@ -550,7 +554,7 @@ void consulta_geral()
 					if(pag == 's' || pag == 'S')
 					{
 						system("cls");
-						linha = 6;
+						linha = 7;
 						gera_tabela(5);
 					}
 					else
@@ -563,9 +567,16 @@ void consulta_geral()
 		}
 	}while ( !feof(fp) );
 	
-	gotoxy(20,31); printf("Pressione uma tecla para voltar ao menu de pesquisa...");
-	getch();
-	fflush(stdin);	
+	gotoxy(20,31); printf("Pressione 0 para voltar ao menu de pesquisa");
+	char tecla;
+	
+	do
+	{
+		fflush(stdin);
+		tecla = getch();
+			
+	}while(tecla != '0');
+		
 	sub_menu();
 }
 
@@ -574,7 +585,8 @@ void gera_tabela(int li)
 	int ci=20;
 	system("cls");
 	borda();
-	
+	tipo_tabela();
+		
 	textcolor(15);
 	gotoxy(ci,4);	printf ("+---------------------------------------------------------------------------------+");
 	gotoxy(ci,5);	printf ("|   ID   |      Nome         |  Preço Unitário  |    Quantidade   |     Tipo      |");
@@ -815,6 +827,14 @@ int valida_id_consulta()
 	id_busca = atoi(id);
 	return 3;
 }	
+
+void tipo_tabela()
+{
+    textcolor(cor_texto);
+    gotoxy(38,37);    printf(" P - Periferico       G - Gpu      C - Cpu");
+    gotoxy(38,38);    printf(" M - Mobo             F - Fonte    W - Cabos");
+    gotoxy(38,39);    printf(" A - Armazenamento    R - Ram      O - Outros");
+}
 
 void info_de_sistema() // Apresenta as informações do sistema
 {
