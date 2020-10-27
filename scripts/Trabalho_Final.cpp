@@ -340,27 +340,65 @@ void cadastro_recebimento()
 
 void valida_preco_recebimento()
 {
-	float aux;
+	char aux[30];
+	int tam;
+	char* end;
+	float num;
+	int k;
+	
 	do
-	{
-		scanf("%f", &aux);
+	{	
+		gets(aux);
 		
-		if(aux > -1) break;
+		tam = strlen(aux);
+		
+		if(tam == 0) gotoxy(39, 16); // Se nada for digitado
 		else
 		{
-			textbackground(cor_fundo);
-			gotoxy(39, 16); clreol(72);
-			textbackground(12);
-			gotoxy(39, 16); printf("[ERRO] Valor invalida");			
-			Sleep(2500);
-			textbackground(cor_fundo);
-			gotoxy(39, 16); clreol(72);
-			gotoxy(39, 16);	
+			k = 0;
+			if(k == 0)
+			{
+				for(int i = 0; i < tam; i++)
+				{
+					if((aux[i] < '0' || aux[i] > '9') && aux[i] != '.') 
+					{
+						k = 1;
+						
+						textbackground(cor_fundo);
+						gotoxy(39, 16); clreol(72);
+						textbackground(12);
+						gotoxy(39, 16); printf("[ERRO] Valor invalida");			
+						Sleep(2500);
+						textbackground(cor_fundo);
+						gotoxy(39, 16); clreol(72);
+						gotoxy(39, 16);	
+					
+						break;
+					}
+				}
+			}			
+			
+			if(k == 0) // Se valor for numérico
+			{
+				num = strtod(aux, &end);
+				
+				if(num > -1) break; // Se valor positivo
+				else // Se valor negativo 
+				{
+					textbackground(cor_fundo);
+					gotoxy(39, 16); clreol(72);
+					textbackground(12);
+					gotoxy(39, 16); printf("[ERRO] Valor invalida");			
+					Sleep(2500);
+					textbackground(cor_fundo);
+					gotoxy(39, 16); clreol(72);
+					gotoxy(39, 16);	
+				}
+			}
 		}
-		
 	}while(true);
 	
-	produto.preco_unitario = aux;
+	produto.preco_unitario = num; 
 	
 	fflush(stdin);
 }
