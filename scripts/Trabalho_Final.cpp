@@ -870,12 +870,6 @@ void consulta_id()
 	abrir_arquivo();
 	op = 'a';
 	int k=0;
-	
-
-
-
-
-
 
 	// Construção visual
 	borda();
