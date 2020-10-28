@@ -339,23 +339,25 @@ void cadastro_recebimento()
 	}
 }
 
-void valida_id_recebimento() // Recebe e valida id
+void valida_id_recebimento()  // Recebe e valida id
 {
 	char id[30];
-	int tam;			// Armazena tamanho da string
-	int k, c;	// Auxiliares
+	int tam;		// Armazena tamanho da string
+	int k,c;   // Auxiliares
+	
+	fflush(stdin);
 	
 	do
 	{
+		k = 1;  //loop principal
+		c = 0;  //se não for número
+		
+		//gotoxy(38, 8);
 		fflush(stdin);
+		gets(id);
+		tam = strlen(id); // pega tamanho da string e joga em uma int tamanho
 		
-		k = 1;
-		c = 0;
-		
-		gets(id); 			// Recebe id
-		tam = strlen(id);	// recebe tamanho da string
-		
-		if(tam == 0)	// Se nada foi digitado
+		if(tam == 0) // Se nada foi digitado 	
 		{
 			gotoxy(39,8);	// Retorna a posição de inicio e pergunta novamente
 			k = 0;
@@ -364,47 +366,60 @@ void valida_id_recebimento() // Recebe e valida id
 		{
 			cursor(0);
 			textbackground(12);
-			gotoxy(52, 35); // Apresenta mensagem a baixo da borda
+			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
 			printf("Voltando ao menu");
 			Sleep(2500);
-			inicio();	// Retorna ao inicio
-		} 	
+			inicio();
+		} 
 		else 
 		{
-			for(int i = 0; i < tam; i++) 
+			for(int i = 0; i < tam; i++) // verifica caractere por caractere se é número
 			{
-				// Confere se é numérico
 				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
 				{
-					c = 1; // Se não for numérico apresenta erro e pergunta novamente o id
+					c = 1; //marca id como invalido para cair no if mais embaixo
 					break;
 				}
-				else // Se for numérico 
-				{
-					k = 1;	// Sai do laço de repetição
-					c = 0; // Não apresenta erro
-				} 
-			}	
+				else
+				c = 0;  //marca o id como valido
+			} 
 			
-			if(c == 1)	// Erro 
+			int aux = atoi(id); // converte a string para int
+				while((fread(&produto.id,sizeof(produto.id),1,fp) ==1)&& produto.id !=aux ); 
+					if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente enão excluído
+					{		
+						textbackground(cor_fundo);
+						gotoxy(38, 8); clreol(70);
+						textbackground(12);
+						gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado",131);
+						Sleep(1500);
+						textbackground(cor_fundo);
+						gotoxy(38, 8); clreol(70);
+						gotoxy(39, 8);
+						k=0; //continua no loop 				
+					}
+					else
+						k = 1; //faz sair do loop
+					
+		}	
+			
+			if(c == 1)  // Erro  se for numero
 			{
-				k = 0;
+				k = 0; //continua no loop 
 				
 				textbackground(cor_fundo);
-				gotoxy(39, 8); clreol(72);
+				gotoxy(38, 8); clreol(72);
 				textbackground(12);
 				gotoxy(39, 8); printf("[ERRO] ID invalido");
-				Sleep(1000); // tempo de erro na tela
+				Sleep(1500);
 				textbackground(cor_fundo);
 				gotoxy(39, 8); clreol(72);
-				gotoxy(39,8);
-				
+				gotoxy(39,8);				
 			}
-		}
 		
 	}while(k == 0);
 	
-	produto.id = atoi(id); // Atoi => Tranforma o id (aux) em inteiro 
+	produto.id = atoi(id);   // converte a string para int e manda para a struct
 }
 
 void valida_nome_recebimento() // Recebe e valida nome
