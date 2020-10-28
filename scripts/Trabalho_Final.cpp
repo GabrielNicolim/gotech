@@ -4,8 +4,8 @@
 #include <conio.h>
 #include <time.h>
 
-// Versão 1.7
-#define versao 1.7
+// Versão 1.81
+#define versao 1.81
 
 // Definição de cores 
 #define cor_fundo 3
@@ -156,9 +156,9 @@ void loading()
 	// Apresentação de versão 
 	
 	textcolor(cor_texto);
-	gotoxy(38, 10); printf("Aguarde, estamos preparando tudo para voce!");
-	gotoxy(15, 30); printf("GoTech");
-	gotoxy(99, 30); printf("Versao %.1f", versao);
+	gotoxy(38, 10); printf("Aguarde, estamos preparando tudo para voc%c!",136);
+	gotoxy(15, 30); printf("Copyright%c GoTech",184);
+	gotoxy(99, 30); printf("Vers%co %.1f",198, versao);
 	
 	textcolor(RED); // Loading vermelho
 	for(int i = 0; i <= 52; i++)
@@ -167,7 +167,7 @@ void loading()
 		Sleep(10);
 	}
 	textcolor(cor_texto);
-	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar                               ");
+	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar...                            ");
 	Sleep(2000);
 }
 
@@ -256,7 +256,7 @@ void cadastro_visual()
 		gotoxy(x, y + 2); printf("Nome do Produto..: ");		
 		gotoxy(x, y + 4); printf("Quantidade.......: ");			
 		gotoxy(x, y + 6); printf("Tipo.............: ");					
-		gotoxy(x, y + 8); printf("Preco Unitario...: ");		
+		gotoxy(x, y + 8); printf("Preco Unit%crio...: ",160);		
 		
 		textcolor(cor_texto);	
 		cadastro_recebimento(); // Recebe as respostas do usuário
@@ -271,7 +271,7 @@ void cadastro_visual()
 			if(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S')
 			{
 				Sleep(100);
-				gotoxy(x, y + 20); clreol(70); printf("Valor invalido! digite novamente (S/N): ");
+				gotoxy(x, y + 20); clreol(70); printf("Valor inv%clido! digite novamente (S/N): ",160);
 				Sleep(50); gotoxy(60, y + 20); clreol(1);
 			}
 				
@@ -309,7 +309,7 @@ void cadastro_recebimento()
 		if(conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N')    //verificação de valores
 		{			
 			Sleep(100);
-			gotoxy(20, y+14); printf("Valor invalido! digite novamente (S/N): ");
+			gotoxy(20, y+14); printf("Valor inv%clido! digite novamente (S/N): ",160);
 			Sleep(50); gotoxy(60, y + 14); clreol(1);
 		}
 		
@@ -320,7 +320,7 @@ void cadastro_recebimento()
 		if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
 		{
 			textcolor(RED);
-			gotoxy(x+50,y+14); printf("Erro na escrita do arquivo");
+			gotoxy(x+50,y+14); printf("Erro na escrita do arquivo!");
 			textcolor(cor_texto);
 		}
 		else
@@ -367,7 +367,7 @@ void valida_id_recebimento()  // Recebe e valida id
 			cursor(0);
 			textbackground(12);
 			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-			printf("Voltando ao menu");
+			printf("Voltando ao menu...");
 			Sleep(2500);
 			inicio();
 		} 
@@ -410,7 +410,7 @@ void valida_id_recebimento()  // Recebe e valida id
 				textbackground(cor_fundo);
 				gotoxy(38, 8); clreol(72);
 				textbackground(12);
-				gotoxy(39, 8); printf("[ERRO] ID invalido");
+				gotoxy(39, 8); printf("[ERRO] ID inv%clido",160);
 				Sleep(1500);
 				textbackground(cor_fundo);
 				gotoxy(39, 8); clreol(72);
@@ -528,7 +528,7 @@ void valida_quantidade_recebimento() // Recebe e valida quantidade
 				textbackground(cor_fundo);
 				gotoxy(39, 12); clreol(72);
 				textbackground(12);
-				gotoxy(39, 12); printf("[ERRO] Quantidade invalida");
+				gotoxy(39, 12); printf("[ERRO] Quantidade inv%clida",160);
 				Sleep(1000); // tempo de erro na tela
 				textbackground(cor_fundo);
 				gotoxy(39, 12); clreol(72);
@@ -557,7 +557,7 @@ void valida_tipo_recebimento() // Recebe e valida tipo
 			textbackground(cor_fundo);
 			gotoxy(39, 14); clreol(72);
 			textbackground(12);
-			gotoxy(39, 14); printf("[ERRO] Tipo invalido");			
+			gotoxy(39, 14); printf("[ERRO] Tipo inv%clido",160);			
 			Sleep(1000); // tempo de erro na tela
 			textbackground(cor_fundo);
 			gotoxy(39, 14); clreol(72);
@@ -622,7 +622,7 @@ void valida_preco_recebimento() // Recebe preço e valida
 					textbackground(cor_fundo);
 					gotoxy(39, 16); clreol(72);
 					textbackground(12);
-					gotoxy(39, 16); printf("[ERRO] Valor invalido");			
+					gotoxy(39, 16); printf("[ERRO] Valor inv%clido",160);			
 					Sleep(1000);
 					textbackground(cor_fundo);
 					gotoxy(39, 16); clreol(72);
@@ -665,13 +665,13 @@ void consulta_geral()
 				{
 					ir_proxima = 0;
 					textcolor(0);
-					gotoxy(20, 31); printf("Deseja ir para a proxima pagina (S-Sim/N-Nao): ");
+					gotoxy(20, 31); printf("Deseja ir para a pr%cxima pagina (S-Sim/N-Nao): ",162);
 					char pag = '0';
 					while(pag != 'S' && pag != 's' && pag != 'N' && pag != 'n' && pag != '\r')
 					{
 						if(pag != 'S' && pag != 's' && pag != 'N' && pag != 'n' && pag != '\r')
 						{
-							gotoxy(20,32); printf("Digite um valor válido!");
+							gotoxy(20,32); printf("Digite um valor v%clido!",160);
 						}
 						gotoxy(68,31); clreol(2); pag = getche();
 					}
@@ -713,7 +713,7 @@ void gera_tabela(int li)
 		
 	textcolor(15);
 	gotoxy(ci,4);	printf ("+---------------------------------------------------------------------------------+");
-	gotoxy(ci,5);	printf ("|   ID   |      Nome         |  Preço Unitário  |    Quantidade   |     Tipo      |");
+	gotoxy(ci,5);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",131);
 	gotoxy(ci,6);	printf ("|---------------------------------------------------------------------------------|");
 	gotoxy(ci,7);	printf ("|        |                   |                  |                 |               |");
 	gotoxy(ci,8);	printf ("|---------------------------------------------------------------------------------|");
@@ -769,7 +769,7 @@ void excluir_dados() //exclusao lógica
 	//sdsdsds
 	
 	do{	
-	    gotoxy(20,7); printf("Digite o codigo do produto a ser excluido (digite zero para encerrar): ");
+	    gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (digite zero para encerrar): ",162);
 	    scanf("%d", &aux_codigo );
 	    if (aux_codigo!=0)
 	    {
@@ -782,9 +782,9 @@ void excluir_dados() //exclusao lógica
 				{
 			   		F = 1;
 			   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
-			   		gotoxy(20,4);	printf ("|   ID   |      Nome         |  Preço Unitário  |    Quantidade   |     Tipo      |");
+			   		gotoxy(20,4);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
 			   		completa_tabela(5); //Apresenta-se ao usuário o registro a ser excluído
-				   	gotoxy(25,22); printf("Confirma exclusao ? (S/N): ");
+				   	gotoxy(25,22); printf("Confirma exclus%co ? (S/N): ",198);
 				   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
 					fflush(stdin);
 					do 
@@ -803,7 +803,7 @@ void excluir_dados() //exclusao lógica
 						if(fwrite (&produto,sizeof(produto),1,fp)==1)
 						{
 							fflush (fp);
-							gotoxy(25,24);printf("Cadastro excluido com sucesso!");
+							gotoxy(25,24);printf("Cadastro exclu%cdo com sucesso!",161);
 							getch();
 							system("cls");
 						}	
@@ -813,7 +813,7 @@ void excluir_dados() //exclusao lógica
 		} 
 		if (F==0 && aux_codigo!=0)
 		{
-			gotoxy(20,15);printf("****** Codigo nao encontrado! Voltando ao menu! ******");
+			gotoxy(20,15);printf("****** C%cdigo n%co encontrado! Voltando ao menu! ******",162,198);
 			getch();
 		}
 		break;
@@ -837,7 +837,7 @@ void sub_menu()
 	gotoxy(inic, (inil+2)); printf("Pesquisa por Id (não feito ainda)");
 	gotoxy(inic, (inil+4)); printf("Pesquisa por Nome (não feito ainda)");
 	gotoxy(inic, (inil+6)); printf("Excluir dados");
-	gotoxy(inic, (inil+8)); printf("Retornar ao Inicio");
+	gotoxy(inic, (inil+8)); printf("Retornar ao In%ccio",161);
 	
 	int escolha;
 	escolha = navegar_menu(inil, (inil + 8), (inic - 2));
@@ -897,7 +897,7 @@ void consulta_id()
 		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
 		{
 			textcolor(RED);
-			gotoxy(53, 24); printf("Id invalido!");
+			gotoxy(53, 24); printf("Id inv%clido!",160);
 			Sleep(3000);
 			consulta_id();	
 		} 
@@ -918,7 +918,7 @@ void consulta_id()
 			}
 			if(k == 0)
 			{
-				gotoxy(21,23);printf("-----> Codigo inexistente! <-----");
+				gotoxy(21,23);printf("-----> C%cdigo inexistente! <-----",162);
 				gotoxy(21,24);printf("Pressione uma tecla para redigitar");
 				getch();
 				
@@ -957,7 +957,7 @@ int valida_id_consulta(int *id_final)
 void tipo_tabela()
 {
     textcolor(cor_texto);
-    gotoxy(38,37);    printf(" P - Periferico       G - Gpu      C - Cpu");
+    gotoxy(38,37);    printf(" P - Perif%crico       G - Gpu      C - Cpu",130);
     gotoxy(38,38);    printf(" M - Mobo             F - Fonte    W - Cabos");
     gotoxy(38,39);    printf(" A - Armazenamento    R - Ram      O - Outros");
 }
@@ -985,7 +985,7 @@ void info_de_sistema() // Apresenta as informações do sistema
 	printf("Gabriel Nicolim e Felipe Lima");
 	
 	textcolor(cor_destaque);
-	gotoxy(inix, iniy + 2);  printf("Numeros: ");
+	gotoxy(inix, iniy + 2);  printf("Numeros: ",163);
 	textcolor(cor_texto);
 	printf("8 e 6");
 	
@@ -1002,16 +1002,16 @@ void info_de_sistema() // Apresenta as informações do sistema
 	textcolor(cor_destaque);
 	gotoxy(inix, iniy + 8);  printf("Sobre o software: ");
 	textcolor(cor_texto);
-	printf("Nosso software, que hoje se encontra na versao %.1f, se destina a", versao);
-	gotoxy(inix, iniy + 10); printf("simular um sistema de gerenciamento de estoque de uma loja de informatica em C/C++.");
-	gotoxy(inix, iniy + 12); printf("Para a realizacao desse projeto utilizamos funcoes de cabecalho da conio.c e conio.h.");
-	gotoxy(inix, iniy + 14); printf("Podem ser registrados perifericos e pecas de computador.");
+	printf("Nosso software, que hoje se encontra na vers%co %.1f, se destina a",198, versao);
+	gotoxy(inix, iniy + 10); printf("simular um sistema de gerenciamento de estoque de uma loja de inform%ctica em C/C++.",160);
+	gotoxy(inix, iniy + 12); printf("Para a realiza%c%co desse projeto utilizamos fun%c%ces de cabe%calho da conio.c e conio.h.",135,198,135,228,135);
+	gotoxy(inix, iniy + 14); printf("Podem ser registrados perif%cricos e pe%cas de computador.",130,135);
 	
 	textcolor(cor_destaque);
 	gotoxy(inix, iniy + 16); printf("Agradecimentos: ");
 	textcolor(cor_texto);
 	printf("Deixamos nosso agradecimento a professora Ariane Scarelli e ");
-	gotoxy(inix, iniy + 18); printf("Katia Zambombon, por compartilharem conosco parte de seus conhecimentos.");
+	gotoxy(inix, iniy + 18); printf("K%ctia Zambombon, por compartilharem conosco parte de seus conhecimentos.",160);
 	
 	gotoxy(inix, iniy + 21); printf("Pressione 0 para retornar ao menu"); 
 	
