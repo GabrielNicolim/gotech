@@ -1,10 +1,8 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <locale.h>
 #include <windows.h>
 #include <conio.h>
 #include <time.h>
-#include <string.h>
 
 // Versão 1.7
 #define versao 1.7
@@ -26,14 +24,13 @@ void clreol(int x);
 
 // Funções de construção do programa
 
-// Função para gerar a parte visual do cadastro 
-void cadastro_visual();
 // Apresenta o menu e a versão
 void loading();
 // Apresenta tela de inicio
 void inicio(); 
 // Função utilizada para a borda
 void borda(); 
+
 // Função utilizada para criar o disquete
 void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
 // Função para criar a logo GoTech
@@ -48,6 +45,7 @@ void gpu(int ic, int il);
 void ram(int ic, int il);
 // Função de geração da placa mãe
 void mobo(int ic, int il);
+
 // Função para fazer a consulta dos dados já salvos
 void consulta_geral();
 // Função para apagar dados do .bin por id
@@ -58,21 +56,21 @@ void gera_tabela(int li);  //
 void completa_tabela(int linha);
 // Função para gerar tabela de tipo 
 void tipo_tabela();
-
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
-// Função de validação de id
 
 // Menu 
 
+// Fução de construção do menu da tela inicial
+void menu_ini();
+
+// Função para gerar a parte visual do cadastro 
+void cadastro_visual();
 // Recebe os dados de registro
 void cadastro_recebimento();
 
-// Fução de construção do menu da tela inicial
-void menu_ini();
 /* Funções do submenu */
 void consulta_id(); // Encontra o produto pelo id
-
 
 // Função para gerar o sub menu de pesquisa
 void sub_menu();
@@ -88,7 +86,7 @@ void sair();
 // Função para validar código consultado
 int valida_id_consulta(int *id_final);
 
-// Validações + Registro
+// Funções de validação => Validações + Registro
 
 // Valida id no registro
 void valida_id_recebimento();
@@ -101,8 +99,7 @@ void valida_tipo_recebimento();
 // Valida preço digitado
 void valida_preco_recebimento();
 
-//Ponteiro para arquivo
-FILE *fp;	
+FILE *fp; //Ponteiro para arquivo
 
 int random_menu; // Var que armazena numero aleatório ente 0 e 4 para gerar um menu diferente 
 
@@ -135,6 +132,7 @@ struct estrutura
 	char tipo;
 	float preco_unitario;
 	bool excluido;
+	
 }produto;
 
 
@@ -142,9 +140,9 @@ main()
 {
 	SetConsoleTitle("GoTech"); 		   // Define o nome do console
     system("mode con:cols=120 lines=40");  // Define o tamanho do console
+    
 	srand(time(NULL));
-	
-	random_menu = rand() % 4;
+	random_menu = rand() % 4; // Escolhe o menu que será exibido ao usuário
 	
     loading();
 	inicio(); // Função de construção da tela inicial
@@ -154,15 +152,14 @@ void loading()
 {
 	borda(); 
 	cursor(0);
-	textcolor(cor_texto);
 	
 	// Apresentação de versão 
 	
+	textcolor(cor_texto);
+	gotoxy(38, 10); printf("Aguarde, estamos preparando tudo para voce!");
+	gotoxy(15, 30); printf("GoTech");
 	gotoxy(99, 30); printf("Versao %.1f", versao);
 	
-	gotoxy(15, 30); printf("GoTech");
-	
-	gotoxy(38, 10); printf("Aguarde, estamos preparando tudo para voce!");
 	textcolor(RED); // Loading vermelho
 	for(int i = 0; i <= 52; i++)
 	{
@@ -177,35 +174,30 @@ void loading()
 void inicio() // Apresenta tela de inicio
 {	
 	borda(); 
-	//disquete(83, 6);
-	//logo(20, 8);
 	
-	// Aleatorio
-	 
-	switch(random_menu)
+	switch(random_menu) // Menu aleatorio
 	{
 		case 0:
 			disquete(18, 6); // Disquete + logo
 			logo(48, 8);
 			break;
-		case 1:
-			cpu(18, 6); // cpu + logo
+		case 1:				// cpu + logo
+			cpu(18, 6); 	
 			logo(48, 8);
 			break;	
-		case 2:
-			logo(32, 8); // logo
+		case 2:				// logo
+			logo(32, 8); 	
 			break;
-		case 3:
-			ram(37, 4); // Ram + logo
+		case 3:				// Ram + logo
+			ram(37, 4); 	
 			logo(32, 10);
 			break;
-		case 4:
-			mobo(83, 6); // placa mae + logo
+		case 4:				// Ram + logo
+			mobo(83, 6); 		
 			logo(20, 8);
 			break;		
 	}
 	
-		
 	menu_ini();
 }
 
@@ -244,20 +236,22 @@ void menu_ini()
 void cadastro_visual()
 {
 	int x = 20, y = 8;
-	char dnv='n';
+	char dnv = 'n';
+	
 	abrir_arquivo();
 	
 	cursor(1);
+	
 	do{
 		
 		borda();
 		tipo_tabela();
 		gotoxy(20,31); printf("Digite 0 no campo de ID para retornar ao menu");
 		
-		cursor(1);
 		textcolor(cor_destaque);
-		gotoxy(50, 4); printf("Cadastro de Produtos");
+		gotoxy(50, 4); printf("Cadastro de Produtos"); // Mensagem em destaque no meio da tela
 		
+		// Posicionado a esquerda => Perguntas
 		gotoxy(x, y); 	  printf("Id do produto....: ");				
 		gotoxy(x, y + 2); printf("Nome do Produto..: ");		
 		gotoxy(x, y + 4); printf("Quantidade.......: ");			
@@ -265,7 +259,7 @@ void cadastro_visual()
 		gotoxy(x, y + 8); printf("Preco Unitario...: ");		
 		
 		textcolor(cor_texto);	
-		cadastro_recebimento();
+		cadastro_recebimento(); // Recebe as respostas do usuário
 		
 		textcolor(cor_destaque);
 		gotoxy(x, y + 20); printf("Deseja realizar mais um cadastro? (S/N): ");
@@ -273,17 +267,22 @@ void cadastro_visual()
 		do{
 			fflush(stdin);
 			dnv = getche();
+			
 			if(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S')
-				{
-					Sleep(500);
-					gotoxy(x, y + 20); clreol(70); printf("Valor invalido! digite novamente (S/N): ");
-				}
+			{
+				Sleep(100);
+				gotoxy(x, y + 20); clreol(70); printf("Valor invalido! digite novamente (S/N): ");
+				Sleep(50); gotoxy(60, y + 20); clreol(1);
+			}
+				
 		}while(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S');
 		
 		system("cls");
+		
 	}while(dnv == 's' || dnv == 'S');
 	
 	system("cls");
+	
 	inicio();
 }
 
@@ -291,12 +290,12 @@ void cadastro_recebimento()
 {
 	int x = 39, y = 8;
 	
-	gotoxy(x, y);   valida_id_recebimento();
-	gotoxy(x, y+2); valida_nome_recebimento();				
-	gotoxy(x, y+4); valida_quantidade_recebimento(); 
-	gotoxy(x, y+6); valida_tipo_recebimento();
-	gotoxy(x, y+8); valida_preco_recebimento();
-	produto.excluido = false;
+	gotoxy(x, y);   valida_id_recebimento();		 // Recebe id
+	gotoxy(x, y+2); valida_nome_recebimento();		 // Recebe nome
+	gotoxy(x, y+4); valida_quantidade_recebimento(); // Recebe quantidade
+	gotoxy(x, y+6); valida_tipo_recebimento();		 // Recebe tipo
+	gotoxy(x, y+8); valida_preco_recebimento();	 	 // Recebe preco
+	produto.excluido = false;						 // Define excluido
 	
 	char conf; // variavel de confirmação do loop seguinte
 	
@@ -309,15 +308,16 @@ void cadastro_recebimento()
 		
 		if(conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N')    //verificação de valores
 		{			
+			Sleep(100);
 			gotoxy(20, y+14); printf("Valor invalido! digite novamente (S/N): ");
-			Sleep(500); gotoxy(60, y + 14); clreol(1);
+			Sleep(50); gotoxy(60, y + 14); clreol(1);
 		}
 		
    	}while( conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N' );
    	
    	if( conf == 's' || conf == 'S' )
    	{
-	   	if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
+		if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
 		{
 			textcolor(RED);
 			gotoxy(x+50,y+14); printf("Erro na escrita do arquivo");
@@ -332,113 +332,89 @@ void cadastro_recebimento()
 			textcolor(cor_destaque);
 			gotoxy(18,11); printf("Dados salvos com sucesso!");
 		}
+		
 		cursor(0);
 		Sleep(2000);
 		cursor(1);
 	}
 }
 
-void valida_preco_recebimento()
+void valida_id_recebimento() // Recebe e valida id
 {
-	char aux[30];
-	int tam;
-	char* end;
-	float num;
-	int k;
+	char id[30];
+	int tam;			// Armazena tamanho da string
+	int k, c;	// Auxiliares
 	
 	do
-	{	
-		gets(aux);
+	{
+		fflush(stdin);
 		
-		tam = strlen(aux);
+		k = 1;
+		c = 0;
 		
-		if(tam == 0) gotoxy(39, 16); // Se nada for digitado
-		else
+		gets(id); 			// Recebe id
+		tam = strlen(id);	// recebe tamanho da string
+		
+		if(tam == 0)	// Se nada foi digitado
 		{
+			gotoxy(39,8);	// Retorna a posição de inicio e pergunta novamente
 			k = 0;
-			if(k == 0)
+		} 
+		else if(id[0] == '0')	// Se o primeiro digito de id for igual a 0 
+		{
+			cursor(0);
+			textbackground(12);
+			gotoxy(52, 35); // Apresenta mensagem a baixo da borda
+			printf("Voltando ao menu");
+			Sleep(2500);
+			inicio();	// Retorna ao inicio
+		} 	
+		else 
+		{
+			for(int i = 0; i < tam; i++) 
 			{
-				for(int i = 0; i < tam; i++)
+				// Confere se é numérico
+				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
 				{
-					if((aux[i] < '0' || aux[i] > '9') && aux[i] != '.') 
-					{
-						k = 1;
-						
-						textbackground(cor_fundo);
-						gotoxy(39, 16); clreol(72);
-						textbackground(12);
-						gotoxy(39, 16); printf("[ERRO] Valor invalida");			
-						Sleep(2500);
-						textbackground(cor_fundo);
-						gotoxy(39, 16); clreol(72);
-						gotoxy(39, 16);	
-					
-						break;
-					}
+					c = 1; // Se não for numérico apresenta erro e pergunta novamente o id
+					break;
 				}
-			}			
+				else // Se for numérico 
+				{
+					k = 1;	// Sai do laço de repetição
+					c = 0; // Não apresenta erro
+				} 
+			}	
 			
-			if(k == 0) // Se valor for numérico
+			if(c == 1)	// Erro 
 			{
-				num = strtod(aux, &end);
+				k = 0;
 				
-				if(num > -1) break; // Se valor positivo
-				else // Se valor negativo 
-				{
-					textbackground(cor_fundo);
-					gotoxy(39, 16); clreol(72);
-					textbackground(12);
-					gotoxy(39, 16); printf("[ERRO] Valor invalida");			
-					Sleep(2500);
-					textbackground(cor_fundo);
-					gotoxy(39, 16); clreol(72);
-					gotoxy(39, 16);	
-				}
+				textbackground(cor_fundo);
+				gotoxy(39, 8); clreol(72);
+				textbackground(12);
+				gotoxy(39, 8); printf("[ERRO] ID invalido");
+				Sleep(1000); // tempo de erro na tela
+				textbackground(cor_fundo);
+				gotoxy(39, 8); clreol(72);
+				gotoxy(39,8);
+				
 			}
 		}
-	}while(true);
+		
+	}while(k == 0);
 	
-	produto.preco_unitario = num; 
-	
-	fflush(stdin);
+	produto.id = atoi(id); // Atoi => Tranforma o id (aux) em inteiro 
 }
 
-void valida_tipo_recebimento()
-{
- 	char aux;
- 	
- 	fflush(stdin);
- 	
- 	do
- 	{
- 		aux = getche();
-		
-		if(aux == 'p' || aux == 'P' || aux == 'g' || aux == 'G' || aux == 'c' || aux == 'C' || aux == 'm' || aux == 'M' || aux == 'f' || aux == 'F' || aux == 'w' || aux == 'W' || aux == 'a' || aux == 'A' || aux == 'r' || aux == 'R' || aux == 'o' || aux == 'O') break;
-		else
-		{
-			textbackground(cor_fundo);
-			gotoxy(39, 14); clreol(72);
-			textbackground(12);
-			gotoxy(39, 14); printf("[ERRO] Tipo invalido");			
-			Sleep(2500);
-			textbackground(cor_fundo);
-			gotoxy(39, 14); clreol(72);
-			gotoxy(39, 14);
-		}
-		
-	}while(true);
-	
-	produto.tipo = aux;
-}
-
-void valida_nome_recebimento()
+void valida_nome_recebimento() // Recebe e valida nome
 {
 	char aux[50], aux_string_final[50]; 
 	
 	// Aux => serve para o recebimento da string 
 	// aux_string_final => Serve para armazenar a string sem espaçamento (final)
 	
-	int tam, c, k, cont, cont_aux_final;
+	int tam, c, k, cont, cont_aux_final; // Variaveis auxiliares
 	
 	do
 	{
@@ -492,24 +468,24 @@ void valida_nome_recebimento()
 	gotoxy(39, 10); printf("%s", produto.nome);
 }
 
-void valida_quantidade_recebimento()
+void valida_quantidade_recebimento() // Recebe e valida quantidade
 {
 	char aux[50];
 	
 	int tam;
-	int k, c;
-	
-	fflush(stdin);
+	int k, c; // Auxiliares
 	
 	do
 	{
+		fflush(stdin);
+		
 		k = 1;
 		c = 0;
 		
 		gets(aux);
-		tam = strlen(aux);
+		tam = strlen(aux); // Tamanho da string
 		
-		if(tam == 0)
+		if(tam == 0)	// Se nada for digitado pergunta novamente
 		{
 			gotoxy(39, 12);
 			k = 0;
@@ -519,26 +495,26 @@ void valida_quantidade_recebimento()
 			for(int i = 0; i < tam; i++) 
 			{
 				if(aux[i] != '0' && aux[i] != '1' && aux[i] != '2' && aux[i] != '3' && aux[i] != '4' && aux[i] != '5' && aux[i] != '6' && aux[i] != '7' && aux[i] != '8' && aux[i] != '9') 
-				{
-					c = 1;
+				{ // Se não é numérico 
+					c = 1;	// Apresenta erro
 					break;
 				}
-				else
+				else // Se é numérico
 				{
 					k = 1;
 					c = 0;
 				} 
 			}	
 			
-			if(c == 1)
+			if(c == 1) // Erro
 			{
-				k = 0;
+				k = 0;	// Repete a pergunta
 				
 				textbackground(cor_fundo);
 				gotoxy(39, 12); clreol(72);
 				textbackground(12);
 				gotoxy(39, 12); printf("[ERRO] Quantidade invalida");
-				Sleep(2500);
+				Sleep(1000); // tempo de erro na tela
 				textbackground(cor_fundo);
 				gotoxy(39, 12); clreol(72);
 				gotoxy(39, 12);
@@ -546,74 +522,112 @@ void valida_quantidade_recebimento()
 		}
 	}while(k == 0);
 	
-	produto.quantidade = atoi(aux);
+	produto.quantidade = atoi(aux); // Retorna quantidade inteira 
 }
 
-void valida_id_recebimento()
+void valida_tipo_recebimento() // Recebe e valida tipo 
 {
-	char id[30];
-	int tam;
-	int k = 0, c = 0;
+ 	char aux;
+ 	
+ 	fflush(stdin);
+ 	
+ 	do
+ 	{
+ 		aux = getche();
+		
+		// Verifica se é um dos tipos listados
+		if(aux == 'p' || aux == 'P' || aux == 'g' || aux == 'G' || aux == 'c' || aux == 'C' || aux == 'm' || aux == 'M' || aux == 'f' || aux == 'F' || aux == 'w' || aux == 'W' || aux == 'a' || aux == 'A' || aux == 'r' || aux == 'R' || aux == 'o' || aux == 'O') break;
+		else // Apresenta erro
+		{
+			textbackground(cor_fundo);
+			gotoxy(39, 14); clreol(72);
+			textbackground(12);
+			gotoxy(39, 14); printf("[ERRO] Tipo invalido");			
+			Sleep(1000); // tempo de erro na tela
+			textbackground(cor_fundo);
+			gotoxy(39, 14); clreol(72);
+			gotoxy(39, 14);
+		}
+		
+	}while(true);
 	
-	fflush(stdin);
+	produto.tipo = aux;
+}
+
+void valida_preco_recebimento() // Recebe preço e valida
+{
+	char aux[30];
+	int tam;
+	char* end; // Ponteiro de conversão 
+	float num;
+	int k;
 	
 	do
-	{
-		k = 1;
-		c = 0;
+	{	
+		fflush(stdin);
 		
-		gets(id);
-		tam = strlen(id);
+		gets(aux);
 		
-		if(tam == 0)
+		tam = strlen(aux); // Recebe tamanho da string
+		
+		k = 0;
+		
+		if(tam == 0) gotoxy(39, 16); // Se nada for digitado
+		else
 		{
-			gotoxy(39,8);
-			k = 0;
-		} 
-		else if(id[0] == '0')
-		{
-			cursor(0);
-			textbackground(12);
-			gotoxy(52, 35);
-			printf("Voltando ao menu");
-			Sleep(2500);
-			inicio();
-		} 
-		else 
-		{
-			for(int i = 0; i < tam; i++) 
+			for(int i = 0; i < tam; i++)
 			{
-				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
-				{
-					c = 1;
+				if((aux[i] < '0' || aux[i] > '9') && aux[i] != '.') // Verifica se é numérico
+				{ 
+					// Erro
+					
+					k = 1;
+						
+					textbackground(cor_fundo);
+					gotoxy(39, 16); clreol(72);
+					textbackground(12);
+					gotoxy(39, 16); printf("[ERRO] Valor invalido");			
+					Sleep(1000); // Tempo de erro
+					textbackground(cor_fundo);
+					gotoxy(39, 16); clreol(72);
+					gotoxy(39, 16);	
+					
 					break;
 				}
-				else
-				{
-					k = 1;
-					c = 0;
-				} 
-			}	
+			}			
 			
-			if(c == 1)
+			if(k == 0) // Se valor for numérico
 			{
-				k = 0;
+				num = strtod(aux, &end); // Converte para float
 				
-				textbackground(cor_fundo);
-				gotoxy(39, 8); clreol(72);
-				textbackground(12);
-				gotoxy(39, 8); printf("[ERRO] ID invalido");
-				Sleep(2500);
-				textbackground(cor_fundo);
-				gotoxy(39, 8); clreol(72);
-				gotoxy(39,8);
-				
+				if(num > -1) break; // Se valor positivo
+				else // Se valor negativo 
+				{
+					// Erro
+					textbackground(cor_fundo);
+					gotoxy(39, 16); clreol(72);
+					textbackground(12);
+					gotoxy(39, 16); printf("[ERRO] Valor invalido");			
+					Sleep(1000);
+					textbackground(cor_fundo);
+					gotoxy(39, 16); clreol(72);
+					gotoxy(39, 16);	
+				}
 			}
 		}
-	}while(k == 0);
+	}while(true);
 	
-	produto.id = atoi(id);
+	produto.preco_unitario = num; 
 }
+
+// Revisão primária => 28/10/2020 
+
+/* 
+	- Funções de recebimento e validação alteradas
+	- Tempo das mensagens de erro reduzido
+	- Erros lógicos resolvidos
+	- Ainda a revisar: valida_nome_recebimento()
+*/
 
 void consulta_geral()
 {
