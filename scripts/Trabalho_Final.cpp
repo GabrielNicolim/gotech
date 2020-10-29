@@ -434,63 +434,54 @@ void valida_id_recebimento()  // Recebe e valida id
 
 void valida_nome_recebimento() // Recebe e valida nome
 {
-	char aux[50], aux_string_final[50]; 
+	char aux[50], aux_final[50]; // Armazena nome | Armazena nome sem espaço 
 	
-	// Aux => serve para o recebimento da string 
-	// aux_string_final => Serve para armazenar a string sem espaçamento (final)
-	
-	int tam, c, k, cont, cont_aux_final; // Variaveis auxiliares
-	
-	do
+	int k, j; 		 // Var auxiliar 
+	int tam;	// Armazena tamanho da string
+
+	while(true)
 	{
-		cont = 0;
-		c = 0;
-		cont_aux_final = 0;
 		k = 0;
+		j = 0;
 		
+		fflush(stdin);
 		gets(aux);
+		
 		tam = strlen(aux);
 		
-		if(tam == 0) gotoxy(39, 10);	
-		else
+		if(tam == 0) gotoxy(39, 10); // Se nada for digitado
+		else // Se o nome não for nem grande de mais nem pequeno de mais
 		{
 			for(int i = 0; i < tam; i++)
 			{
-				if(k == 0)
+				if(aux[i] != char(32)) // O primeiro caractere diferente de um espaço
 				{
-					if(aux[i] != char(32))
-					{
-						aux_string_final[cont_aux_final] = aux[i];
-						c = 1;
-						cont_aux_final++;
-						k = 1;
-					} 
-					else
-					{
-						c = 0;
-						cont++;
-					}	 
+					k = 1;
+					break;
 				}
-				else 
+				else j++; 	// Conta quantos espaços existem antes da primeira letra 
+			}
+			
+			if(k == 0)  gotoxy(39, 10); // o nome tiver apenas espaços 
+			else if(k == 1)
+			{
+				k = 0; // Reutilização de variavel para navegar em aux final 
+				for(int i = j; i < tam; i++) // Inicia a partir da primeira posição sem espaço
 				{
-					aux_string_final[cont_aux_final] = aux[i];
-					c = 1;
-					cont_aux_final++;
-				}			
-			}	
+					aux_final[k] = aux[i];
+					k++;
+				}
+				break;
+			}
+			
 		}
-		
-		if(c == 1) break;
-		else gotoxy(39, 10);	
-		
-	}while(true);
+	}
 	
-	for(int i = 0; i < strlen(aux_string_final); i++)
-	if((aux_string_final[i] < char(48) || aux_string_final[i] > char(57) ) && (aux_string_final[i] < char(65) || aux_string_final[i] > char(90))  && (aux_string_final[i] < char(97) || aux_string_final[i] > char(122))) aux_string_final[i] = ' ';
+	gotoxy(39, 10); clreol(70);
+	gotoxy(39, 10); printf("%s", aux_final);
 	
-	gotoxy(39, 10); clreol((cont + tam));
-	strcpy(produto.nome, aux_string_final); 
-	gotoxy(39, 10); printf("%s", produto.nome);
+	strcpy(produto.nome, aux_final);
+	
 }
 
 void valida_quantidade_recebimento() // Recebe e valida quantidade
