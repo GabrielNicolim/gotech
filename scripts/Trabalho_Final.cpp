@@ -655,35 +655,32 @@ void consulta_geral()
 	abrir_arquivo();
 	
 	cursor(0);
-	gera_tabela(5);
+	
+	gera_tabela(5);	// Gera borda e tabela inicial
+				
 	do
 	{
 		switch(retornar)
 		{
-			case int('d'):
+			case 77:
 				if(pag < 10) pag++; // Limita pag a 10 
-				rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")		
+				rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+				gera_tabela(5);	
 				break;
 				
-			case int('a'):
+			case 75:
 				if(pag > 1) pag--;				
-				rewind(fp);				
+				rewind(fp);	
+				gera_tabela(5);			
 				break;
 		}
 				
 		limite = (12*pag); // 12 linhas de dados por página (oq cabe na tabela)
+		limiteAnte = (12*(pag-1));  // Limite da página anterior 
 		
-		if(pag > 1) 
-			limiteAnte = (12*(pag-1)); 
-		else 
-			limiteAnte = 0; 
-			
-		borda();
-		
-		gera_tabela(5);
-		
-		gotoxy(20,31); 	printf("-> Pressione D para Avançar e A para retornar ao início\n\n");
-		gotoxy(107,4);	printf("%d",pag);
+		textcolor(cor_texto);
+		gotoxy(20,31);  printf("Pressione 0 para voltar ao menu de pesquisa");
+		gotoxy(107,4);	printf("%d",pag); // Número da página 
 		
 		contl= 1;    //reseta o contador de linha
 		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
@@ -699,10 +696,10 @@ void consulta_geral()
 					break; 
 				contl++; //adiciona mais uma linha ao contador
 			}
-		gotoxy(20,34); printf("Pressione 0 para voltar ao menu de pesquisa");
+		gotoxy(20,34); 
 		retornar = getch();
 			
-	}while (retornar != '0');  //
+	}while (retornar != '0');  
 		
 	// Se 0 for pressionado 
 	cursor(0);
@@ -722,8 +719,8 @@ void gera_tabela(int li)
 
 	borda();
 	tabela_tipos(); //apresenta a info doq as letras significam
-		
-	textcolor(15);
+	
+	textcolor(cor_texto);
 	gotoxy(ci,4);	printf ("+---------------------------------------------------------------------------------+");
 	gotoxy(ci,5);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",131);
 	gotoxy(ci,6);	printf ("|---------------------------------------------------------------------------------|");
@@ -834,12 +831,12 @@ void excluir_dados() //exclusao lógica (continua no binário)
 		
 	}while(aux_codigo!=0);
 	
+	textcolor(cor_texto);
 	cursor(0);
 	textbackground(12);
 	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
 	printf("Voltando ao menu...");
 	Sleep(1500);
-	textbackground(cor_fundo);
 	
 	Sleep(1000);
 	
@@ -932,6 +929,7 @@ void consulta_id()   //consulta por id
 					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
 					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
 					completa_tabela(14); //Apresenta-se ao usuário o registro pesquisado
+					textcolor(cor_destaque);
 					gotoxy(20,30);printf("Pressione uma tecla para continuar...");
 					getch();
 					k = 1;
