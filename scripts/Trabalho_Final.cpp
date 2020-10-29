@@ -1,4 +1,14 @@
-/* Trabalho de FPD 4? Bimestre 2020
+/* 
+á = 160
+ó = 162
+ã = 198
+í = 161
+é = 130
+ú = 163
+ç = 135
+ê = 136
+õ = 228
+Trabalho de FPD 4? Bimestre 2020						
 	
 	Felipe Lima Estevanatto 06
 	Gabriel Gomes Nicolim 08
@@ -16,8 +26,8 @@
 #include <time.h>
 #include <strings.h>
 
-// Versão 1.81
-#define versao 1.81
+// Versão 1.9
+#define versao 1.9
 
 // Definição de cores 
 #define cor_fundo 3
@@ -656,66 +666,68 @@ void valida_preco_recebimento() // Recebe preço e valida
 	- Funções de recebimento e validação alteradas
 	- Tempo das mensagens de erro reduzido
 	- Erros lógicos resolvidos
-	- Ainda a revisar: valida_nome_recebimento()
+	- Ainda a revisar: valida_nome_recebimento()  -  Corrigida
 */
 
 void consulta_geral()
 {
-	int ir_proxima=0, sair, linha = 7;
+	int contl = 1, limite, limiteante, pag= 1, linha;
+	char retornar;
 	
 	abrir_arquivo();
 	
-	rewind(fp); // seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")
-	
+	//rewind(fp); - seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")
+	cursor(0);
 	gera_tabela(5);
-	
+			//if(fread(&produto, sizeof(produto), 1, fp) == 1) {
 	do
 	{
-		if(fread(&produto, sizeof(produto), 1, fp) == 1) {
-			if(produto.excluido == false) {
-				ir_proxima++;
-				completa_tabela(linha);
-				linha+=2;
-				if(ir_proxima == 12)
-				{
-					ir_proxima = 0;
-					textcolor(0);
-					gotoxy(20, 31); printf("Deseja ir para a pr%cxima pagina (S-Sim/N-Nao): ",162);
-					char pag = '0';
-					while(pag != 'S' && pag != 's' && pag != 'N' && pag != 'n' && pag != '\r')
-					{
-						if(pag != 'S' && pag != 's' && pag != 'N' && pag != 'n' && pag != '\r')
-						{
-							gotoxy(20,32); printf("Digite um valor v%clido!",160);
-						}
-						gotoxy(68,31); clreol(2); pag = getche();
-					}
-					if(pag == 's' || pag == 'S')
-					{
-						system("cls");
-						linha = 6;
-						gera_tabela(5);
-					}
-					else
-					{
-						system("cls");
-						break;
-					}
-				}
-			}
+		switch(retornar)
+		{
+			case int('d'):
+				if(pag < 10) pag++; // Limita pag a 10 
+				rewind(fp);			
+				break;
+				
+			case int('a'):
+				if(pag > 1) pag--;				
+				rewind(fp);				
+				break;
 		}
-	}while ( !feof(fp) );
-	
-	gotoxy(20,31); printf("Pressione 0 para voltar ao menu de pesquisa");
-	char tecla;
-	
-	do
-	{
-		fflush(stdin);
-		tecla = getch();
+				
+		limite = ((12)*pag); // 2 linhas por página
+		
+		if(pag > 1) 
+			limiteante = ((12)*(pag-1));
+		else 
+			limiteante = 0; 
 			
-	}while(tecla != '0');
-	
+		borda();
+		
+		gera_tabela(5);
+		
+		gotoxy(20,31); 	printf("-> Pressione D para Avançar e A para retornar ao início\n\n");
+		gotoxy(107,4);   printf("%d",pag);
+		
+		contl= 1;
+		linha= 7;
+		
+		while(fread(&produto, sizeof(produto), 1, fp) == 1)
+			{			
+				if(contl > limiteante) 
+					{
+						completa_tabela(linha);
+						linha+=2;
+					}
+				if(contl == limite) 
+					break; 
+				contl++;
+			}
+		gotoxy(20,34); printf("Pressione 0 para voltar ao menu de pesquisa");
+		retornar = getch();
+			
+	}while (retornar != '0');
+		
 	// Se 0 for pressionado 
 	cursor(0);
 	textbackground(12);
