@@ -1,3 +1,14 @@
+/* Trabalho de FPD 4? Bimestre 2020
+	
+	Felipe Lima Estevanatto 06
+	Gabriel Gomes Nicolim 08
+	
+			71/81A
+			
+		CTI - Bauru - 2020
+*/
+
+
 #include <stdio.h>
 #include <locale.h>
 #include <windows.h>
@@ -56,7 +67,7 @@ void gera_tabela(int li);  //
 //Função para colocar os dados na tabela
 void completa_tabela(int linha);
 // Função para gerar tabela de tipo 
-void tipo_tabela();
+void tabela_tipos();
 // Função utilizada para navegar com setasem menus
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
 
@@ -246,7 +257,7 @@ void cadastro_visual()
 	do{
 		
 		borda();
-		tipo_tabela();
+		tabela_tipos();
 		gotoxy(20,31); printf("Digite 0 no campo de ID para retornar ao menu");
 		
 		textcolor(cor_destaque);
@@ -282,6 +293,7 @@ void cadastro_visual()
 		
 	}while(dnv == 's' || dnv == 'S');
 	
+	fclose(fp);
 	system("cls");
 	
 	inicio();
@@ -291,6 +303,7 @@ void cadastro_recebimento()
 {
 	int x = 39, y = 8;
 	
+	fflush( fp ); 
 	gotoxy(x, y);   valida_id_recebimento();		 // Recebe id
 	gotoxy(x, y+2); valida_nome_recebimento();		 // Recebe nome
 	gotoxy(x, y+4); valida_quantidade_recebimento(); // Recebe quantidade
@@ -326,8 +339,7 @@ void cadastro_recebimento()
 		}
 		else
 		{
-			fflush( fp );
-			//fclose(fp);  
+			fflush( fp );  
 			system("cls");
 			borda();
 			textcolor(cor_destaque);
@@ -352,7 +364,6 @@ void valida_id_recebimento()  // Recebe e valida id
 		k = 1;  //loop principal
 		c = 0;  //se não for número
 		
-		//gotoxy(38, 8);
 		fflush(stdin);
 		
 		gets(id);
@@ -402,8 +413,7 @@ void valida_id_recebimento()  // Recebe e valida id
 						k=0; //continua no loop 				
 					}
 					else
-						k = 1; //faz sair do loop
-					
+						k = 1; //faz sair do loop				
 		}	
 			
 			if(c == 1)  // Erro  se for numero
@@ -712,7 +722,9 @@ void consulta_geral()
 	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
 	printf("Voltando ao menu...");
 	Sleep(2500);
+	textbackground(cor_fundo);
 	
+	fclose(fp);
 	sub_menu(); // Retorna ao submenu
 }
 
@@ -721,7 +733,7 @@ void gera_tabela(int li)
 	int ci=20;
 	system("cls");
 	borda();
-	tipo_tabela();
+	tabela_tipos();
 		
 	textcolor(15);
 	gotoxy(ci,4);	printf ("+---------------------------------------------------------------------------------+");
@@ -758,11 +770,11 @@ void gera_tabela(int li)
 
 void completa_tabela(int linha)
 {
-	gotoxy(24,linha);  printf("%d", produto.id);
+	gotoxy(22,linha);  printf("%d", produto.id);
 	gotoxy(31,linha); printf("%s", produto.nome);
 	gotoxy(51,linha); printf("%.2f", produto.preco_unitario);
-	gotoxy(71,linha); printf("%d", produto.quantidade);
-	gotoxy(89,linha); printf("%c", produto.tipo);
+	gotoxy(70,linha); printf("%d", produto.quantidade);
+	gotoxy(94,linha); printf("%c", produto.tipo);
 }
 
 void excluir_dados() //exclusao lógica
@@ -771,7 +783,7 @@ void excluir_dados() //exclusao lógica
 	system("cls");
 	abrir_arquivo_alterar();
 	borda();
-	tipo_tabela();
+	tabela_tipos();
 	textcolor(15); 
 	int aux_codigo,F;
 	long fposicao;
@@ -794,8 +806,12 @@ void excluir_dados() //exclusao lógica
 				{
 			   		F = 1;
 			   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
-			   		gotoxy(20,9);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
-			   		completa_tabela(10); //Apresenta-se ao usuário o registro a ser excluído
+			   		gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
+					gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
+			   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
+					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
+					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
+					completa_tabela(14); //Apresenta-se ao usuário o registro a ser excluído
 			   		textcolor(cor_destaque);
 				   	gotoxy(25,22); printf("Confirma exclus%co ? (S/N): ",198);
 				   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
@@ -804,8 +820,7 @@ void excluir_dados() //exclusao lógica
 				   	{
 				   		textcolor(cor_texto);
 				    	gotoxy(54,22); conf = getche();
-				   	}while( conf != 's' && conf != 'S' &&
-					   conf != 'n' && conf != 'N' );
+				   	}while( conf != 's' && conf != 'S' && conf != 'n' && conf != 'N' );
 				   
 				   	if( conf == 's' || conf == 'S' )
 				   	{
@@ -817,9 +832,9 @@ void excluir_dados() //exclusao lógica
 						if(fwrite (&produto,sizeof(produto),1,fp)==1)
 						{
 							fflush (fp);
+							textcolor(cor_destaque);
 							gotoxy(25,24);printf("Cadastro exclu%cdo com sucesso!",161);
 							getch();
-							system("cls");
 						}	
 				   	}
 				}
@@ -832,7 +847,19 @@ void excluir_dados() //exclusao lógica
 		}
 		break;
 	}while(aux_codigo!=0);
+	
+	cursor(0);
+	textbackground(12);
+	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
+	printf("Voltando ao menu...");
+	Sleep(2500);
+	textbackground(cor_fundo);
+	
 	Sleep(1000);
+	
+	fflush(stdin);
+	fflush(fp);
+	fclose(fp);
 	system("cls");
 	inicio();
 }
@@ -878,23 +905,18 @@ void sub_menu()
 
 void consulta_id()
 {	
-	char op;
-	int proxima_tela = 0, linha = 6, sair = 0;	
-	abrir_arquivo();
-	op = 'a';
-	int k=0;
-
 	// Construção visual
 	borda();
-	tipo_tabela();
+	tabela_tipos();
 	textcolor(cor_destaque);
 	gotoxy(54, 4); printf("Busca por Id");
-	
-	int x = 20, y = 12;
+		
+	abrir_arquivo();
+	int k=0;
 	int aux = 0;
 	int id_busca; // Armazena id digitado pelu usuário durante a busca
 	
-	gotoxy(x, y); printf("Digite o Id (0 para sair): ");
+	gotoxy(20, 7); printf("Digite o Id (0 para sair): ");
 	
 	textcolor(cor_texto);
 	do
@@ -913,15 +935,21 @@ void consulta_id()
 		} 
 		else if(aux == 3)
 		{
-			while( !feof(fp) )
+			while( !feof(fp) )  //enquanto no for o fim de um arquivo...
 			{
-				if(fread(&produto, sizeof(produto), 1, fp) == 1 && produto.excluido == 'n' && produto.id == id_busca)
+				if(fread(&produto, sizeof(produto), 1, fp) == 1 && !produto.excluido && produto.id == id_busca)
 				{					
-					gera_tabela(linha);
-					gotoxy(20,24);printf("Pressione uma tecla para continuar...");
+		
+					gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
+					gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
+			   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
+					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
+					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
+					completa_tabela(14); //Apresenta-se ao usuário o registro pesquisado
+					gotoxy(20,30);printf("Pressione uma tecla para continuar...");
 					getch();
 					k = 1;
-					system("cls");
+					consulta_id();
 					break;	
 				}				
 			}
@@ -937,6 +965,7 @@ void consulta_id()
 		
 	}while(true);
 	
+	fclose(fp); //fecha arquivo
 	sub_menu();
 }
 
@@ -953,12 +982,12 @@ int valida_id_consulta(int *id_final)
 		gets(id);
 		tam = strlen(id);
 		
-		if(tam == 0)
+		if(tam == 0)  //se não for digitado nada (apenas enter) volta a posição inicial
 		{
 			gotoxy(47,12);
 			k = 0;
 		} 
-		else if(id[0] == '0') 
+		else if(id[0] == '0')   //se for digitado 0 como o primeiro número retorna ao submenu
 		{
 			cursor(0);
 			textbackground(12);
@@ -967,17 +996,18 @@ int valida_id_consulta(int *id_final)
 			Sleep(2500);
 			sub_menu();
 		}
-		else for(int i = 0; i < tam; i++) if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') return 1;
-		if(k == 1)break;	
-		
-	}while(true);
+		else 
+			for(int i = 0; i < tam; i++) 
+				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
+					return 1;			
+	}while(k != 1);
 	
 	cursor(0);
-	*id_final = atoi(id);
+	*id_final = atoi(id); //manda por referencia o id em forma de int
 	return 3;
 }	
 
-void tipo_tabela()
+void tabela_tipos()
 {
     textcolor(cor_texto);
     gotoxy(38,37);    printf(" P - Perif%crico       G - Gpu      C - Cpu",130);
