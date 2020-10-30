@@ -769,87 +769,138 @@ void excluir_dados() //exclusao lógica (continua no binário)
 {
 	cursor(1); // Liga o cursor
 	
-	abrir_arquivo_alterar();  //abre o arquivo no modo de alteração de dados
-	borda();
-	tabela_tipos();  //apresenta a info doq as letras significam 
-	int aux_codigo, F;
+	abrir_arquivo_alterar();  //abre o arquivo no modo de alteração de dados   
+	int aux_codigo, F, k, tam; // Auxiliares
 	long fposicao;
-	char conf;
-	
-	do{	
-		textcolor(cor_destaque);
-		gotoxy(50, 4); printf("Exclus%co de dados", 198);
-	    gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (digite zero para encerrar): ",162);
-	    textcolor(cor_texto);
-	    scanf("%d", &aux_codigo );
-	    if (aux_codigo!=0)
-	    {
-			F = 0;
-			rewind(fp);
-		    do
-		    {
-				fread( &produto,sizeof(produto),1,fp);
-				if ( produto.id == aux_codigo && produto.excluido == false ) //Se houver um produto com o id e que não foi excluído
-				{
-			   		F = 1;
-			   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
-			   		gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
-					gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
-			   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
-					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
-					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
-					completa_tabela(14); //Apresenta-se ao usuário o registro a ser excluído
-			   		textcolor(cor_destaque);
-				   	gotoxy(25,22); printf("Confirma exclus%co ? (S/N): ",198);
-				   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
-					fflush(stdin);
-					do 
-				   	{
-				   		textcolor(cor_texto);
-				    	gotoxy(54,22); conf = getche();
-				   	}while( conf != 's' && conf != 'S' && conf != 'n' && conf != 'N' );
-				   
-				   	if( conf == 's' || conf == 'S' )
-				   	{
-				   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
-						fseek (fp,fposicao-(sizeof(produto)),SEEK_SET); 	//em stdio.h
-																			//SEEK_SET indica o início do arquivo
-						produto.excluido= true; /*atribuição de 's' para o campo excluído para indicar 
-							 			que o registro foi excluído ou desativado (exclusão lógica) */
-						if(fwrite (&produto,sizeof(produto),1,fp)==1)
-						{
-							fflush (fp);
-							textcolor(cor_destaque);
-							gotoxy(25,24);printf("Cadastro exclu%cdo com sucesso!",161);
-							getch();
-						}	
-				   	}
-				}
-			} while ((!F) && (!feof(fp)));  	
-		} 
-		if (F==0 && aux_codigo!=0)  //código não encontrado
-		{
-			gotoxy(20,15);printf("****** C%cdigo n%co encontrado! Voltando ao menu! ******",162,198);
-			getch();
-		}
-		break; //sai do loop
-		
-	}while(aux_codigo!=0);
-	
+	char conf, id[50];
+
+	borda();
+	tabela_tipos(); //apresenta a info doq as letras significam
+	textcolor(cor_destaque);
+	gotoxy(50, 4); printf("Exclus%co de dados", 198);
+	gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ",162);
 	textcolor(cor_texto);
-	cursor(0);
-	textbackground(12);
-	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-	printf("Voltando ao menu...");
-	Sleep(1500);
-	
-	Sleep(1000);
-	
-	fflush(stdin);      //
-	fflush(fp);			//limpeza de buffers e fechamento do arquivo
-	fclose(fp);			//
-	
-	inicio();
+	      
+	do{	
+		k = 0;
+		
+		gets(id);
+		
+	    tam = strlen(id);
+	    
+	    if(tam == 0) gotoxy(77, 7); // Se nada for digitado
+	    else if(id[0] == '0') // Se 0 for digitado
+		{
+			cursor(0);
+			textbackground(12);
+			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
+			printf("Voltando ao menu...");
+			Sleep(1500);
+			sub_menu(); 
+		} 
+	    else // Se algo diferente de 0 for digitado
+	    {
+	    	for(int i = 0; i < tam; i++)
+			{
+				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
+				{ // Confere se é numérico  
+					k = 1; // Se não for numérico 
+					break;	
+				}	
+			} 
+	    	
+	    	if(k == 1) // Se um caractere não numérico for digitado
+	    	{
+	    		textcolor(cor_texto);
+	    		gotoxy(77, 7); clreol(34);
+				textbackground(12);
+	    		gotoxy(77, 7); printf("[ERRO] Id Inv%clido", 160);
+				Sleep(1000);
+				textbackground(cor_fundo); gotoxy(77, 7); clreol(34);
+			}
+	    	else // Se o ID for valido e numérico
+	    	{ 
+	    		aux_codigo = atoi(id); // Converte string em int 
+	    		
+		    	F = 0;
+		    	
+				rewind(fp);
+				
+			    do
+			    {
+					fread(&produto, sizeof(produto), 1, fp);
+					
+					if (produto.id == aux_codigo && !produto.excluido) //Se houver um produto com o id e que não foi excluído
+					{
+				   		F = 1;
+				   		
+				   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
+				   		
+				   		textcolor(cor_texto);
+				   		gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
+						gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
+				   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
+						gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
+						gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
+						completa_tabela(14); //Apresenta-se ao usuário o registro a ser excluído
+						
+				   		textcolor(cor_destaque);
+					   	gotoxy(19,22); printf("Confirma exclus%co ? (S/N): ",198);
+					   	
+					   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
+						do 
+					   	{
+					   		fflush(stdin);
+					   		textcolor(cor_texto);
+					    	gotoxy(46,22); conf = getche(); // Confirmação 
+					    	
+					    	if(conf != 's' && conf != 'S' && conf != 'n' && conf != 'N') 
+					    	{
+					    		gotoxy(46, 22); clreol(5);	
+							}
+							
+					   	}while( conf != 's' && conf != 'S' && conf != 'n' && conf != 'N' );
+					   
+					   	if( conf == 's' || conf == 'S' )
+					   	{
+					   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
+							fseek (fp, fposicao-(sizeof(produto)), SEEK_SET); 	//SEEK_SET indica o início do arquivo
+																				
+							produto.excluido= true; //atribuição de true para o campo excluído para indicar que o registro foi excluído ou desativado (exclusão lógica) 
+							
+							if(fwrite(&produto, sizeof(produto), 1, fp) == 1)
+							{
+								cursor(0);
+								fflush (fp);
+								textcolor(cor_destaque);
+								gotoxy(19,24);printf("Cadastro exclu%cdo com sucesso!",161);
+								getch();
+								
+								fflush(fp);			// limpeza de buffers 
+								fclose(fp);			// fechamento do arquivo
+					
+								excluir_dados(); 
+							}	
+					   	}
+					   	else excluir_dados(); 
+					}
+				} while ((!F) && (!feof(fp)));  
+				
+				if (F==0 && aux_codigo!=0)  //código não encontrado
+				{
+					cursor(0);
+					textcolor(cor_destaque);
+					gotoxy(42,25);printf("****** C%cdigo n%co encontrado! ******",162,198);
+					getch();
+					
+					fflush(fp);			// limpeza de buffers 
+					fclose(fp);			// fechamento do arquivo
+					
+					excluir_dados(); 
+				}		
+			}
+		}
+	}while(true);
 }
 
 void sub_menu()
