@@ -644,17 +644,16 @@ void valida_preco_recebimento() // Recebe preço e valida
 	- Funções de recebimento e validação alteradas
 	- Tempo das mensagens de erro reduzido
 	- Erros lógicos resolvidos
-	- Ainda a revisar: valida_nome_recebimento()  -  Corrigida
 */
 
 void consulta_geral()
 {
-	int contl = 1, limite, limiteAnte, pag= 1, linha;
+	int contl = 1, limite, limiteAnte, pag= 1, linha; // Funções Auxiliares
 	char retornar;
 	
 	abrir_arquivo();
 	
-	cursor(0);
+	cursor(0); // Desliga o cursor
 	
 	gera_tabela(5);	// Gera borda e tabela inicial
 				
@@ -662,16 +661,22 @@ void consulta_geral()
 	{
 		switch(retornar)
 		{
-			case 77:
-				if(pag < 10) pag++; // Limita pag a 10 
-				rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-				gera_tabela(5);	
+			case 77: // Se a seta direita for pressionada
+				if(pag < 10) 
+				{
+					pag++; // Avança a página | Limita pag a 10 
+					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+					gera_tabela(5);
+				}	
 				break;
 				
-			case 75:
-				if(pag > 1) pag--;				
-				rewind(fp);	
-				gera_tabela(5);			
+			case 75: // Se a seta da esquerda
+				if(pag > 1) 				
+				{
+					pag--; // Volta a pagina
+					rewind(fp);	
+					gera_tabela(5);	
+				}			
 				break;
 		}
 				
@@ -686,16 +691,16 @@ void consulta_geral()
 		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
 		
 		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
-			{			
-				if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
-					{
-						completa_tabela(linha);    //preenche a tabela
-						linha+=2;    
-					}
-				if(contl == limite) //se a linha atual for igual ao limite quebra
-					break; 
-				contl++; //adiciona mais uma linha ao contador
+		{			
+			if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
+			{
+				completa_tabela(linha);    //preenche a tabela
+				linha+=2;    
 			}
+			if(contl == limite) //se a linha atual for igual ao limite quebra
+				break; 
+			contl++; //adiciona mais uma linha ao contador
+		}
 		gotoxy(20,34); 
 		retornar = getch();
 			
@@ -705,7 +710,7 @@ void consulta_geral()
 	cursor(0);
 	textbackground(12);
 	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-	printf("Voltando ao menu...");
+	printf("Voltando ao Menu...");
 	Sleep(1500);
 	textbackground(cor_fundo);
 	
@@ -753,7 +758,7 @@ void gera_tabela(int li)
 
 void completa_tabela(int linha)  //função para colocar os dados na tabela
 {
-	gotoxy(22,linha);  printf("%d", produto.id);
+	gotoxy(22,linha); printf("%d", produto.id);
 	gotoxy(31,linha); printf("%s", produto.nome);
 	gotoxy(51,linha); printf("%.2f", produto.preco_unitario);
 	gotoxy(70,linha); printf("%d", produto.quantidade);
@@ -762,11 +767,11 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 
 void excluir_dados() //exclusao lógica (continua no binário)
 {
+	cursor(1); // Liga o cursor
 	
 	abrir_arquivo_alterar();  //abre o arquivo no modo de alteração de dados
 	borda();
-	tabela_tipos();  //apresenta a info doq as letras significam
-	textcolor(15); 
+	tabela_tipos();  //apresenta a info doq as letras significam 
 	int aux_codigo, F;
 	long fposicao;
 	char conf;
