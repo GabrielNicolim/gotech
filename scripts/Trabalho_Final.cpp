@@ -1,5 +1,5 @@
 /* 
-Trabalho de FPD 4? Bimestre 2020						
+	Trabalho de FPD 4 Bimestre 2020						
 	
 	Felipe Lima Estevanatto 06
 	Gabriel Gomes Nicolim 08
@@ -7,6 +7,9 @@ Trabalho de FPD 4? Bimestre 2020
 			71/81A
 			
 		CTI - Bauru - 2020
+		
+	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
+	
 */
 
 #include <stdio.h>
@@ -947,17 +950,19 @@ void consulta_id()   //consulta por id
 	// Construção visual
 	borda();
 	tabela_tipos();
+	
 	textcolor(cor_destaque);
 	gotoxy(54, 4); printf("Busca por Id");
-		
-	abrir_arquivo();
+	gotoxy(20, 7); printf("Digite o Id (0 para sair): ");
+	
 	int k=0;
 	int aux = 0;
 	int id_busca; // Armazena id digitado pelu usuário durante a busca
 	
-	gotoxy(20, 7); printf("Digite o Id (0 para sair): ");
+	abrir_arquivo();
 	
 	textcolor(cor_texto);
+	
 	do
 	{
 		aux = valida_id_consulta(&id_busca);
@@ -969,7 +974,7 @@ void consulta_id()   //consulta por id
 			textcolor(cor_texto);
 			gotoxy(47, 12); printf("Id inv%clido",160);
 			cursor(0);
-			Sleep(1500);
+			Sleep(1000);
 			consulta_id();	
 		} 
 		else if(aux == 3)
@@ -984,11 +989,16 @@ void consulta_id()   //consulta por id
 			   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
 					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
 					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
+					
 					completa_tabela(14); //Apresenta-se ao usuário o registro pesquisado
+					
 					textcolor(cor_destaque);
 					gotoxy(20,30);printf("Pressione uma tecla para continuar...");
+					
 					getch();
+					
 					k = 1;
+					
 					consulta_id();
 					break;	
 				}				
@@ -998,7 +1008,9 @@ void consulta_id()   //consulta por id
 				textcolor(cor_destaque); 
 				gotoxy(21,23);printf("-----> C%cdigo inexistente! <-----",162);
 				gotoxy(21,24);printf("Pressione uma tecla para redigitar");
+				
 				getch();
+				
 				consulta_id();
 			}
 		}
