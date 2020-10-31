@@ -1955,5 +1955,6 @@ void clreol(int x)  //função customizada e mais versátil para o programa do clre
 	- Linhas extras removidas
 	- Espaçamentos adicionados
 	- Comentários adicionados
+	- Alteraçõs nas funções de exclusão e apresentação
 	
 */
