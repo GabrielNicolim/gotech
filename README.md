@@ -1,4 +1,4 @@
-<h1 align = "center">Gerenciamento de Estoque</h1>
+<h1 align = "center">Projeto de Fundamento de Processamento de Dados</h1>
 
 <h3>Sobre o projeto</h3>
 :computer: <b>Tema: </b>Loja de Informática<br>
@@ -8,7 +8,6 @@
 <h3>Bibliotecas utilizadas: </h3>
 <li><a href = "https://www.ime.usp.br/~pf/algoritmos/apend/stdio.h.html">Stdio.h</a>
 <li><a href = "https://www.programmingsimplified.com/c/conio.h">Conio.h</a>
-<li><a href = "https://www.ime.usp.br/~pf/algoritmos/apend/stdlib.h.html">Stdlib.h</a>
 <li><a href = "https://www.tutorialspoint.com/c_standard_library/locale_h.htm">Locale.h</a>
 <li><a href = "https://en.wikipedia.org/wiki/Windows.h">Windows.h</a>
 <li><a href = "https://pt.wikipedia.org/wiki/Time.h">Time.h</a>
