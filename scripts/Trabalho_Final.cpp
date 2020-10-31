@@ -396,24 +396,24 @@ void valida_id_recebimento()  // Recebe e valida id
 				c = 0;  //marca o id como valido
 			} 
 			
-			 	aux = atoi(id); // converte a string para int
+			aux = atoi(id); // converte a string para int
 			 	
-				while((fread(&produto.id,sizeof(produto.id),1,fp) ==1)&& produto.id != aux); 
+			while((fread(&produto.id,sizeof(produto.id),1,fp) ==1) && produto.id != aux); 
 				
-					if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente enão excluído
-					{		
-						textbackground(cor_fundo);
-						gotoxy(38, 8); clreol(70);
-						textbackground(12);
-						gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado",131);
-						Sleep(1500);
-						textbackground(cor_fundo);
-						gotoxy(38, 8); clreol(70);
-						gotoxy(39, 8);
-						k=0; //continua no loop 				
-					}
-					else
-						k = 1; //faz sair do loop				
+			if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
+			{		
+				textbackground(cor_fundo);
+				gotoxy(38, 8); clreol(70);
+				textbackground(12);
+				gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado",131);
+				Sleep(1500);
+				textbackground(cor_fundo);
+				gotoxy(38, 8); clreol(70);
+				gotoxy(39, 8);
+				k=0; //continua no loop 				
+			}
+			else
+				k = 1; //faz sair do loop				
 		}	
 			
 			if(c == 1)  // Erro  se for numero
@@ -697,8 +697,11 @@ void consulta_geral()
 		{			
 			if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
 			{
-				completa_tabela(linha);    //preenche a tabela
-				linha+=2;    
+				if(!produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+				{
+					completa_tabela(linha);    //preenche a tabela
+					linha+=2; 
+				}
 			}
 			if(contl == limite) //se a linha atual for igual ao limite quebra
 				break; 
@@ -761,11 +764,14 @@ void gera_tabela(int li)
 
 void completa_tabela(int linha)  //função para colocar os dados na tabela
 {
-	gotoxy(22,linha); printf("%d", produto.id);
-	gotoxy(31,linha); printf("%s", produto.nome);
-	gotoxy(51,linha); printf("%.2f", produto.preco_unitario);
-	gotoxy(70,linha); printf("%d", produto.quantidade);
-	gotoxy(94,linha); printf("%c", produto.tipo);
+	if(!produto.excluido)
+	{
+		gotoxy(22,linha); printf("%d", produto.id);
+		gotoxy(31,linha); printf("%s", produto.nome);
+		gotoxy(51,linha); printf("%.2f", produto.preco_unitario);
+		gotoxy(70,linha); printf("%d", produto.quantidade);
+		gotoxy(94,linha); printf("%c", produto.tipo);	
+	}
 }
 
 void excluir_dados() //exclusao lógica (continua no binário)
@@ -1018,6 +1024,7 @@ void consulta_id()   //consulta por id
 	}while(true);
 	
 	fclose(fp); //fecha arquivo
+	
 	sub_menu();
 }
 
@@ -1055,13 +1062,16 @@ int valida_id_consulta(int *id_final)
 	}while(k != 1);
 	
 	cursor(0);
+	
 	*id_final = atoi(id); //manda por referencia o id em forma de int
+	
 	return 3;
 }	
 
 void tabela_tipos()
 {
     textcolor(cor_texto);
+    
     gotoxy(38,37);    printf(" P - Perif%crico       G - Gpu      C - Cpu",130);
     gotoxy(38,38);    printf(" M - Mobo             F - Fonte    W - Cabos");
     gotoxy(38,39);    printf(" A - Armazenamento    R - Ram      O - Outros");
@@ -1074,7 +1084,7 @@ void info_de_sistema() // Apresenta as informações do sistema
 	int inix = 20, iniy = 9; // Controla o eixo x e y das informações
 	
 	// Apresenta as informações do sistema
-	textcolor(0);
+	textcolor(cor_destaque);
 	gotoxy(54, 4);  printf("Info do Sistema");
 	textbackground(cor_fundo);
 	
@@ -1137,8 +1147,11 @@ void sair() // Finaliza a execução do programa
 	textcolor(cor_texto);
 	gotoxy(42, 17); printf("Obrigado por utilizar nosso programa!");
 	textcolor(cor_fundo);
+	
 	fclose(fp);
-	gotoxy(80, 37);
+	
+	gotoxy(80, 37); // Esconde mensagem de encerramento 
+	
 	exit(1);
 }
 
@@ -1146,17 +1159,19 @@ void sair() // Finaliza a execução do programa
 int navegar_menu(int ini, int fim, int p)
 {
 	cursor(0); // Desativa o cursor
+	
 	int aux = ini; // Recebe posição da seta
 	int c; // Armazena entrada do teclado
 	
 	do
 	{
-		gotoxy(p,aux);printf("%c", 62);	
+		gotoxy(p,aux); printf("%c", 62);	
 			
 		fflush(stdin); 
+		
 		c = getch();
 		
-		gotoxy(p,aux);printf(" ");
+		gotoxy(p,aux); printf(" ");
 		
 		switch(c) 
 		{
@@ -1933,3 +1948,12 @@ void clreol(int x)  //função customizada e mais versátil para o programa do clre
            printf("\b");		//volta X vezes o cursor para trás para a posição original após limpar a linha
 }
 
+/*
+
+	Revisão Final - 31/10/2020
+	
+	- Linhas extras removidas
+	- Espaçamentos adicionados
+	- Comentários adicionados
+	
+*/
