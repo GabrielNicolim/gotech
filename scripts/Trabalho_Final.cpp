@@ -122,7 +122,7 @@ void abrir_arquivo()
 {
 	if((fp = fopen("estoque.bin", "ab+")) == NULL) 
 	{
-		gotoxy(18,11);printf("Erro na abertura do arquivo"); //caso haja um problema com o arquivo
+		gotoxy(15, 11);printf("Erro na abertura do arquivo"); //caso haja um problema com o arquivo
 		exit(1);
 	}
 }
@@ -131,7 +131,7 @@ int abrir_arquivo_alterar()
 {
 	if((fp = fopen("estoque.bin", "rb+")) == NULL) 
 	{
-		gotoxy(18,11);printf("Nao foram encontrados dados, cadastre algo!");
+		gotoxy(15, 11);printf("Nao foram encontrados dados, cadastre algo!");
 		getch();
 		return 1;
 	}
@@ -336,7 +336,7 @@ void cadastro_recebimento()
 		if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
 		{
 			textcolor(RED);
-			gotoxy(x+50,y+14); printf("Erro na escrita do arquivo!");
+			gotoxy(x+40,y+14); printf("Erro na escrita do arquivo!");
 			textcolor(cor_texto);
 		}
 		else  //se tudo der certo
@@ -398,7 +398,7 @@ void valida_id_recebimento()  // Recebe e valida id
 			
 			aux = atoi(id); // converte a string para int
 			 	
-			while((fread(&produto.id,sizeof(produto.id),1,fp) ==1) && produto.id != aux); 
+			while((fread(&produto.id,sizeof(produto.id),1,fp) == 1) && produto.id != aux); 
 				
 			if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
 			{		
