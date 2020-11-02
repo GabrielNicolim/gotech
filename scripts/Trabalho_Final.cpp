@@ -1,5 +1,5 @@
 /* 
-	Trabalho de FPD 4 Bimestre 2020						
+	Trabalho de FPD 4 Bimestre 2020					
 	
 	Felipe Lima Estevanatto 06
 	Gabriel Gomes Nicolim 08
@@ -356,14 +356,17 @@ void valida_id_recebimento()  // Recebe e valida id
 {
 	char id[30];
 	int tam;		// Armazena tamanho da string
-	int k,c;   // Auxiliares
+	int k,c;   	   // Auxiliares
 	int aux;
+	
+
 	
 	do
 	{
 		k = 1;  //loop principal
 		c = 0;  //se não for número
-		
+
+		rewind(fp);
 		fflush(stdin);
 		
 		gets(id);
@@ -392,25 +395,23 @@ void valida_id_recebimento()  // Recebe e valida id
 					c = 1; //marca id como invalido para cair no if mais embaixo
 					break;
 				}
-				else
-				c = 0;  //marca o id como valido
 			} 
 			
 			aux = atoi(id); // converte a string para int
 			 	
-			while((fread(&produto.id,sizeof(produto.id),1,fp) == 1) && produto.id != aux); 
+			while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1) && produto.id != aux || (produto.id == aux && produto.excluido));
 				
 			if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
 			{		
 				textbackground(cor_fundo);
 				gotoxy(38, 8); clreol(70);
 				textbackground(12);
-				gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado",131);
+				gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
 				Sleep(1500);
 				textbackground(cor_fundo);
 				gotoxy(38, 8); clreol(70);
 				gotoxy(39, 8);
-				k=0; //continua no loop 				
+				k = 0; //continua no loop 				
 			}
 			else
 				k = 1; //faz sair do loop				
