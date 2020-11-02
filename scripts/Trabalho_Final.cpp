@@ -20,7 +20,7 @@
 #include <strings.h>
 
 // Versão 1.91
-#define versao 1.91
+#define versao 1.95
 
 // Definição de cores 
 #define cor_fundo 3
