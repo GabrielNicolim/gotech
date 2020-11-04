@@ -63,6 +63,9 @@ void mobo(int ic, int il);
 
 // Função para fazer a consulta dos dados já salvos
 void consulta_geral();
+// Realiza a consulta por tipo do produto
+void consulta_tipo_recebimento();
+void consulta_tipo(char aux);
 // Função para apagar dados do .bin por id
 void apaga_dados();
 // Função para gerar uma tabela
@@ -549,10 +552,11 @@ void valida_tipo_recebimento() // Recebe e valida tipo
 {
  	char aux;
  	
- 	fflush(stdin);
- 	
  	do
  	{
+ 		
+ 		fflush(stdin);
+ 	
  		aux = getche();
 		
 		aux = toupper(aux);
@@ -649,6 +653,129 @@ void valida_preco_recebimento() // Recebe preço e valida
 	- Tempo das mensagens de erro reduzido
 	- Erros lógicos resolvidos
 */
+
+void consulta_tipo_recebimento()
+{
+	borda();
+	
+	textcolor(cor_texto); tabela_tipos();
+	
+	textcolor(cor_destaque);
+	gotoxy(20,31);  printf("Pressione 0 para voltar ao menu de pesquisa");
+	gotoxy(52, 4); printf("Consulta por Tipo", 198);
+	
+	gotoxy(20,7); printf("Digite tipo a ser pesquisado (0 para sair): ");
+	
+	textcolor(cor_texto);
+	
+	char aux;
+	
+	do
+ 	{
+ 		
+ 		fflush(stdin);
+ 	
+ 		aux = getche();
+		
+		aux = toupper(aux);
+		
+		// Verifica se é um dos tipos listados
+		if(aux == '0') sub_menu();
+		else if(aux == 'P' || aux == 'G' || aux == 'C' || aux == 'M' || aux == 'F' || aux == 'W' || aux == 'A' || aux == 'R' || aux == 'O') break;
+		else // Apresenta erro
+		{
+			textbackground(cor_fundo);
+			textbackground(12);
+			gotoxy(64, 7); printf("[ERRO] Tipo inv%clido",160);			
+			Sleep(1000); // tempo de erro na tela
+			textbackground(cor_fundo);
+			gotoxy(64, 7); clreol(30);
+			gotoxy(39, 14);
+		}
+		
+	}while(true);
+	
+	consulta_tipo(aux);
+}
+
+void consulta_tipo(char aux)
+{
+	int contl = 1, limite, limiteAnte, pag= 1, linha; // Funções Auxiliares
+	char retornar;
+	
+	abrir_arquivo();
+	
+	cursor(0); // Desliga o cursor
+	
+	gera_tabela(5);	// Gera borda e tabela inicial
+				
+	do
+	{
+		switch(retornar)
+		{
+			case 77: // Se a seta direita for pressionada
+				if(pag < 10) 
+				{
+					pag++; // Avança a página | Limita pag a 10 
+					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+					gera_tabela(5);
+				}	
+				break;
+				
+			case 75: // Se a seta da esquerda
+				if(pag > 1) 				
+				{
+					pag--; // Volta a pagina
+					rewind(fp);	
+					gera_tabela(5);	
+				}			
+				break;
+		}
+				
+		limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
+		limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
+		
+		textcolor(cor_texto);
+		
+		gotoxy(20,31);  printf("Pressione 0 para voltar");
+		gotoxy(107,4);	printf("%d", pag); // Número da página 
+		gotoxy(107,6);	printf("%c", aux); // Tipo pesquisado
+		
+		contl= 1;    //reseta o contador de linha
+		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
+		
+		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+		{			
+			if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
+			{
+				if(produto.tipo == aux) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+				{
+					completa_tabela(linha);    //preenche a tabela
+					linha += 2; 
+				}
+			}
+			if(contl == limite) //se a linha atual for igual ao limite quebra
+				break; 
+				
+			contl++; //adiciona mais uma linha ao contador
+		}
+		
+		gotoxy(20,34); 
+		retornar = getch();
+			
+	}while (retornar != '0');  
+		
+	// Se 0 for pressionado 
+	cursor(0);
+	textbackground(12);
+	gotoxy(54, 35);			 // Apresenta mensagem a baixo da borda
+	printf("Voltando...");
+	Sleep(1500);
+	textbackground(cor_fundo);
+	
+	fclose(fp);	// fecha o arquivo
+	consulta_tipo_recebimento(); 
+}
 
 void consulta_geral()
 {
@@ -786,9 +913,12 @@ void excluir_dados() //exclusao lógica (continua no binário)
 
 	borda();
 	tabela_tipos(); //apresenta a info doq as letras significam
+	
 	textcolor(cor_destaque);
+	gotoxy(20,31);  printf("Pressione 0 para voltar ao menu de pesquisa");
 	gotoxy(50, 4); printf("Exclus%co de dados", 198);
 	gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ",162);
+	
 	textcolor(cor_texto);
 	      
 	do{	
@@ -925,7 +1055,7 @@ void sub_menu()
 	textcolor(cor_texto);
 	gotoxy(inic, inil); 	printf("Geral");
 	gotoxy(inic, (inil+2)); printf("Pesquisa por Id");
-	gotoxy(inic, (inil+4)); printf("Pesquisa por Tipo (n%co feito ainda)",198);
+	gotoxy(inic, (inil+4)); printf("Pesquisa por Tipo");
 	gotoxy(inic, (inil+6)); printf("Excluir dados");
 	gotoxy(inic, (inil+8)); printf("Retornar ao In%ccio",161);
 	
@@ -941,7 +1071,7 @@ void sub_menu()
 			consulta_id();
 			break;
 		case 2:
-			//pesquisa();
+			consulta_tipo_recebimento();
 			break;
 		case 3:
 			excluir_dados();
@@ -959,6 +1089,7 @@ void consulta_id()   //consulta por id
 	tabela_tipos();
 	
 	textcolor(cor_destaque);
+	gotoxy(20,31);  printf("Pressione 0 para voltar ao menu de pesquisa");
 	gotoxy(54, 4); printf("Busca por Id");
 	gotoxy(20, 7); printf("Digite o Id (0 para sair): ");
 	
