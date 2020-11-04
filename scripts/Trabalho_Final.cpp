@@ -361,9 +361,7 @@ void valida_id_recebimento()  // Recebe e valida id
 	int tam;		// Armazena tamanho da string
 	int k,c;   	   // Auxiliares
 	int aux;
-	
 
-	
 	do
 	{
 		k = 1;  //loop principal
@@ -400,27 +398,10 @@ void valida_id_recebimento()  // Recebe e valida id
 				}
 			} 
 			
-			aux = atoi(id); // converte a string para int
-			 	
-			while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1) && produto.id != aux || (produto.id == aux && produto.excluido));
-				
-			if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
-			{		
-				textbackground(cor_fundo);
-				gotoxy(38, 8); clreol(70);
-				textbackground(12);
-				gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
-				Sleep(1500);
-				textbackground(cor_fundo);
-				gotoxy(38, 8); clreol(70);
-				gotoxy(39, 8);
-				k = 0; //continua no loop 				
-			}
-			else
-				k = 1; //faz sair do loop				
+			aux = atoi(id); // converte a string para int	
 		}	
 			
-			if(c == 1)  // Erro  se for numero
+			if(c == 1)  // Erro se não for numerico
 			{
 				k = 0; //continua no loop 
 				
@@ -432,6 +413,25 @@ void valida_id_recebimento()  // Recebe e valida id
 				textbackground(cor_fundo);
 				gotoxy(39, 8); clreol(72);
 				gotoxy(39,8);				
+			}
+			else
+			{
+				while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1) && produto.id != aux || (produto.id == aux && produto.excluido));
+				
+				if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
+				{		
+					textbackground(cor_fundo);
+					gotoxy(38, 8); clreol(70);
+					textbackground(12);
+					gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
+					Sleep(1500);
+					textbackground(cor_fundo);
+					gotoxy(38, 8); clreol(70);
+					gotoxy(39, 8);
+					k = 0; //continua no loop 				
+				}
+				else
+					k = 1; //faz sair do loop			
 			}
 		
 	}while(k == 0);
