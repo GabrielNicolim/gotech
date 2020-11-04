@@ -457,6 +457,15 @@ void valida_nome_recebimento() // Recebe e valida nome
 		tam = strlen(aux);
 		
 		if(tam == 0) gotoxy(39, 10); // Se nada for digitado
+		else if(tam >= 19) // Limita o nome a 19 caracteres 
+		{
+			gotoxy(39, 10); clreol(70);
+			textbackground(12);
+			printf("[ERRO] Nome Muito Grande");
+			Sleep(1000);
+			textbackground(cor_fundo);
+			gotoxy(39, 10); clreol(70);
+		}
 		else // Se o nome não for nem grande de mais nem pequeno de mais
 		{
 			for(int i = 0; i < tam; i++)
