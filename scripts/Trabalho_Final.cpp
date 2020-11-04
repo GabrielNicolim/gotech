@@ -66,6 +66,8 @@ void consulta_geral();
 // Realiza a consulta por tipo do produto
 void consulta_tipo_recebimento();
 void consulta_tipo(char aux);
+// Fonção que realiza a busca por nome
+void consulta_nome();
 // Função para apagar dados do .bin por id
 void apaga_dados();
 // Função para gerar uma tabela
@@ -1062,14 +1064,15 @@ void sub_menu()
 	
 	// Menu 
 	textcolor(cor_texto);
-	gotoxy(inic, inil); 	printf("Geral");
-	gotoxy(inic, (inil+2)); printf("Pesquisa por Id");
-	gotoxy(inic, (inil+4)); printf("Pesquisa por Tipo");
-	gotoxy(inic, (inil+6)); printf("Excluir dados");
-	gotoxy(inic, (inil+8)); printf("Retornar ao In%ccio",161);
+	gotoxy(inic, inil); 	 printf("Geral");
+	gotoxy(inic, (inil+2));  printf("Pesquisa por ID");
+	gotoxy(inic, (inil+4));  printf("Pesquisa por Tipo");
+	gotoxy(inic, (inil+6));  printf("Pesquisa por Nome"); 
+	gotoxy(inic, (inil+8));  printf("Excluir dados");
+	gotoxy(inic, (inil+10)); printf("Retornar ao In%ccio",161);
 	
 	int escolha;
-	escolha = navegar_menu(inil, (inil + 8), (inic - 2));
+	escolha = navegar_menu(inil, (inil + 10), (inic - 2));
 	
 	switch(escolha)
 	{
@@ -1083,11 +1086,32 @@ void sub_menu()
 			consulta_tipo_recebimento();
 			break;
 		case 3:
-			excluir_dados();
+			consulta_nome(); 
 			break;
 		case 4:
+			excluir_dados();
+			break;
+		case 5:
 			inicio();
 			break;
+	}
+}
+
+void consulta_nome()
+{
+	borda();
+	tabela_tipos();
+	
+	char aux[50];
+	int tam, k, j;
+	
+	textcolor(cor_destaque); 
+	gotoxy(52, 4); printf("Consulta por Nome");
+	gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
+	
+	while(true)
+	{
+		// Obter Nome
 	}
 }
 
@@ -1099,7 +1123,7 @@ void consulta_id()   //consulta por id
 	
 	textcolor(cor_destaque);
 	gotoxy(20,31);  printf("Pressione 0 para voltar ao menu de pesquisa");
-	gotoxy(54, 4); printf("Busca por Id");
+	gotoxy(54, 4); printf("Consulta por ID");
 	gotoxy(20, 7); printf("Digite o Id (0 para sair): ");
 	
 	int k=0;
