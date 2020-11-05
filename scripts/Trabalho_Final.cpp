@@ -1282,7 +1282,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
 			printf("Voltando ao menu...");
 			Sleep(1500);
-			sub_menu(); 
+			//sub_menu(); 
 		} 
 	    else // Se algo diferente de 0 for digitado
 	    {
@@ -1445,6 +1445,7 @@ int navegar_menu(int ini, int fim, int p)
 		}
 		
 	}while(true);
+
 }
 
 void gera_tabela(int li)
