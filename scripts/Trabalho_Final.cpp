@@ -19,8 +19,8 @@
 #include <time.h>
 #include <strings.h>
 
-// Versão 1.91
-#define versao 1.95
+// Versão 1.98
+#define versao 1.98
 
 // Definição de cores 
 #define cor_fundo 3
@@ -69,7 +69,7 @@ void consulta_tipo(char aux);
 // Fonção que realiza a busca por nome
 void consulta_nome();
 // Função para apagar dados do .bin por id
-void apaga_dados();
+void excluir_dados();
 // Função para gerar uma tabela
 void gera_tabela(int li);  //
 //Função para colocar os dados na tabela
@@ -191,50 +191,58 @@ void loading()
 	Sleep(1500);
 }
 
+//
+// Primeira página que o usuário tem contato 
+//
+
 void inicio() // Apresenta tela de inicio
 {	
-	borda(); 
-	
-	switch(random_menu) // Menu aleatorio
+	while(true)
 	{
-		case 0:
-			disquete(18, 6); // Disquete + logo
-			logo(48, 8);
-			break;
-		case 1:				// cpu + logo
-			cpu(18, 6); 	
-			logo(48, 8);
-			break;	
-		case 2:				// logo
-			logo(32, 8); 	
-			break;
-		case 3:				// Ram + logo
-			ram(37, 4); 	
-			logo(32, 10);
-			break;
-		case 4:				// Ram + logo
-			mobo(83, 6); 		
-			logo(20, 8);
-			break;		
-	}
+		borda(); 
 	
-	menu_ini();
+		switch(random_menu) // Menu aleatorio
+		{
+			case 0:
+				disquete(18, 6); // Disquete + logo
+				logo(48, 8);
+				break;
+			case 1:				// cpu + logo
+				cpu(18, 6); 	
+				logo(48, 8);
+				break;	
+			case 2:				// logo
+				logo(32, 8); 	
+				break;
+			case 3:				// Ram + logo
+				ram(37, 4); 	
+				logo(32, 10);
+				break;
+			case 4:				// Ram + logo
+				mobo(83, 6); 		
+				logo(20, 8);
+				break;		
+		}
+		
+		menu_ini();
+	}
 }
 
 void menu_ini()
 {	
-	int inic = 50, inil = 19; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
-	
 	// Menu 
+	
 	textcolor(cor_texto);
-	gotoxy(inic, inil); 	printf("Cadastro");
-	gotoxy(inic, (inil+2)); printf("Pesquisa");
-	gotoxy(inic, (inil+4)); printf("Info do Sistema");
-	gotoxy(inic, (inil+6)); printf("Sair");
+	
+	gotoxy(50, 19); printf("Cadastro");
+	gotoxy(50, 21); printf("Pesquisa");
+	gotoxy(50, 23); printf("Info do Sistema");
+	gotoxy(50, 25); printf("Sair");
 	
 	// Chama navegação com setas
+	
 	int escolha;
-	escolha = navegar_menu(inil, (inil + 6), (inic - 2));
+	escolha = navegar_menu(19, 25, 48);
 	
 	switch(escolha)
 	{
@@ -251,11 +259,16 @@ void menu_ini()
 			sair();
 			break;
 	}
+	
+	return; 
 }
+
+//
+// Escolhas possiveis no primeiro menu 
+//
 
 void cadastro_visual()
 {
-	int x = 20, y = 8;
 	char dnv = 'n';
 	
 	abrir_arquivo();
@@ -266,33 +279,33 @@ void cadastro_visual()
 		
 		borda();
 		tabela_tipos();
-		gotoxy(20,31); printf("Digite 0 no campo de ID para retornar ao menu");
+		
+		gotoxy(20, 31); printf("Digite 0 no campo de ID para retornar ao menu");
 		
 		textcolor(cor_destaque);
 		gotoxy(50, 4); printf("Cadastro de Produtos"); // Mensagem em destaque no meio da tela
 		
-		// Posicionado a esquerda => Perguntas
-		gotoxy(x, y); 	  printf("Id do produto....: ");				
-		gotoxy(x, y + 2); printf("Nome do Produto..: ");		
-		gotoxy(x, y + 4); printf("Quantidade.......: ");			
-		gotoxy(x, y + 6); printf("Tipo.............: ");					
-		gotoxy(x, y + 8); printf("Preco Unit%crio...: ",160);		
-		
-		textcolor(cor_texto);	
+		gotoxy(20, 8); 	printf("Id do produto....: ");				
+		gotoxy(20, 10); printf("Nome do Produto..: ");		
+		gotoxy(20, 12); printf("Quantidade.......: ");			
+		gotoxy(20, 14); printf("Tipo.............: ");					
+		gotoxy(20, 16); printf("Preco Unit%crio...: ",160);		
+			
 		cadastro_recebimento(); // Recebe as respostas do usuário
 		
 		textcolor(cor_destaque);
-		gotoxy(x, y + 20); printf("Deseja realizar mais um cadastro? (S/N): ");
+		gotoxy(20, 28); printf("Deseja realizar mais um cadastro? (S/N): ");
 	
 		do{
 			fflush(stdin);
+			
 			dnv = getche();
 			
 			if(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S')
 			{
 				Sleep(80);
-				gotoxy(x, y + 20); clreol(70); printf("Valor inv%clido! digite novamente (S/N): ",160);
-				Sleep(20); gotoxy(60, y + 20); clreol(1);
+				gotoxy(20, 28); clreol(70); printf("Valor inv%clido! digite novamente (S/N): ", 160);
+				Sleep(20); gotoxy(60, 28); clreol(1);
 			}
 				
 		}while(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S');
@@ -303,35 +316,38 @@ void cadastro_visual()
 	
 	fclose(fp);
 	
-	inicio();
+	return; 
 }
 
 void cadastro_recebimento()
 {
-	int x = 39, y = 8;
+	textcolor(cor_texto);
 	
 	fflush( fp ); 
-	gotoxy(x, y);   valida_id_recebimento();		 // Recebe id
-	gotoxy(x, y+2); valida_nome_recebimento();		 // Recebe nome
-	gotoxy(x, y+4); valida_quantidade_recebimento(); // Recebe quantidade
-	gotoxy(x, y+6); valida_tipo_recebimento();		 // Recebe tipo
-	gotoxy(x, y+8); valida_preco_recebimento();	 	 // Recebe preco
+	
+	gotoxy(39, 8);  valida_id_recebimento();		 // Recebe id
+	gotoxy(39, 10); valida_nome_recebimento();		 // Recebe nome
+	gotoxy(39, 12); valida_quantidade_recebimento(); // Recebe quantidade
+	gotoxy(39, 14); valida_tipo_recebimento();		 // Recebe tipo
+	gotoxy(39, 16); valida_preco_recebimento();	 	 // Recebe preco
 	produto.excluido = false;						 // Define excluido
 	
 	char conf; // variavel de confirmação do loop seguinte
 	
 	textcolor(cor_destaque);
-	gotoxy(20, y+14); printf("Deseja salvar os dados? (S/N): ");
+	gotoxy(20, 22); printf("Deseja salvar os dados? (S/N): ");
 	
 	do{
+		
 		fflush(stdin); //limpa buffer teclado
+		
 		conf = getche();
 		
 		if(conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N')    //verificação de valores
 		{			
 			Sleep(100);
-			gotoxy(20, y+14); printf("Valor inv%clido! digite novamente (S/N): ",160);
-			Sleep(50); gotoxy(60, y + 14); clreol(1);
+			gotoxy(20, 22); printf("Valor inv%clido! digite novamente (S/N): ",160);
+			Sleep(50); gotoxy(60, 22); clreol(1);
 		}
 		
    	}while( conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N' );
@@ -341,21 +357,30 @@ void cadastro_recebimento()
 		if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
 		{
 			textcolor(RED);
-			gotoxy(x+40,y+14); printf("Erro na escrita do arquivo!");
+			gotoxy(79, 22); printf("Erro na escrita do arquivo!");
 			textcolor(cor_texto);
 		}
 		else  //se tudo der certo
 		{
 			fflush( fp ); //limpa buffer arquivo 
+			
 			borda();
+			
 			textcolor(cor_destaque);
 			gotoxy(18,11); printf("Dados salvos com sucesso!");
 		}
 		
+		cursor(0); 
 		Sleep(1500);
 		cursor(1);
+		
+		return; 
 	}
 }
+
+// 
+// Parte do recebimento de dados 
+// 
 
 void valida_id_recebimento()  // Recebe e valida id
 {
@@ -370,6 +395,7 @@ void valida_id_recebimento()  // Recebe e valida id
 		c = 0;  //se não for número
 
 		rewind(fp);
+		
 		fflush(stdin);
 		
 		gets(id);
@@ -440,6 +466,8 @@ void valida_id_recebimento()  // Recebe e valida id
 	}while(k == 0);
 	
 	produto.id = atoi(id);   // converte a string para int e manda para a struct
+	
+	return; 
 }
 
 void valida_nome_recebimento() // Recebe e valida nome
@@ -501,6 +529,7 @@ void valida_nome_recebimento() // Recebe e valida nome
 	
 	strcpy(produto.nome, aux_final);
 	
+	return; 
 }
 
 void valida_quantidade_recebimento() // Recebe e valida quantidade
@@ -558,6 +587,8 @@ void valida_quantidade_recebimento() // Recebe e valida quantidade
 	}while(k == 0);
 	
 	produto.quantidade = atoi(aux); // Retorna quantidade inteira 
+	
+	return; 
 }
 
 void valida_tipo_recebimento() // Recebe e valida tipo 
@@ -590,6 +621,8 @@ void valida_tipo_recebimento() // Recebe e valida tipo
 	}while(true);
 	
 	produto.tipo = aux;
+	
+	return; 
 }
 
 void valida_preco_recebimento() // Recebe preço e valida
@@ -656,6 +689,8 @@ void valida_preco_recebimento() // Recebe preço e valida
 	}while(true);
 	
 	produto.preco_unitario = num; 
+	
+	return; 
 }
 
 // Revisão primária => 28/10/2020 
@@ -664,6 +699,220 @@ void valida_preco_recebimento() // Recebe preço e valida
 	- Funções de recebimento e validação alteradas
 	- Tempo das mensagens de erro reduzido
 	- Erros lógicos resolvidos
+*/
+
+void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu 
+{
+	while(true)
+	{
+		borda();
+		
+		lupa(43, 4);
+		
+		// Menu 
+		
+		textcolor(cor_texto);
+		gotoxy(45, 19);  printf("Geral");
+		gotoxy(45, 21);  printf("Pesquisa por ID");
+		gotoxy(45, 23);  printf("Pesquisa por Tipo");
+		gotoxy(45, 25);  printf("Pesquisa por Nome"); 
+		gotoxy(45, 27);  printf("Excluir dados");
+		gotoxy(45, 29);  printf("Retornar ao In%ccio", 161);
+		
+		int escolha;
+		escolha = navegar_menu(19, 29, 43);
+		
+		switch(escolha)
+		{
+			case 0:
+				consulta_geral();
+				break;
+			case 1:
+				consulta_id();
+				break;
+			case 2:
+				consulta_tipo_recebimento();
+				break;
+			case 3:
+				consulta_nome(); 
+				break;
+			case 4:
+				excluir_dados();
+				break;
+			case 5: 
+				return; // Retorna ao menu inicial 
+		} 
+	}
+}
+
+void info_de_sistema() // Apresenta as informações do sistema
+{
+	borda();
+	
+	int inix = 20, iniy = 9; // Controla o eixo x e y das informações
+	
+	// Apresenta as informações do sistema
+	textcolor(cor_destaque);
+	gotoxy(54, 4);  printf("Info do Sistema");
+	textbackground(cor_fundo);
+	
+	textcolor(cor_destaque);
+	gotoxy(20, 7); printf("Empresa: ");
+	textcolor(cor_texto);
+	printf("GoTech");
+	
+	textcolor(cor_destaque);
+	gotoxy(20, 9);  printf("Nomes: ");
+	textcolor(cor_texto);
+	printf("Gabriel Nicolim e Felipe Lima");
+	
+	textcolor(cor_destaque);
+	gotoxy(20, 11);  printf("N%cmeros: ",163);
+	textcolor(cor_texto);
+	printf("08 e 06");
+	
+	textcolor(cor_destaque);
+	gotoxy(20, 13);  printf("Turmas: ");
+	textcolor(cor_texto);
+	printf("71A");
+	
+	textcolor(cor_destaque);
+	gotoxy(20, 15);  printf("Ano: ");
+	textcolor(cor_texto);
+	printf("2020");
+	
+	textcolor(cor_destaque);
+	gotoxy(20, 17);  printf("Sobre o software: ");
+	textcolor(cor_texto);
+	printf("Nosso software, que hoje se encontra na vers%co %.1f, se destina a",198, versao);
+	gotoxy(20, 19); printf("simular um sistema de gerenciamento de estoque de uma loja de inform%ctica em C/C++.",160);
+	gotoxy(20, 21); printf("Para a realiza%c%co desse projeto utilizamos fun%c%ces de cabe%calho da conio.c e conio.h.",135,198,135,228,135);
+	gotoxy(20, 23); printf("Podem ser registrados perif%cricos e outras pe%cas de computador.",130,135);
+	
+	textcolor(cor_destaque);
+	gotoxy(20, 25); printf("Agradecimentos: ");
+	textcolor(cor_texto);
+	printf("Deixamos nosso agradecimento a professora Ariane Scarelli e ");
+	gotoxy(20, 27); printf("K%ctia Zambombon, por compartilharem conosco parte de seus conhecimentos.",160);
+	
+	gotoxy(20, 30); printf("Pressione 0 para retornar ao menu"); 
+	
+	char c;
+	
+	do
+	{
+		fflush(stdin); 
+		
+		c =	getch();
+			
+	}while(c != '0');
+	
+	return; 
+}
+
+void sair() // Finaliza a execução do programa
+{
+	borda();
+	
+	textcolor(cor_texto);
+	
+	gotoxy(42, 17); printf("Obrigado por utilizar nosso programa!");
+	
+	fclose(fp);
+	
+	textcolor(cor_fundo); gotoxy(80, 37); // Esconde mensagem de encerramento 
+	
+	exit(1);
+}
+
+//
+// Sub menu 
+//
+
+void consulta_geral()
+{
+	int contl = 1, limite, limiteAnte, pag= 1, linha; // Variaveis Auxiliares
+	
+	char retornar;
+	
+	abrir_arquivo();
+	
+	cursor(0); // Desliga o cursor
+	
+	gera_tabela(5);	// Gera borda e tabela inicial
+				
+	do
+	{
+		switch(retornar)
+		{
+			case 77: // Se a seta direita for pressionada
+				if(pag < 10) 
+				{
+					pag++; // Avança a página | Limita pag a 10 
+					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+					gera_tabela(5);
+				}	
+				break;
+				
+			case 75: // Se a seta da esquerda
+				if(pag > 1) 				
+				{
+					pag--; // Volta a pagina
+					rewind(fp);	
+					gera_tabela(5);	
+				}			
+				break;
+		}
+				
+		limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
+		limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
+		
+		textcolor(cor_texto);
+		
+		gotoxy(20, 31);  printf("Pressione 0 para voltar ao menu de pesquisa");
+		gotoxy(107, 4);	printf("%d",pag); // Número da página 
+		
+		contl= 1;    //reseta o contador de linha
+		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
+		
+		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+		{			
+			if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
+			{
+				if(!produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+				{
+					completa_tabela(linha);    //preenche a tabela
+					linha+=2; 
+				}
+			}
+			
+			if(contl == limite) break; //se a linha atual for igual ao limite quebra
+			else contl++; //adiciona mais uma linha ao contador
+		}
+		
+		gotoxy(20,34); 
+		retornar = getch();
+			
+	}while (retornar != '0');  
+		
+	// Se 0 for pressionado 
+	
+	textbackground(12);
+	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
+	printf("Voltando ao Menu...");
+	Sleep(1500);
+	textbackground(cor_fundo);
+	
+	fclose(fp);	// fecha o arquivo
+	return;    // Retorna ao submenu
+}
+
+// Revisão Final para entrega => 05/11/2020 
+
+/* 
+	- Funções foram alteradas a fim de retirar a "recursividade" (ERRO GRAVE)
+	- Erros lógicos resolvidos
+	- Foram retiradas linhas sem sentido 
 */
 
 void consulta_tipo_recebimento()
@@ -787,81 +1036,6 @@ void consulta_tipo(char aux)
 	
 	fclose(fp);	// fecha o arquivo
 	consulta_tipo_recebimento(); 
-}
-
-void consulta_geral()
-{
-	int contl = 1, limite, limiteAnte, pag= 1, linha; // Funções Auxiliares
-	char retornar;
-	
-	abrir_arquivo();
-	
-	cursor(0); // Desliga o cursor
-	
-	gera_tabela(5);	// Gera borda e tabela inicial
-				
-	do
-	{
-		switch(retornar)
-		{
-			case 77: // Se a seta direita for pressionada
-				if(pag < 10) 
-				{
-					pag++; // Avança a página | Limita pag a 10 
-					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-					gera_tabela(5);
-				}	
-				break;
-				
-			case 75: // Se a seta da esquerda
-				if(pag > 1) 				
-				{
-					pag--; // Volta a pagina
-					rewind(fp);	
-					gera_tabela(5);	
-				}			
-				break;
-		}
-				
-		limite = (12*pag); // 12 linhas de dados por página (oq cabe na tabela)
-		limiteAnte = (12*(pag-1));  // Limite da página anterior 
-		
-		textcolor(cor_texto);
-		gotoxy(20,31);  printf("Pressione 0 para voltar ao menu de pesquisa");
-		gotoxy(107,4);	printf("%d",pag); // Número da página 
-		
-		contl= 1;    //reseta o contador de linha
-		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
-		
-		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
-		{			
-			if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
-			{
-				if(!produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
-				{
-					completa_tabela(linha);    //preenche a tabela
-					linha+=2; 
-				}
-			}
-			if(contl == limite) //se a linha atual for igual ao limite quebra
-				break; 
-			contl++; //adiciona mais uma linha ao contador
-		}
-		gotoxy(20,34); 
-		retornar = getch();
-			
-	}while (retornar != '0');  
-		
-	// Se 0 for pressionado 
-	cursor(0);
-	textbackground(12);
-	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-	printf("Voltando ao Menu...");
-	Sleep(1500);
-	textbackground(cor_fundo);
-	
-	fclose(fp);	// fecha o arquivo
-	sub_menu(); // Retorna ao submenu
 }
 
 void gera_tabela(int li)
@@ -1053,49 +1227,6 @@ void excluir_dados() //exclusao lógica (continua no binário)
 			}
 		}
 	}while(true);
-}
-
-void sub_menu()
-{
-	borda();
-	
-	int inic = 45, inil = 19; // Se deseja mudar a posição do texto no menu basta alterar uma das variaveis 
-	
-	lupa(43,4);
-	
-	// Menu 
-	textcolor(cor_texto);
-	gotoxy(inic, inil); 	 printf("Geral");
-	gotoxy(inic, (inil+2));  printf("Pesquisa por ID");
-	gotoxy(inic, (inil+4));  printf("Pesquisa por Tipo");
-	gotoxy(inic, (inil+6));  printf("Pesquisa por Nome"); 
-	gotoxy(inic, (inil+8));  printf("Excluir dados");
-	gotoxy(inic, (inil+10)); printf("Retornar ao In%ccio",161);
-	
-	int escolha;
-	escolha = navegar_menu(inil, (inil + 10), (inic - 2));
-	
-	switch(escolha)
-	{
-		case 0:
-			consulta_geral();
-			break;
-		case 1:
-			consulta_id();
-			break;
-		case 2:
-			consulta_tipo_recebimento();
-			break;
-		case 3:
-			consulta_nome(); 
-			break;
-		case 4:
-			excluir_dados();
-			break;
-		case 5:
-			inicio();
-			break;
-	}
 }
 
 void consulta_nome()
@@ -1302,85 +1433,6 @@ void tabela_tipos()
     gotoxy(38,38);    printf(" M - Mobo             F - Fonte    W - Cabos");
     gotoxy(38,39);    printf(" A - Armazenamento    R - Ram      O - Outros");
 }
-
-void info_de_sistema() // Apresenta as informações do sistema
-{
-	borda();
-	
-	int inix = 20, iniy = 9; // Controla o eixo x e y das informações
-	
-	// Apresenta as informações do sistema
-	textcolor(cor_destaque);
-	gotoxy(54, 4);  printf("Info do Sistema");
-	textbackground(cor_fundo);
-	
-	textcolor(cor_destaque);
-	gotoxy(inix, iniy -2); printf("Empresa: ");
-	textcolor(cor_texto);
-	printf("GoTech");
-	
-	textcolor(cor_destaque);
-	gotoxy(inix, iniy);  printf("Nomes: ");
-	textcolor(cor_texto);
-	printf("Gabriel Nicolim e Felipe Lima");
-	
-	textcolor(cor_destaque);
-	gotoxy(inix, iniy + 2);  printf("N%cmeros: ",163);
-	textcolor(cor_texto);
-	printf("08 e 06");
-	
-	textcolor(cor_destaque);
-	gotoxy(inix, iniy + 4);  printf("Turmas: ");
-	textcolor(cor_texto);
-	printf("71A");
-	
-	textcolor(cor_destaque);
-	gotoxy(inix, iniy + 6);  printf("Ano: ");
-	textcolor(cor_texto);
-	printf("2020");
-	
-	textcolor(cor_destaque);
-	gotoxy(inix, iniy + 8);  printf("Sobre o software: ");
-	textcolor(cor_texto);
-	printf("Nosso software, que hoje se encontra na vers%co %.1f, se destina a",198, versao);
-	gotoxy(inix, iniy + 10); printf("simular um sistema de gerenciamento de estoque de uma loja de inform%ctica em C/C++.",160);
-	gotoxy(inix, iniy + 12); printf("Para a realiza%c%co desse projeto utilizamos fun%c%ces de cabe%calho da conio.c e conio.h.",135,198,135,228,135);
-	gotoxy(inix, iniy + 14); printf("Podem ser registrados perif%cricos e outras pe%cas de computador.",130,135);
-	
-	textcolor(cor_destaque);
-	gotoxy(inix, iniy + 16); printf("Agradecimentos: ");
-	textcolor(cor_texto);
-	printf("Deixamos nosso agradecimento a professora Ariane Scarelli e ");
-	gotoxy(inix, iniy + 18); printf("K%ctia Zambombon, por compartilharem conosco parte de seus conhecimentos.",160);
-	
-	gotoxy(inix, iniy + 21); printf("Pressione 0 para retornar ao menu"); 
-	
-	char c;
-	
-	while(true)
-	{
-		fflush(stdin); 
-		c =	getch();
-		
-		if(c == '0') inicio(); // Retorna ao inicio se a tecla 0 for pressionada
-	}
-}
-
-void sair() // Finaliza a execução do programa
-{
-	borda();
-	
-	textcolor(cor_texto);
-	gotoxy(42, 17); printf("Obrigado por utilizar nosso programa!");
-	textcolor(cor_fundo);
-	
-	fclose(fp);
-	
-	gotoxy(80, 37); // Esconde mensagem de encerramento 
-	
-	exit(1);
-}
-
 
 int navegar_menu(int ini, int fim, int p)
 {
