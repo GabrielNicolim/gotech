@@ -1107,12 +1107,14 @@ void consulta_nome()
 	
 	char aux[50], aux_final[50]; // Armazena nome | Armazena nome sem espaço 
 	int tam, k, j;
-	
+	char c;
+		
 	textcolor(cor_destaque); 
 	gotoxy(52, 4); printf("Consulta por Nome");
 	gotoxy(20,31);  printf("Pressione 0 para voltar a pesquisa");
 	gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
-
+	textcolor(cor_texto);
+	
 	while(true)
 	{
 		k = 0;
@@ -1161,8 +1163,6 @@ void consulta_nome()
 	
 	abrir_arquivo();
 	
-	char c;
-	
 	do
 	{		
 		k = 0;
@@ -1173,12 +1173,13 @@ void consulta_nome()
 		{			
 			if(strstr(strlwr(produto.nome),strlwr(aux_final)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
 			{
-				completa_tabela(14);    //preenche a tabela
 				gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
 				gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
 				gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
 				gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
 				gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
+				
+				completa_tabela(14);    //preenche a tabela
 				k = 0;
 				break;
 			} 
