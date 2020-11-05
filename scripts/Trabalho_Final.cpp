@@ -497,7 +497,9 @@ void valida_nome_recebimento() // Recebe e valida nome
 			textbackground(cor_fundo);
 			gotoxy(39, 10); clreol(70);
 		}
-		else // Se o nome não for nem grande de mais nem pequeno de mais
+		else
+		break;
+		/*else // Se o nome não for nem grande de mais nem pequeno de mais
 		{
 			for(int i = 0; i < tam; i++)
 			{
@@ -521,13 +523,13 @@ void valida_nome_recebimento() // Recebe e valida nome
 				break;
 			}
 			
-		}
+		}*/
 	}
 	
 	gotoxy(39, 10); clreol(70);
-	gotoxy(39, 10); printf("%s", aux_final);
+	gotoxy(39, 10); printf("%s", aux);
 	
-	strcpy(produto.nome, aux_final);
+	strcpy(produto.nome, aux);
 	
 	return; 
 }
