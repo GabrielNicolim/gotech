@@ -833,49 +833,30 @@ void sair() // Finaliza a execução do programa
 
 void consulta_geral()
 {
-	int contl = 1, limite, limiteAnte, pag= 1, linha; // Variaveis Auxiliares
+	int contl = 1, limite, limiteAnte, pag = 1, linha; // Variaveis Auxiliares
 	
-	char retornar;
+	char retornar = '0';
 	
 	abrir_arquivo();
 	
 	cursor(0); // Desliga o cursor
-	
+				
 	gera_tabela(5);	// Gera borda e tabela inicial
-				
+	
 	do
-	{
-		switch(retornar)
-		{
-			case 77: // Se a seta direita for pressionada
-				if(pag < 10) 
-				{
-					pag++; // Avança a página | Limita pag a 10 
-					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-					gera_tabela(5);
-				}	
-				break;
-				
-			case 75: // Se a seta da esquerda
-				if(pag > 1) 				
-				{
-					pag--; // Volta a pagina
-					rewind(fp);	
-					gera_tabela(5);	
-				}			
-				break;
-		}
-				
+	{			
 		limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
 		limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
 		
 		textcolor(cor_texto);
 		
-		gotoxy(20, 31);  printf("Pressione 0 para voltar ao menu de pesquisa");
-		gotoxy(107, 4);	printf("%d",pag); // Número da página 
+		gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
+		gotoxy(107, 4);	printf("%d", pag); // Número da página 
 		
 		contl= 1;    //reseta o contador de linha
 		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
+		
+		rewind(fp);
 		
 		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
 		{			
@@ -884,7 +865,7 @@ void consulta_geral()
 				if(!produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
 				{
 					completa_tabela(linha);    //preenche a tabela
-					linha+=2; 
+					linha += 2; 
 				}
 			}
 			
@@ -893,8 +874,32 @@ void consulta_geral()
 		}
 		
 		gotoxy(20,34); 
+		
+		fflush(stdin);
+		
 		retornar = getch();
-			
+		
+		switch(retornar)
+		{
+			case char(77): // Se a seta direita for pressionada
+				if(pag < 10) 
+				{
+					pag++; // Avança a página | Limita pag a 10 
+					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+					gera_tabela(5);
+				}	
+				break;
+				
+			case char(75): // Se a seta da esquerda
+				if(pag > 1) 				
+				{
+					pag--; // Volta a pagina
+					rewind(fp);	
+					gera_tabela(5);	
+				} 			
+				break;
+		}
+		
 	}while (retornar != '0');  
 		
 	// Se 0 for pressionado 
