@@ -1103,7 +1103,9 @@ void consulta_nome()
 	borda();
 	tabela_tipos();
 	
-	char aux[50];
+	cursor(1);
+	
+	char aux[50], aux_final[50]; // Armazena nome | Armazena nome sem espaço 
 	int tam, k, j;
 	
 	textcolor(cor_destaque); 
@@ -1112,8 +1114,46 @@ void consulta_nome()
 	
 	while(true)
 	{
-		// Obter Nome
+		k = 0;
+		j = 0;
+		
+		fflush(stdin);
+		gets(aux);
+		
+		tam = strlen(aux);
+		
+		if(tam == 0) gotoxy(49, 7); // Se nada for digitado
+		else if(tam >= 19) consulta_nome(); // Limita o nome a 19 caracteres 
+		else // Se o nome não for nem grande de mais nem pequeno de mais
+		{
+			for(int i = 0; i < tam; i++)
+			{
+				if(aux[i] != char(32)) // O primeiro caractere diferente de um espaço
+				{
+					k = 1;
+					break;
+				}
+				else j++; 	// Conta quantos espaços existem antes da primeira letra 
+			}
+			
+			if(k == 0)  gotoxy(39, 10); // o nome tiver apenas espaços 
+			else if(k == 1)
+			{
+				k = 0; // Reutilização de variavel para navegar em aux final 
+				for(int i = j; i < tam; i++) // Inicia a partir da primeira posição sem espaço
+				{
+					aux_final[k] = aux[i];
+					k++;
+				}
+				break;
+			}
+			
+		}
 	}
+	
+	// aux_final => Guarda o nome desejado  
+	
+	
 }
 
 void consulta_id()   //consulta por id
