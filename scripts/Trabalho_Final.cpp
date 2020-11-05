@@ -942,14 +942,15 @@ void consulta_id()   //consulta por id
 		if(aux == 0) break;
 		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
 		{
+			gotoxy(47, 7); 		clreol(50);
 			textbackground(12); 
 			textcolor(cor_texto);
-			gotoxy(47, 7); printf("Id inv%clido",160);
+			printf("Id inv%clido",160);
 			Sleep(1000);
 			textbackground(cor_fundo);
 			gotoxy(47, 7); clreol(50);	
 		} 
-		else if(aux == 3)
+		else if(aux == 3)  //retorno de 3 significa que o id é válido
 		{
 			rewind(fp);	
 			while( !feof(fp) )  //enquanto no for o fim de um arquivo...
@@ -1019,7 +1020,7 @@ int valida_id_consulta(int *id_final)
 			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
 			printf("Voltando ao menu...");
 			Sleep(1500);
-			sub_menu();
+			return 0;
 		}
 		else 
 			for(int i = 0; i < tam; i++) 
@@ -1282,7 +1283,6 @@ void excluir_dados() //exclusao lógica (continua no binário)
 			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
 			printf("Voltando ao menu...");
 			Sleep(1500);
-			sub_menu(); 
 		} 
 	    else // Se algo diferente de 0 for digitado
 	    {
@@ -1445,6 +1445,7 @@ int navegar_menu(int ini, int fim, int p)
 		}
 		
 	}while(true);
+
 }
 
 void gera_tabela(int li)
