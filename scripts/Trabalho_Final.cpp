@@ -673,7 +673,7 @@ void consulta_tipo_recebimento()
 	textcolor(cor_texto); tabela_tipos();
 	
 	textcolor(cor_destaque);
-	gotoxy(20,31);  printf("Pressione 0 para voltar ao menu de pesquisa");
+	gotoxy(20,31); printf("Pressione 0 para voltar ao menu de pesquisa");
 	gotoxy(52, 4); printf("Consulta por Tipo", 198);
 	
 	gotoxy(20,7); printf("Digite tipo a ser pesquisado (0 para sair): ");
@@ -760,7 +760,7 @@ void consulta_tipo(char aux)
 		{			
 			if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
 			{
-				if(produto.tipo == aux) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+				if(produto.tipo == aux && !produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
 				{
 					completa_tabela(linha);    //preenche a tabela
 					linha += 2; 
@@ -1042,7 +1042,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 				{
 					cursor(0);
 					textcolor(cor_destaque);
-					gotoxy(42,25);printf("****** C%cdigo n%co encontrado! ******",162,198);
+					gotoxy(42,20);printf("****** C%cdigo n%co encontrado! ******",162,198);
 					getch();
 					
 					fflush(fp);			// limpeza de buffers 
@@ -1105,7 +1105,7 @@ void consulta_nome()
 		
 	cursor(1);
 	
-	char aux[50], aux_final[50]; // Armazena nome | Armazena nome sem espaço 
+	char aux[50]; // Armazena nome | Armazena nome sem espaço 
 	int tam, k, j;
 	char c;
 		
@@ -1128,35 +1128,11 @@ void consulta_nome()
 		if(tam == 0) gotoxy(49, 7); // Se nada for digitado
 		else // Se o nome não for nem grande de mais nem pequeno de mais
 		{
-			for(int i = 0; i < tam; i++)
-			{
-				if(aux[i] != char(32)) // O primeiro caractere diferente de um espaço
-				{
-					k = 1;
-					break;
-				}
-				else j++; 	// Conta quantos espaços existem antes da primeira letra 
-			}
-			
-			if(k == 0)  gotoxy(49, 7); // o nome tiver apenas espaços 
-			else if(k == 1)
-			{
-				k = -1; // Reutilização de variavel para navegar em aux final 
-				for(int i = j; i < tam; i++) // Inicia a partir da primeira posição sem espaço
-				{
-					k++;
-					aux_final[k] = aux[i];
-				}
-				break;
-			}
+			break;
 		}
 	}
 	
-	if(aux_final[0] == '0') sub_menu();
-	
-	gotoxy(49, 7); clreol(40);
-	puts(aux_final); 
-	
+	if(aux[0] == '0') sub_menu();	
 	// aux_final => Guarda o nome desejado  
 	
 	cursor(0);
@@ -1171,7 +1147,7 @@ void consulta_nome()
 		
 		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
 		{			
-			if(strstr(strlwr(produto.nome),strlwr(aux_final)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
+			if(strstr(strlwr(produto.nome),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
 			{
 				gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
 				gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
@@ -1189,7 +1165,7 @@ void consulta_nome()
 		if(k == 1) 
 		{
 			textcolor(cor_destaque);
-			gotoxy(45, 20); printf("*** Nome não encontrado ***");
+			gotoxy(45, 20); printf("*** Nome n%co encontrado ***", 198);
 		}
 				
 		c = getch();
@@ -1197,8 +1173,6 @@ void consulta_nome()
 	}while(c != '0');
 	
 	consulta_nome();
-	
-	
 	
 }
 
