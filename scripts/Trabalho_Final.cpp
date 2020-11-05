@@ -373,6 +373,7 @@ void valida_id_recebimento()  // Recebe e valida id
 		fflush(stdin);
 		
 		gets(id);
+		
 		tam = strlen(id); // pega tamanho da string e joga em uma int tamanho
 		
 		if(tam == 0) // Se nada foi digitado 	
@@ -398,10 +399,7 @@ void valida_id_recebimento()  // Recebe e valida id
 					c = 1; //marca id como invalido para cair no if mais embaixo
 					break;
 				}
-			} 
-			
-			aux = atoi(id); // converte a string para int	
-		}	
+			} 	
 			
 			if(c == 1)  // Erro se não for numerico
 			{
@@ -418,6 +416,8 @@ void valida_id_recebimento()  // Recebe e valida id
 			}
 			else
 			{
+				aux = atoi(id); // converte a string para int
+				
 				while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1) && produto.id != aux || (produto.id == aux && produto.excluido));
 				
 				if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
@@ -435,6 +435,7 @@ void valida_id_recebimento()  // Recebe e valida id
 				else
 					k = 1; //faz sair do loop			
 			}
+		}	
 		
 	}while(k == 0);
 	
