@@ -19,8 +19,8 @@
 #include <time.h>
 #include <strings.h>
 
-// Versão 1.98
-#define versao 1.98
+// Versão 2
+#define versao 2.0
 
 // Definição de cores 
 #define cor_fundo 3
@@ -178,7 +178,7 @@ void loading()
 	textcolor(cor_texto);
 	gotoxy(38, 10); printf("Aguarde, estamos preparando tudo para voc%c!",136);
 	gotoxy(15, 30); printf("Copyright%c GoTech",184);
-	gotoxy(99, 30); printf("Vers%co %.2f",198, versao);
+	gotoxy(99, 30); printf("Vers%co %.1f",198, versao);
 	
 	textcolor(RED); // Loading vermelho
 	for(int i = 0; i <= 52; i++)
@@ -713,9 +713,9 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 		
 		textcolor(cor_texto);
 		gotoxy(45, 19);  printf("Geral");
-		gotoxy(45, 21);  printf("Pesquisa por ID");
-		gotoxy(45, 23);  printf("Pesquisa por Tipo");
-		gotoxy(45, 25);  printf("Pesquisa por Nome"); 
+		gotoxy(45, 21);  printf("Busca por ID");
+		gotoxy(45, 23);  printf("Busca por Tipo");
+		gotoxy(45, 25);  printf("Busca por Nome"); 
 		gotoxy(45, 27);  printf("Excluir dados");
 		gotoxy(45, 29);  printf("Retornar ao In%ccio", 161);
 		
@@ -915,48 +915,174 @@ void consulta_geral()
 	- Foram retiradas linhas sem sentido 
 */
 
-void consulta_tipo_recebimento()
-{
-	borda();
-	
-	textcolor(cor_texto); tabela_tipos();
-	
-	textcolor(cor_destaque);
-	gotoxy(20,31); printf("Pressione 0 para voltar ao menu de pesquisa");
-	gotoxy(52, 4); printf("Consulta por Tipo", 198);
-	
-	gotoxy(20,7); printf("Digite tipo a ser pesquisado (0 para sair): ");
+void consulta_id()   //consulta por id
+{	
+		
+	abrir_arquivo();
 	
 	textcolor(cor_texto);
 	
-	char aux;
-	
 	do
- 	{
- 		
- 		fflush(stdin);
- 	
- 		aux = getche();
+	{
+		// Construção visual
+		borda();
+		tabela_tipos();
 		
-		aux = toupper(aux);
+		int k=0;
+		int aux = 0;
+		int id_busca; // Armazena id digitado pelu usuário durante a busca
+			
+		textcolor(cor_destaque);
+		gotoxy(54, 4); printf("Consulta por ID");
+		gotoxy(20, 7); printf("Digite o Id (0 para sair): ");
+		textcolor(cor_texto);
 		
-		// Verifica se é um dos tipos listados
-		if(aux == '0') sub_menu();
-		else if(aux == 'P' || aux == 'G' || aux == 'C' || aux == 'M' || aux == 'F' || aux == 'W' || aux == 'A' || aux == 'R' || aux == 'O') break;
-		else // Apresenta erro
+		aux = valida_id_consulta(&id_busca);
+		
+		if(aux == 0) break;
+		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
 		{
+			textbackground(12); 
+			textcolor(cor_texto);
+			gotoxy(47, 7); printf("Id inv%clido",160);
+			Sleep(1000);
 			textbackground(cor_fundo);
-			textbackground(12);
-			gotoxy(64, 7); printf("[ERRO] Tipo inv%clido",160);			
-			Sleep(1000); // tempo de erro na tela
-			textbackground(cor_fundo);
-			gotoxy(64, 7); clreol(30);
-			gotoxy(39, 14);
+			gotoxy(47, 7); clreol(50);	
+		} 
+		else if(aux == 3)
+		{
+			rewind(fp);	
+			while( !feof(fp) )  //enquanto no for o fim de um arquivo...
+			{
+				if(fread(&produto, sizeof(produto), 1, fp) == 1 && !produto.excluido && produto.id == id_busca)
+				{					
+		
+					gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
+					gotoxy(20,12);	printf ("|   ID   |      Nome         |  Pre%co Unit%crio  |    Quantidade   |     Tipo      |",135,160);
+			   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
+					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
+					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
+					
+					completa_tabela(14); //Apresenta-se ao usuário o registro pesquisado
+					
+					textcolor(cor_destaque);
+					gotoxy(20,30);printf("Pressione uma tecla para continuar...");
+					
+					fflush(stdin);
+					getch();
+					
+					k = 1; //para não apresentar erro de código inexistente
+					
+					break;	//sai do loop pra n ter q fazer verificação extra (preguiça)
+				}				
+			}
+			if(k == 0)
+			{
+				textcolor(cor_destaque); 
+				gotoxy(21,23);printf("-----> C%cdigo inexistente! <-----",162);
+				gotoxy(21,24);printf("Pressione uma tecla para redigitar");
+				
+				getch();
+				
+			}
 		}
 		
 	}while(true);
 	
-	consulta_tipo(aux);
+	fclose(fp); //fecha arquivo
+	
+	return;
+}
+
+int valida_id_consulta(int *id_final)
+{
+	char id[30];
+	int tam;
+	int k;
+	
+	do
+	{
+		k = 1;
+		cursor(1);
+		gets(id);
+		tam = strlen(id);
+		
+		if(tam == 0)  //se não for digitado nada (apenas enter) volta a posição inicial
+		{
+			gotoxy(47,7);
+			k = 0;
+		} 
+		else if(id[0] == '0')   //se for digitado 0 como o primeiro número retorna ao submenu
+		{
+			cursor(0);
+			textbackground(12);
+			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
+			printf("Voltando ao menu...");
+			Sleep(1500);
+			sub_menu();
+		}
+		else 
+			for(int i = 0; i < tam; i++) 
+				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
+					return 1;			
+	}while(k != 1);
+	
+	cursor(0);
+	
+	*id_final = atoi(id); //manda por referencia o id em forma de int
+	
+	return 3;
+}	
+
+void consulta_tipo_recebimento()
+{
+	char aux;
+	
+	do{
+		borda();
+		
+		textcolor(cor_texto); tabela_tipos();
+		
+		textcolor(cor_destaque);
+		gotoxy(52, 4); printf("Consulta por Tipo", 198);
+		
+		gotoxy(20,7); printf("Digite tipo a ser pesquisado (0 para sair): ");
+		
+		textcolor(cor_texto);
+		
+		do
+	 	{
+	 		
+	 		fflush(stdin);
+	 	
+	 		aux = getche();
+			
+			aux = toupper(aux);  //passa o auxiliar para maiusculo
+			
+			// Verifica se é um dos tipos listados
+		
+			if(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' )
+			{
+				textbackground(cor_fundo); // Apresenta erro
+				textbackground(12);
+				gotoxy(64, 7); printf("[ERRO] Tipo inv%clido",160);			
+				Sleep(1000); // tempo de erro na tela
+				textbackground(cor_fundo);
+				gotoxy(64, 7); clreol(30);
+				//gotoxy(39, 14);
+			}
+			
+		}while(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' );
+		
+		if(aux != '0')
+		{
+			Sleep(500);
+			consulta_tipo(aux);
+		}
+		
+	}while(aux != '0');
+	
+	return;
 }
 
 void consulta_tipo(char aux)
@@ -1035,7 +1161,290 @@ void consulta_tipo(char aux)
 	textbackground(cor_fundo);
 	
 	fclose(fp);	// fecha o arquivo
-	consulta_tipo_recebimento(); 
+	
+	return;
+}
+
+void consulta_nome()
+{
+	
+	char aux[50]; // Armazena nome | Armazena nome sem espaço 
+	int tam, k, j;
+	char c;
+	
+	do{
+	
+		borda();
+		tabela_tipos();
+			
+		cursor(1);
+			
+		textcolor(cor_destaque); 
+		gotoxy(52, 4); printf("Consulta por Nome");
+		gotoxy(20,31);  printf("Pressione 0 para voltar a pesquisa");
+		gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
+		textcolor(cor_texto);
+		
+		do{
+			
+			k = 0;
+			j = 0;
+			
+			fflush(stdin);
+			gets(aux);
+			
+			tam = strlen(aux);
+			
+			if(tam == 0) gotoxy(49, 7); // Se nada for digitado
+			
+		}while(tam == 0);
+		
+		if(aux[0] == '0')
+			return;
+		// aux_final => Guarda o nome desejado  
+		
+		cursor(0);
+		
+		abrir_arquivo();
+		
+		do
+		{		
+			k = 0;
+			
+			rewind(fp);
+			
+			while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+			{			
+				if(strstr(strlwr(produto.nome),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
+				{
+					gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
+					gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
+					gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
+					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
+					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
+					
+					completa_tabela(14);    //preenche a tabela
+					k = 0;
+					break;
+				} 
+				else k = 1;		
+			}
+			
+			if(k == 1) 
+			{
+				textcolor(cor_destaque);
+				gotoxy(45, 20); printf("*** Nome n%co encontrado ***", 198);
+			}
+					
+			c = getch();
+		
+		}while(c != '0');
+	
+	}while(aux[0] != '0');
+	
+	return;
+	
+}
+
+void excluir_dados() //exclusao lógica (continua no binário)
+{
+	cursor(1); // Liga o cursor
+	
+	int aux_codigo, F, k, tam; // Auxiliares
+	long fposicao;
+	char conf, id[50];
+
+	do{
+		
+		borda();
+		tabela_tipos(); //apresenta a info doq as letras significam
+		
+		abrir_arquivo_alterar();  //abre o arquivo no modo de alteração de dados   
+		
+		textcolor(cor_destaque);
+		gotoxy(50, 4); printf("Exclus%co de dados", 198);
+		gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ",162);
+		
+		textcolor(cor_texto);
+		      
+		
+		k = 0;
+		
+		gets(id);
+		
+	    tam = strlen(id);
+	    
+	    if(tam == 0) gotoxy(77, 7); // Se nada for digitado
+	    else if(id[0] == '0') // Se 0 for digitado
+		{
+			cursor(0);
+			textbackground(12);
+			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
+			printf("Voltando ao menu...");
+			Sleep(1500);
+			sub_menu(); 
+		} 
+	    else // Se algo diferente de 0 for digitado
+	    {
+	    	for(int i = 0; i < tam; i++)
+			{
+				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
+				{ // Confere se é numérico  
+					k = 1; // Se não for numérico 
+					break;	
+				}	
+			} 
+	    	
+	    	if(k == 1) // Se um caractere não numérico for digitado
+	    	{
+	    		textcolor(cor_texto);
+	    		gotoxy(77, 7); clreol(34);
+				textbackground(12);
+	    		gotoxy(77, 7); printf("[ERRO] Id Inv%clido", 160);
+				Sleep(1000);
+				textbackground(cor_fundo); gotoxy(77, 7); clreol(34);
+			}
+	    	else // Se o ID for valido e numérico
+	    	{ 
+	    		aux_codigo = atoi(id); // Converte string em int 
+	    		
+		    	F = 0;
+		    	
+				rewind(fp);  //volta ao inicio do arquivo (para segunda repetição)
+				
+			    do
+			    {
+					fread(&produto, sizeof(produto), 1, fp);
+					
+					if (produto.id == aux_codigo && !produto.excluido) //Se houver um produto com o id e que não foi excluído
+					{
+				   		F = 1;  // F = 1 significa que o arquivo foi achado
+				   		
+				   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
+				   		
+				   		textcolor(cor_texto);
+				   		gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
+						gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
+				   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
+						gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
+						gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
+						completa_tabela(14); //Apresenta-se ao usuário o registro a ser excluído
+						
+				   		textcolor(cor_destaque);
+					   	gotoxy(19,22); printf("Confirma exclus%co ? (S/N): ",198);
+					   	
+					   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
+						do 
+					   	{
+					   		fflush(stdin);
+					   		textcolor(cor_texto);
+					    	gotoxy(46,22); conf = getche(); // Confirmação 
+					    	
+					    	if(conf != 's' && conf != 'S' && conf != 'n' && conf != 'N') 
+					    	{
+					    		gotoxy(46, 22); clreol(5);	
+							}
+							
+					   	}while( conf != 's' && conf != 'S' && conf != 'n' && conf != 'N' );
+					   
+					   	if( conf == 's' || conf == 'S' )
+					   	{
+					   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
+							if(fseek (fp, fposicao-(sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, 
+							{															//funciona igual o rewind(fp); porém pode ser usado em verificações pois retorna algo
+								gotoxy(20,11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+								Sleep(1500);
+								return;
+							}
+																				
+							produto.excluido= true; //atribuição de true para o campo excluído para indicar que o registro foi excluído ou desativado (exclusão lógica) 
+							
+							if(fwrite(&produto, sizeof(produto), 1, fp) == 1)
+							{
+								cursor(0);
+								fflush (fp);
+								textcolor(cor_destaque);
+								gotoxy(19,24);printf("Cadastro exclu%cdo com sucesso!",161);
+								getch();
+								
+								fflush(fp);			// limpeza de buffers 
+								fclose(fp);			// fechamento do arquivo
+					
+							}	
+					   	}
+					   	else break; 
+					}
+				} while ((!F) && (!feof(fp)));  
+				
+				if (F==0 && aux_codigo!=0)  //código não encontrado
+				{
+					cursor(0);
+					textcolor(cor_destaque);
+					gotoxy(42,20);printf("****** C%cdigo n%co encontrado! ******",162,198);
+					getch();
+					
+					fflush(fp);			// limpeza de buffers 
+					fclose(fp);			// fechamento do arquivo
+					
+				}		
+			}
+		}
+		
+	}while( id[0] != '0');
+	
+	return;
+}
+
+
+void tabela_tipos()
+{
+    textcolor(cor_texto);
+    
+    gotoxy(38,37);    printf(" P - Perif%crico       G - Gpu      C - Cpu",130);
+    gotoxy(38,38);    printf(" M - Mobo             F - Fonte    W - Cabos");
+    gotoxy(38,39);    printf(" A - Armazenamento    R - Ram      O - Outros");
+}
+
+int navegar_menu(int ini, int fim, int p)
+{
+	cursor(0); // Desativa o cursor
+	
+	int aux = ini; // Recebe posição da seta
+	int c; // Armazena entrada do teclado
+	
+	do
+	{
+		gotoxy(p,aux); printf("%c", 62);	
+			
+		fflush(stdin); 
+		
+		c = getch();
+		
+		gotoxy(p,aux); printf(" ");
+		
+		switch(c) 
+		{
+			case 72: // Seta para cima
+				aux -= 2;
+				
+				if(aux < ini) aux  = fim;
+
+				gotoxy(p,aux);printf("%c", 62);
+				break;
+				
+			case 80: // Seta para baixo
+				aux+=2;
+					
+				if(aux > fim) aux = ini;
+					
+				gotoxy(p,aux);printf("%c", 62);
+				break;	
+			case 13:
+			return (aux - ini)/2; // Retorna o valor da opção seleciona => inicia em 0
+			break;	
+		}
+		
+	}while(true);
 }
 
 void gera_tabela(int li)
@@ -1088,393 +1497,6 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 	}
 }
 
-void excluir_dados() //exclusao lógica (continua no binário)
-{
-	cursor(1); // Liga o cursor
-	
-	abrir_arquivo_alterar();  //abre o arquivo no modo de alteração de dados   
-	int aux_codigo, F, k, tam; // Auxiliares
-	long fposicao;
-	char conf, id[50];
-
-	borda();
-	tabela_tipos(); //apresenta a info doq as letras significam
-	
-	textcolor(cor_destaque);
-	gotoxy(20,31);  printf("Pressione 0 para voltar ao menu de pesquisa");
-	gotoxy(50, 4); printf("Exclus%co de dados", 198);
-	gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ",162);
-	
-	textcolor(cor_texto);
-	      
-	do{	
-		k = 0;
-		
-		gets(id);
-		
-	    tam = strlen(id);
-	    
-	    if(tam == 0) gotoxy(77, 7); // Se nada for digitado
-	    else if(id[0] == '0') // Se 0 for digitado
-		{
-			cursor(0);
-			textbackground(12);
-			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-			printf("Voltando ao menu...");
-			Sleep(1500);
-			sub_menu(); 
-		} 
-	    else // Se algo diferente de 0 for digitado
-	    {
-	    	for(int i = 0; i < tam; i++)
-			{
-				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
-				{ // Confere se é numérico  
-					k = 1; // Se não for numérico 
-					break;	
-				}	
-			} 
-	    	
-	    	if(k == 1) // Se um caractere não numérico for digitado
-	    	{
-	    		textcolor(cor_texto);
-	    		gotoxy(77, 7); clreol(34);
-				textbackground(12);
-	    		gotoxy(77, 7); printf("[ERRO] Id Inv%clido", 160);
-				Sleep(1000);
-				textbackground(cor_fundo); gotoxy(77, 7); clreol(34);
-			}
-	    	else // Se o ID for valido e numérico
-	    	{ 
-	    		aux_codigo = atoi(id); // Converte string em int 
-	    		
-		    	F = 0;
-		    	
-				rewind(fp);
-				
-			    do
-			    {
-					fread(&produto, sizeof(produto), 1, fp);
-					
-					if (produto.id == aux_codigo && !produto.excluido) //Se houver um produto com o id e que não foi excluído
-					{
-				   		F = 1;
-				   		
-				   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
-				   		
-				   		textcolor(cor_texto);
-				   		gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
-						gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
-				   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
-						gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
-						gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
-						completa_tabela(14); //Apresenta-se ao usuário o registro a ser excluído
-						
-				   		textcolor(cor_destaque);
-					   	gotoxy(19,22); printf("Confirma exclus%co ? (S/N): ",198);
-					   	
-					   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
-						do 
-					   	{
-					   		fflush(stdin);
-					   		textcolor(cor_texto);
-					    	gotoxy(46,22); conf = getche(); // Confirmação 
-					    	
-					    	if(conf != 's' && conf != 'S' && conf != 'n' && conf != 'N') 
-					    	{
-					    		gotoxy(46, 22); clreol(5);	
-							}
-							
-					   	}while( conf != 's' && conf != 'S' && conf != 'n' && conf != 'N' );
-					   
-					   	if( conf == 's' || conf == 'S' )
-					   	{
-					   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
-							fseek (fp, fposicao-(sizeof(produto)), SEEK_SET); 	//SEEK_SET indica o início do arquivo
-																				
-							produto.excluido= true; //atribuição de true para o campo excluído para indicar que o registro foi excluído ou desativado (exclusão lógica) 
-							
-							if(fwrite(&produto, sizeof(produto), 1, fp) == 1)
-							{
-								cursor(0);
-								fflush (fp);
-								textcolor(cor_destaque);
-								gotoxy(19,24);printf("Cadastro exclu%cdo com sucesso!",161);
-								getch();
-								
-								fflush(fp);			// limpeza de buffers 
-								fclose(fp);			// fechamento do arquivo
-					
-								excluir_dados(); 
-							}	
-					   	}
-					   	else excluir_dados(); 
-					}
-				} while ((!F) && (!feof(fp)));  
-				
-				if (F==0 && aux_codigo!=0)  //código não encontrado
-				{
-					cursor(0);
-					textcolor(cor_destaque);
-					gotoxy(42,20);printf("****** C%cdigo n%co encontrado! ******",162,198);
-					getch();
-					
-					fflush(fp);			// limpeza de buffers 
-					fclose(fp);			// fechamento do arquivo
-					
-					excluir_dados(); 
-				}		
-			}
-		}
-	}while(true);
-}
-
-void consulta_nome()
-{
-	borda();
-	tabela_tipos();
-		
-	cursor(1);
-	
-	char aux[50]; // Armazena nome | Armazena nome sem espaço 
-	int tam, k, j;
-	char c;
-		
-	textcolor(cor_destaque); 
-	gotoxy(52, 4); printf("Consulta por Nome");
-	gotoxy(20,31);  printf("Pressione 0 para voltar a pesquisa");
-	gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
-	textcolor(cor_texto);
-	
-	while(true)
-	{
-		k = 0;
-		j = 0;
-		
-		fflush(stdin);
-		gets(aux);
-		
-		tam = strlen(aux);
-		
-		if(tam == 0) gotoxy(49, 7); // Se nada for digitado
-		else // Se o nome não for nem grande de mais nem pequeno de mais
-		{
-			break;
-		}
-	}
-	
-	if(aux[0] == '0') sub_menu();	
-	// aux_final => Guarda o nome desejado  
-	
-	cursor(0);
-	
-	abrir_arquivo();
-	
-	do
-	{		
-		k = 0;
-		
-		rewind(fp);
-		
-		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
-		{			
-			if(strstr(strlwr(produto.nome),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
-			{
-				gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
-				gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
-				gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
-				gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
-				gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
-				
-				completa_tabela(14);    //preenche a tabela
-				k = 0;
-				break;
-			} 
-			else k = 1;		
-		}
-		
-		if(k == 1) 
-		{
-			textcolor(cor_destaque);
-			gotoxy(45, 20); printf("*** Nome n%co encontrado ***", 198);
-		}
-				
-		c = getch();
-	
-	}while(c != '0');
-	
-	consulta_nome();
-	
-}
-
-void consulta_id()   //consulta por id
-{	
-	// Construção visual
-	borda();
-	tabela_tipos();
-	
-	textcolor(cor_destaque);
-	gotoxy(20,31);  printf("Pressione 0 para voltar ao menu de pesquisa");
-	gotoxy(54, 4); printf("Consulta por ID");
-	gotoxy(20, 7); printf("Digite o Id (0 para sair): ");
-	
-	int k=0;
-	int aux = 0;
-	int id_busca; // Armazena id digitado pelu usuário durante a busca
-	
-	abrir_arquivo();
-	
-	textcolor(cor_texto);
-	
-	do
-	{
-		aux = valida_id_consulta(&id_busca);
-		
-		if(aux == 0) break;
-		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
-		{
-			textbackground(12); 
-			textcolor(cor_texto);
-			gotoxy(47, 12); printf("Id inv%clido",160);
-			cursor(0);
-			Sleep(1000);
-			consulta_id();	
-		} 
-		else if(aux == 3)
-		{
-			while( !feof(fp) )  //enquanto no for o fim de um arquivo...
-			{
-				if(fread(&produto, sizeof(produto), 1, fp) == 1 && !produto.excluido && produto.id == id_busca)
-				{					
-		
-					gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
-					gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
-			   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
-					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
-					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
-					
-					completa_tabela(14); //Apresenta-se ao usuário o registro pesquisado
-					
-					textcolor(cor_destaque);
-					gotoxy(20,30);printf("Pressione uma tecla para continuar...");
-					
-					getch();
-					
-					k = 1;
-					
-					consulta_id();
-					break;	
-				}				
-			}
-			if(k == 0)
-			{
-				textcolor(cor_destaque); 
-				gotoxy(21,23);printf("-----> C%cdigo inexistente! <-----",162);
-				gotoxy(21,24);printf("Pressione uma tecla para redigitar");
-				
-				getch();
-				
-				consulta_id();
-			}
-		}
-		
-	}while(true);
-	
-	fclose(fp); //fecha arquivo
-	
-	sub_menu();
-}
-
-int valida_id_consulta(int *id_final)
-{
-	char id[30];
-	int tam;
-	int k;
-	
-	do
-	{
-		k = 1;
-		cursor(1);
-		gets(id);
-		tam = strlen(id);
-		
-		if(tam == 0)  //se não for digitado nada (apenas enter) volta a posição inicial
-		{
-			gotoxy(47,12);
-			k = 0;
-		} 
-		else if(id[0] == '0')   //se for digitado 0 como o primeiro número retorna ao submenu
-		{
-			cursor(0);
-			textbackground(12);
-			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-			printf("Voltando ao menu...");
-			Sleep(1500);
-			sub_menu();
-		}
-		else 
-			for(int i = 0; i < tam; i++) 
-				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
-					return 1;			
-	}while(k != 1);
-	
-	cursor(0);
-	
-	*id_final = atoi(id); //manda por referencia o id em forma de int
-	
-	return 3;
-}	
-
-void tabela_tipos()
-{
-    textcolor(cor_texto);
-    
-    gotoxy(38,37);    printf(" P - Perif%crico       G - Gpu      C - Cpu",130);
-    gotoxy(38,38);    printf(" M - Mobo             F - Fonte    W - Cabos");
-    gotoxy(38,39);    printf(" A - Armazenamento    R - Ram      O - Outros");
-}
-
-int navegar_menu(int ini, int fim, int p)
-{
-	cursor(0); // Desativa o cursor
-	
-	int aux = ini; // Recebe posição da seta
-	int c; // Armazena entrada do teclado
-	
-	do
-	{
-		gotoxy(p,aux); printf("%c", 62);	
-			
-		fflush(stdin); 
-		
-		c = getch();
-		
-		gotoxy(p,aux); printf(" ");
-		
-		switch(c) 
-		{
-			case 72: // Seta para cima
-				aux -= 2;
-				
-				if(aux < ini) aux  = fim;
-
-				gotoxy(p,aux);printf("%c", 62);
-				break;
-				
-			case 80: // Seta para baixo
-				aux+=2;
-					
-				if(aux > fim) aux = ini;
-					
-				gotoxy(p,aux);printf("%c", 62);
-				break;	
-			case 13:
-			return (aux - ini)/2; // Retorna o valor da opção seleciona => inicia em 0
-			break;	
-		}
-		
-	}while(true);
-}
 
 void borda() 
 {
