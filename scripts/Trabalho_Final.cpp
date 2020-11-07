@@ -19,8 +19,8 @@
 #include <time.h>
 #include <strings.h>
 
-// Versão 2.1
-#define versao 2.1
+// Versão 2.2
+#define versao 2.2
 
 // Definição de cores 
 #define cor_fundo 3
@@ -1208,7 +1208,6 @@ void consulta_nome()
 		
 		if(aux[0] == '0')
 			return;
-		// aux_final => Guarda o nome desejado  
 		
 		cursor(0);
 		
