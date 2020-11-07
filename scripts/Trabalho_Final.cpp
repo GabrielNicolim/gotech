@@ -488,7 +488,7 @@ void valida_nome_recebimento() // Recebe e valida nome
 		tam = strlen(aux);
 		
 		if(tam == 0) gotoxy(39, 10); // Se nada for digitado
-		else if(tam >= 19) // Limita o nome a 19 caracteres 
+/*		else if(tam >= 19) // Limita o nome a 19 caracteres 
 		{
 			gotoxy(39, 10); clreol(70);
 			textbackground(12);
@@ -496,9 +496,8 @@ void valida_nome_recebimento() // Recebe e valida nome
 			Sleep(1000);
 			textbackground(cor_fundo);
 			gotoxy(39, 10); clreol(70);
-		}
-		else
-		break;
+		} */
+		else break;
 		/*else // Se o nome não for nem grande de mais nem pequeno de mais
 		{
 			for(int i = 0; i < tam; i++)
@@ -1500,7 +1499,7 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 	if(!produto.excluido)
 	{
 		gotoxy(22,linha); printf("%d", produto.id);
-		gotoxy(31,linha); printf("%s", produto.nome);
+		gotoxy(31,linha); for(int i = 0; i < 17; i++) printf("%c", produto.nome[i]); 		
 		gotoxy(51,linha); printf("%.2f", produto.preco_unitario);
 		gotoxy(70,linha); printf("%d", produto.quantidade);
 		gotoxy(94,linha); printf("%c", produto.tipo);	
