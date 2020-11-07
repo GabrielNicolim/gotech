@@ -1175,7 +1175,7 @@ void consulta_tipo(char aux)
 void consulta_nome()
 {
 	
-	char aux[50]; // Armazena nome | Armazena nome sem espaço 
+	char aux[50], comp[50]; // Armazena nome  
 	int tam, k, j;
 	char c;
 	
@@ -1221,7 +1221,10 @@ void consulta_nome()
 			
 			while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
 			{			
-				if(strstr(strlwr(produto.nome),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
+				
+				strcpy(comp, produto.nome);
+				
+				if(strstr(strlwr(comp),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
 				{
 					gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
 					gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
