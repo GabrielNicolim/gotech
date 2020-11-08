@@ -148,7 +148,7 @@ int abrir_arquivo_alterar()
 struct estrutura
 {
 	long id;
-	char nome[100];
+	char nome[50];
 	int quantidade;
 	char tipo;
 	float preco_unitario;
@@ -473,7 +473,7 @@ void valida_id_recebimento()  // Recebe e valida id
 
 void valida_nome_recebimento() // Recebe e valida nome
 {
-	char aux[100], aux_final[100]; // Armazena nome | Armazena nome sem espaço 
+	char aux[50], aux_final[50]; // Armazena nome | Armazena nome sem espaço 
 	
 	int k, j; 		 // Var auxiliar 
 	int tam;	// Armazena tamanho da string
@@ -489,41 +489,7 @@ void valida_nome_recebimento() // Recebe e valida nome
 		tam = strlen(aux);
 		
 		if(tam == 0) gotoxy(39, 10); // Se nada for digitado
-/*		else if(tam >= 19) // Limita o nome a 19 caracteres 
-		{
-			gotoxy(39, 10); clreol(70);
-			textbackground(12);
-			printf("[ERRO] Nome Muito Grande");
-			Sleep(1000);
-			textbackground(cor_fundo);
-			gotoxy(39, 10); clreol(70);
-		} */
 		else break;
-		/*else // Se o nome não for nem grande de mais nem pequeno de mais
-		{
-			for(int i = 0; i < tam; i++)
-			{
-				if(aux[i] != char(32)) // O primeiro caractere diferente de um espaço
-				{
-					k = 1;
-					break;
-				}
-				else j++; 	// Conta quantos espaços existem antes da primeira letra 
-			}
-			
-			if(k == 0)  gotoxy(39, 10); // o nome tiver apenas espaços 
-			else if(k == 1)
-			{
-				k = 0; // Reutilização de variavel para navegar em aux final 
-				for(int i = j; i < tam; i++) // Inicia a partir da primeira posição sem espaço
-				{
-					aux_final[k] = aux[i];
-					k++;
-				}
-				break;
-			}
-			
-		}*/
 	}
 	
 	gotoxy(39, 10); clreol(70);
