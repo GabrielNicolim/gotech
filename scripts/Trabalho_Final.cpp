@@ -74,6 +74,7 @@ void excluir_dados();
 void gera_tabela(int li);  //
 //Função para colocar os dados na tabela
 void completa_tabela(int linha);
+void completa_tabela_vertical(int coluna); 
 // Função para gerar tabela de tipo 
 void tabela_tipos();
 // Função utilizada para navegar com setasem menus
@@ -147,7 +148,7 @@ int abrir_arquivo_alterar()
 struct estrutura
 {
 	long id;
-	char nome[50];
+	char nome[100];
 	int quantidade;
 	char tipo;
 	float preco_unitario;
@@ -184,7 +185,7 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(32+i, 20);printf("%c", 219);
-		Sleep(50);
+//		Sleep(50);
 	}
 	textcolor(cor_texto);
 	gotoxy(38, 10); printf("       Tudo pronto! Podemos iniciar...                            ");
@@ -472,7 +473,7 @@ void valida_id_recebimento()  // Recebe e valida id
 
 void valida_nome_recebimento() // Recebe e valida nome
 {
-	char aux[50], aux_final[50]; // Armazena nome | Armazena nome sem espaço 
+	char aux[100], aux_final[100]; // Armazena nome | Armazena nome sem espaço 
 	
 	int k, j; 		 // Var auxiliar 
 	int tam;	// Armazena tamanho da string
@@ -964,13 +965,19 @@ void consulta_id()   //consulta por id
 				if(fread(&produto, sizeof(produto), 1, fp) == 1 && !produto.excluido && produto.id == id_busca)
 				{					
 		
-					gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
-					gotoxy(20,12);	printf ("|   ID   |      Nome         |  Pre%co Unit%crio  |    Quantidade   |     Tipo      |",135,160);
-			   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
-					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
-					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
-					
-					completa_tabela(14); //Apresenta-se ao usuário o registro pesquisado
+					gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
+					gotoxy(20,12);	printf ("|  ID                |                                                           |");
+			   		gotoxy(20,13);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,14);	printf ("|  Nome              |                                                           |");
+					gotoxy(20,15);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
+					gotoxy(20,17);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
+					gotoxy(20,19);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
+					gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
+
+					completa_tabela_vertical(43); //Apresenta-se ao usuário o registro pesquisado
 					
 					textcolor(cor_destaque);
 					gotoxy(20,30);printf("Pressione uma tecla para continuar...");
@@ -1226,13 +1233,19 @@ void consulta_nome()
 				
 				if(strstr(strlwr(comp),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
 				{
-					gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
-					gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
-					gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
-					gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
-					gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
+					gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
+					gotoxy(20,12);	printf ("|  ID                |                                                           |");
+			   		gotoxy(20,13);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,14);	printf ("|  Nome              |                                                           |");
+					gotoxy(20,15);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
+					gotoxy(20,17);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
+					gotoxy(20,19);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
+					gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
 					
-					completa_tabela(14);    //preenche a tabela
+					completa_tabela_vertical(43);    //preenche a tabela
 					k = 0;
 					break;
 				} 
@@ -1331,26 +1344,33 @@ void excluir_dados() //exclusao lógica (continua no binário)
 					   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
 					   		
 					   		textcolor(cor_texto);
-					   		gotoxy(20,11);	printf ("+---------------------------------------------------------------------------------+");
-							gotoxy(20,12);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",160);
-					   		gotoxy(20,13);	printf ("|--------|-------------------|------------------|-----------------|---------------|");
-							gotoxy(20,14);	printf ("|        |                   |                  |                 |               |",160);
-							gotoxy(20,15);	printf ("+---------------------------------------------------------------------------------+");
-							completa_tabela(14); //Apresenta-se ao usuário o registro a ser excluído
+					   		gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
+							gotoxy(20,12);	printf ("|  ID                |                                                           |");
+					   		gotoxy(20,13);	printf ("|--------------------|-----------------------------------------------------------|");
+							gotoxy(20,14);	printf ("|  Nome              |                                                           |");
+							gotoxy(20,15);	printf ("|--------------------|-----------------------------------------------------------|");
+							gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
+							gotoxy(20,17);	printf ("|--------------------|-----------------------------------------------------------|");
+							gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
+							gotoxy(20,19);	printf ("|--------------------|-----------------------------------------------------------|");
+							gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
+							gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
+							
+							completa_tabela_vertical(43); //Apresenta-se ao usuário o registro a ser excluído
 							
 					   		textcolor(cor_destaque);
-						   	gotoxy(19,22); printf("Confirma exclus%co ? (S/N): ",198);
+						   	gotoxy(19,24); printf("Confirma exclus%co ? (S/N): ",198);
 						   	
 						   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
 							do 
 						   	{
 						   		fflush(stdin);
 						   		textcolor(cor_texto);
-						    	gotoxy(46,22); conf = getche(); // Confirmação 
+						    	gotoxy(46,24); conf = getche(); // Confirmação 
 						    	
 						    	if(conf != 's' && conf != 'S' && conf != 'n' && conf != 'N') 
 						    	{
-						    		gotoxy(46, 22); clreol(5);	
+						    		gotoxy(46, 24); clreol(5);	
 								}
 								
 						   	}while( conf != 's' && conf != 'S' && conf != 'n' && conf != 'N' );
@@ -1372,7 +1392,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 									cursor(0);
 									fflush (fp);
 									textcolor(cor_destaque);
-									gotoxy(19,24);printf("Cadastro exclu%cdo com sucesso!",161);
+									gotoxy(19,26);printf("Cadastro exclu%cdo com sucesso!",161);
 									getch();
 									
 									fflush(fp);			// limpeza de buffers 
@@ -1508,6 +1528,17 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 	}
 }
 
+void completa_tabela_vertical(int coluna)  //função para colocar os dados na tabela
+{
+	if(!produto.excluido)
+	{
+		gotoxy(coluna, 12); printf("%d", produto.id);
+		gotoxy(coluna, 14); for(int i = 0; i < 70; i++) printf("%c", produto.nome[i]); 		
+		gotoxy(coluna, 16); printf("%.2f", produto.preco_unitario);
+		gotoxy(coluna, 18); printf("%d", produto.quantidade);
+		gotoxy(coluna, 20); printf("%c", produto.tipo);	
+	}
+}
 
 void borda() 
 {
