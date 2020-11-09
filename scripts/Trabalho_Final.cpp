@@ -1457,31 +1457,31 @@ void gera_tabela(int li)
 	
 	textcolor(cor_texto);
 	gotoxy(ci,4);	printf ("+---------------------------------------------------------------------------------+");
-	gotoxy(ci,5);	printf ("|   ID   |      Nome         |  Preço Unit%crio  |    Quantidade   |     Tipo      |",131);
+	gotoxy(ci,5);	printf ("|   ID   |             Nome              |  Pre%co Unit%crio  | Quantidade |  Tipo  |",135, 160);
 	gotoxy(ci,6);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,7);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,7);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,8);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,9);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,9);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,10);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,11);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,11);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,12);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,13);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,13);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,14);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,15);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,15);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,16);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,17);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,17);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,18);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,19);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,19);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,20);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,21);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,21);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,22);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,23);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,23);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,24);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,25);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,25);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,26);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,27);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,27);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,28);	printf ("|---------------------------------------------------------------------------------|");
-	gotoxy(ci,29);	printf ("|        |                   |                  |                 |               |");
+	gotoxy(ci,29);	printf ("|        |                               |                  |            |        |");
 	gotoxy(ci,30);	printf ("+---------------------------------------------------------------------------------+");
 	
 }
@@ -1496,11 +1496,12 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 		
 		gotoxy(22,linha); printf("%d", produto.id);
 		gotoxy(31,linha); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
-		gotoxy(51,linha); printf("%.2f", produto.preco_unitario);
-		gotoxy(70,linha); printf("%d", produto.quantidade);
-		gotoxy(94,linha); printf("%c", produto.tipo);	
+		gotoxy(63,linha); printf("%.2f", produto.preco_unitario);
+		gotoxy(83,linha); printf("%d", produto.quantidade);
+		gotoxy(97,linha); printf("%c", produto.tipo);	
 	}
 }
+
 
 void completa_tabela_vertical(int coluna)  //função para colocar os dados na tabela
 {	
