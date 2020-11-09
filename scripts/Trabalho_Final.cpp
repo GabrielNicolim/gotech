@@ -19,8 +19,8 @@
 #include <time.h>
 #include <strings.h>
 
-// Versão 2.2
-#define versao 2.2
+// Versão 2.3
+#define versao 2.3
 
 // Definição de cores 
 #define cor_fundo 3
@@ -388,7 +388,7 @@ void valida_id_recebimento()  // Recebe e valida id
 	char id[30];
 	int tam;		// Armazena tamanho da string
 	int k,c;   	   // Auxiliares
-	int aux;
+	int aux;		//int auxiliar que armazenará a id digitada
 
 	do
 	{
@@ -447,24 +447,26 @@ void valida_id_recebimento()  // Recebe e valida id
 			}
 			else
 			{
-				aux = atoi(id); // converte a string para int
+				//aux é int e id é char
+				aux = atoi(id); // converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
 				
-				while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1) && produto.id != aux || (produto.id == aux && produto.excluido));
-				
+				//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
+				while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1))							
+				{	//Se produto.id for igual a auxiliar E produto não for excluído	
 				if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
-				{		
-					textbackground(cor_fundo);
-					gotoxy(38, 8); clreol(70);
-					textbackground(12);
-					gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
-					Sleep(1500);
-					textbackground(cor_fundo);
-					gotoxy(38, 8); clreol(70);
-					gotoxy(39, 8);
-					k = 0; //continua no loop 				
-				}
-				else
-					k = 1; //faz sair do loop			
+					{	
+							textbackground(cor_fundo);
+							gotoxy(38, 8); clreol(70);
+							textbackground(12);
+							gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
+							Sleep(1500);
+							textbackground(cor_fundo);
+							gotoxy(38, 8); clreol(70);
+							gotoxy(39, 8);
+							k = 0; 	//continua no loop 	
+							break;	//sai do while		
+					}
+				}	
 			}
 		}	
 		
@@ -1205,13 +1207,13 @@ void consulta_nome()
 				{
 					gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
 					gotoxy(20,12);	printf ("|  ID                |                                                           |");
-			   		gotoxy(20,13);	printf ("|--------------------|-----------------------------------------------------------|");
+			   		gotoxy(20,13);	printf ("|--------------------------------------------------------------------------------|");
 					gotoxy(20,14);	printf ("|  Nome              |                                                           |");
-					gotoxy(20,15);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,15);	printf ("|--------------------------------------------------------------------------------|");
 					gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
-					gotoxy(20,17);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,17);	printf ("|--------------------------------------------------------------------------------|");
 					gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
-					gotoxy(20,19);	printf ("|--------------------|-----------------------------------------------------------|");
+					gotoxy(20,19);	printf ("|--------------------------------------------------------------------------------|");
 					gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
 					gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
 					
@@ -1258,8 +1260,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 			gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ",162);
 			
 			textcolor(cor_texto);
-			      
-			
+			      			
 			k = 0;
 			
 			gets(id);
@@ -1316,13 +1317,13 @@ void excluir_dados() //exclusao lógica (continua no binário)
 					   		textcolor(cor_texto);
 					   		gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
 							gotoxy(20,12);	printf ("|  ID                |                                                           |");
-					   		gotoxy(20,13);	printf ("|--------------------|-----------------------------------------------------------|");
+					   		gotoxy(20,13);	printf ("|--------------------------------------------------------------------------------|");
 							gotoxy(20,14);	printf ("|  Nome              |                                                           |");
-							gotoxy(20,15);	printf ("|--------------------|-----------------------------------------------------------|");
+							gotoxy(20,15);	printf ("|--------------------------------------------------------------------------------|");
 							gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
-							gotoxy(20,17);	printf ("|--------------------|-----------------------------------------------------------|");
+							gotoxy(20,17);	printf ("|--------------------------------------------------------------------------------|");
 							gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
-							gotoxy(20,19);	printf ("|--------------------|-----------------------------------------------------------|");
+							gotoxy(20,19);	printf ("|--------------------------------------------------------------------------------|");
 							gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
 							gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
 							
@@ -1492,12 +1493,12 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 	{
 		int tam = strlen(produto.nome);
 		
-		if(tam > 17) tam = 17;
+		if(tam > 29) tam = 29; // define o tamanho máximo a ser apresentado (29 espaços na tabela)
 		
 		gotoxy(22,linha); printf("%d", produto.id);
 		gotoxy(31,linha); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
 		gotoxy(63,linha); printf("%.2f", produto.preco_unitario);
-		gotoxy(83,linha); printf("%d", produto.quantidade);
+		gotoxy(82,linha); printf("%d", produto.quantidade);
 		gotoxy(97,linha); printf("%c", produto.tipo);	
 	}
 }
