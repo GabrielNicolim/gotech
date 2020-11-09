@@ -1483,11 +1483,15 @@ void gera_tabela(int li)
 }
 
 void completa_tabela(int linha)  //função para colocar os dados na tabela
-{
+{ 
 	if(!produto.excluido)
 	{
+		int tam = strlen(produto.nome);
+		
+		if(tam > 17) tam = 17;
+		
 		gotoxy(22,linha); printf("%d", produto.id);
-		gotoxy(31,linha); for(int i = 0; i < 17; i++) printf("%c", produto.nome[i]); 		
+		gotoxy(31,linha); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
 		gotoxy(51,linha); printf("%.2f", produto.preco_unitario);
 		gotoxy(70,linha); printf("%d", produto.quantidade);
 		gotoxy(94,linha); printf("%c", produto.tipo);	
@@ -1495,11 +1499,13 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 }
 
 void completa_tabela_vertical(int coluna)  //função para colocar os dados na tabela
-{
+{	
 	if(!produto.excluido)
 	{
+		int tam = strlen(produto.nome); 
+			
 		gotoxy(coluna, 12); printf("%d", produto.id);
-		gotoxy(coluna, 14); for(int i = 0; i < 70; i++) printf("%c", produto.nome[i]); 		
+		gotoxy(coluna, 14); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
 		gotoxy(coluna, 16); printf("%.2f", produto.preco_unitario);
 		gotoxy(coluna, 18); printf("%d", produto.quantidade);
 		gotoxy(coluna, 20); printf("%c", produto.tipo);	
