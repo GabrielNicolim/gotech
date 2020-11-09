@@ -419,16 +419,20 @@ void valida_id_recebimento()  // Recebe e valida id
 		} 
 		else 
 		{
-			for(int i = 0; i < tam; i++) // verifica caractere por caractere se é número
+			if(tam > 6) c = 1; // Define como invalido se id > 6 
+			else 
 			{
-				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
+				for(int i = 0; i < tam; i++) // verifica caractere por caractere se é número
 				{
-					c = 1; //marca id como invalido para cair no if mais embaixo
-					break;
-				}
-			} 	
+					if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
+					{
+						c = 1; //marca id como invalido para cair no if mais embaixo
+						break;
+					}
+				} 	
+			}
 			
-			if(c == 1)  // Erro se não for numerico
+			if(c == 1)  // Erro se não for numerico ou for muito grande
 			{
 				k = 0; //continua no loop 
 				
