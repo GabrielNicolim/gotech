@@ -19,8 +19,8 @@
 #include <time.h>
 #include <strings.h>
 
-// Versão 2.3
-#define versao 2.3
+// Versão 2.4
+#define versao 2.4
 
 // Definição de cores 
 #define cor_fundo 3
