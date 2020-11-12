@@ -13,7 +13,7 @@
 */
 
 #include <stdio.h>
-#include <locale.h>
+#include <math.h>
 #include <windows.h>
 #include <conio.h>
 #include <time.h>
@@ -816,8 +816,7 @@ void sair() // Finaliza a execução do programa
 
 void consulta_geral()
 {
-	int contl = 1, limite, limiteAnte, pag = 1, linha; // Variaveis Auxiliares
-	
+	int cont_tuplas = 0; // Contador de registros 
 	char retornar = '0';
 	
 	abrir_arquivo();
@@ -831,12 +830,18 @@ void consulta_geral()
 		if(!produto.excluido)
 		{
 			vazio = false;
-			break;
+			cont_tuplas++;
 		}
 	}
 	
 	if(!vazio)
 	{
+		int contl = 1, limite, limiteAnte, pag, linha, pag_limite; // Variaveis Auxiliares
+		
+		pag = 1;
+		
+		pag_limite = ceil(cont_tuplas / 12);  
+		
 		gera_tabela(5);	// Gera borda e tabela inicial
 		
 		do
@@ -878,7 +883,7 @@ void consulta_geral()
 			switch(retornar)
 			{
 				case char(77): // Se a seta direita for pressionada
-					if(pag < 10) 
+					if(pag <= pag_limite) 
 					{
 						pag++; // Avança a página | Limita pag a 10 
 						rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
@@ -1118,6 +1123,8 @@ void consulta_tipo_recebimento()
 
 void consulta_tipo(char aux)
 {	
+	int cont_tuplas = 0;
+	
 	abrir_arquivo();
 	
 	cursor(0); // Desliga o cursor
@@ -1133,55 +1140,37 @@ void consulta_tipo(char aux)
 		if(produto.tipo == aux && !produto.excluido) 
 		{
 			vazio = false;
+			cont_tuplas++;
 		}
 	}
 	
 	if(!vazio)
 	{
-		rewind(fp);
-			
-		int contl , limite, limiteAnte, pag, linha; // Funções Auxiliares
+		int contl = 1, limite, limiteAnte, pag, linha, pag_limite; // Variaveis Auxiliares
+		
 		char retornar;
-	
-		contl = 1;
+		
 		pag = 1;
 		
+		pag_limite = ceil(cont_tuplas / 12);  
+		
+		gera_tabela(5);	// Gera borda e tabela inicial
+		
 		do
-		{
-			switch(retornar)
-			{
-				case 77: // Se a seta direita for pressionada
-					if(pag < 10) 
-					{
-						pag++; // Avança a página | Limita pag a 10 
-						rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-						gera_tabela(5);
-					}	
-					break;
-					
-				case 75: // Se a seta da esquerda
-					if(pag > 1) 				
-					{
-						pag--; // Volta a pagina
-						rewind(fp);	
-						gera_tabela(5);	
-					}			
-					break;
-			}
-					
+		{			
 			limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
 			limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
-			 
+			
 			textcolor(cor_texto);
 			
-			gotoxy(20,31);  printf("Pressione 0 para voltar");
-			gotoxy(107,4);	printf("%d", pag); // Número da página 
-			gotoxy(107,6);	printf("%c", aux); // Tipo pesquisado
+			gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
+			gotoxy(107, 4);	printf("%d", pag); // Número da página 
+			gotoxy(107, 6); printf("%c", aux);
 			
 			contl= 1;    //reseta o contador de linha
 			linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
 			
-			
+			rewind(fp);
 			
 			while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
 			{			
@@ -1193,15 +1182,38 @@ void consulta_tipo(char aux)
 						linha += 2; 
 					}
 				}
-				if(contl == limite) //se a linha atual for igual ao limite quebra
-					break; 
-					
-				contl++; //adiciona mais uma linha ao contador
+				
+				if(contl == limite) break; //se a linha atual for igual ao limite quebra
+				else contl++; //adiciona mais uma linha ao contador
 			}
 			
 			gotoxy(20,34); 
+			
+			fflush(stdin);
+			
 			retornar = getch();
-				
+			
+			switch(retornar)
+			{
+				case char(77): // Se a seta direita for pressionada
+					if(pag <= pag_limite) 
+					{
+						pag++; // Avança a página | Limita pag a 10 
+						rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+						gera_tabela(5);
+					}	
+					break;
+					
+				case char(75): // Se a seta da esquerda
+					if(pag > 1) 				
+					{
+						pag--; // Volta a pagina
+						rewind(fp);	
+						gera_tabela(5);	
+					} 			
+					break;
+			}
+			
 		}while (retornar != '0');  
 			
 		// Se 0 for pressionado 
@@ -1535,7 +1547,7 @@ int navegar_menu(int ini, int fim, int p)
 
 void gera_tabela(int li)
 {
-	int ci=20;
+	int ci = 20;
 
 	borda();
 	tabela_tipos(); //apresenta a info doq as letras significam
