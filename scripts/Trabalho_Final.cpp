@@ -451,9 +451,9 @@ void valida_id_recebimento()  // Recebe e valida id
 				aux = atoi(id); // converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
 				
 				//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
-				while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1))						
+				while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1))							
 				{	//Se produto.id for igual a auxiliar E produto não for excluído	
-					if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
+				if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
 					{	
 							textbackground(cor_fundo);
 							gotoxy(38, 8); clreol(70);
