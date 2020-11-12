@@ -769,6 +769,7 @@ void info_de_sistema() // Apresenta as informações do sistema
 	printf("Deixamos nosso agradecimento a professora Ariane Scarelli e ");
 	gotoxy(20, 27); printf("K%ctia Zambombon, por compartilharem conosco parte de seus conhecimentos.",160);
 	
+	textcolor(cor_destaque);
 	gotoxy(20, 30); printf("Pressione 0 para retornar ao menu"); 
 	
 	char c;
@@ -812,78 +813,100 @@ void consulta_geral()
 	abrir_arquivo();
 	
 	cursor(0); // Desliga o cursor
-				
-	gera_tabela(5);	// Gera borda e tabela inicial
 	
-	do
-	{			
-		limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
-		limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
+	bool vazio = true;  // Verifica se o arquivo bin está vazio 
+	
+	while(fread(&produto, sizeof(produto), 1, fp) == 1)
+	{
+		if(!produto.excluido)
+		{
+			vazio = false;
+			break;
+		}
+	}
+	
+	if(!vazio)
+	{
+		gera_tabela(5);	// Gera borda e tabela inicial
 		
-		textcolor(cor_texto);
-		
-		gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
-		gotoxy(107, 4);	printf("%d", pag); // Número da página 
-		
-		contl= 1;    //reseta o contador de linha
-		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
-		
-		rewind(fp);
-		
-		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+		do
 		{			
-			if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
-			{
-				if(!produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+			limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
+			limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
+			
+			textcolor(cor_texto);
+			
+			gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
+			gotoxy(107, 4);	printf("%d", pag); // Número da página 
+			
+			contl= 1;    //reseta o contador de linha
+			linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
+			
+			rewind(fp);
+			
+			while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+			{			
+				if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
 				{
-					completa_tabela(linha);    //preenche a tabela
-					linha += 2; 
+					if(!produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+					{
+						completa_tabela(linha);    //preenche a tabela
+						linha += 2; 
+					}
 				}
+				
+				if(contl == limite) break; //se a linha atual for igual ao limite quebra
+				else contl++; //adiciona mais uma linha ao contador
 			}
 			
-			if(contl == limite) break; //se a linha atual for igual ao limite quebra
-			else contl++; //adiciona mais uma linha ao contador
-		}
+			gotoxy(20,34); 
+			
+			fflush(stdin);
+			
+			retornar = getch();
+			
+			switch(retornar)
+			{
+				case char(77): // Se a seta direita for pressionada
+					if(pag < 10) 
+					{
+						pag++; // Avança a página | Limita pag a 10 
+						rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+						gera_tabela(5);
+					}	
+					break;
+					
+				case char(75): // Se a seta da esquerda
+					if(pag > 1) 				
+					{
+						pag--; // Volta a pagina
+						rewind(fp);	
+						gera_tabela(5);	
+					} 			
+					break;
+			}
+			
+		}while (retornar != '0');  
+			
+		// Se 0 for pressionado 
 		
-		gotoxy(20,34); 
+		textbackground(12);
+		gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
+		printf("Voltando ao Menu...");
+		Sleep(1500);
+		textbackground(cor_fundo);
 		
-		fflush(stdin);
-		
-		retornar = getch();
-		
-		switch(retornar)
-		{
-			case char(77): // Se a seta direita for pressionada
-				if(pag < 10) 
-				{
-					pag++; // Avança a página | Limita pag a 10 
-					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-					gera_tabela(5);
-				}	
-				break;
-				
-			case char(75): // Se a seta da esquerda
-				if(pag > 1) 				
-				{
-					pag--; // Volta a pagina
-					rewind(fp);	
-					gera_tabela(5);	
-				} 			
-				break;
-		}
-		
-	}while (retornar != '0');  
-		
-	// Se 0 for pressionado 
-	
-	textbackground(12);
-	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-	printf("Voltando ao Menu...");
-	Sleep(1500);
-	textbackground(cor_fundo);
-	
-	fclose(fp);	// fecha o arquivo
-	return;    // Retorna ao submenu
+		fclose(fp);	// fecha o arquivo
+		return;    // Retorna ao submenu
+	}
+	else
+	{
+		borda();
+		textcolor(cor_destaque); 
+		gotoxy(34, 16); printf("N%co h%c nenhum item registrado! Por favor registre algo", 198,160);
+		getche();
+		return; 
+	}			
 }
 
 // Revisão Final para entrega => 05/11/2020 
@@ -1167,7 +1190,6 @@ void consulta_nome()
 			
 		textcolor(cor_destaque); 
 		gotoxy(52, 4); printf("Consulta por Nome");
-		gotoxy(20,31);  printf("Pressione 0 para voltar a pesquisa");
 		gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
 		textcolor(cor_texto);
 		
