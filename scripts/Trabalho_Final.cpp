@@ -389,9 +389,11 @@ void valida_id_recebimento()  // Recebe e valida id
 	int tam;		// Armazena tamanho da string
 	int k,c;   	   // Auxiliares
 	int aux;		//int auxiliar que armazenará a id digitada
-
+	
+	bool valido;
+	
 	do
-	{
+	{	
 		k = 1;  //loop principal
 		c = 0;  //se não for número
 
@@ -447,33 +449,41 @@ void valida_id_recebimento()  // Recebe e valida id
 			}
 			else
 			{
+				valido = true;
+				
 				//aux é int e id é char
 				aux = atoi(id); // converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
-				
+			
 				//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
-				while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1))							
-				{	//Se produto.id for igual a auxiliar E produto não for excluído	
-				if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
-					{	
-							textbackground(cor_fundo);
-							gotoxy(38, 8); clreol(70);
-							textbackground(12);
-							gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
-							Sleep(1500);
-							textbackground(cor_fundo);
-							gotoxy(38, 8); clreol(70);
-							gotoxy(39, 8);
-							k = 0; 	//continua no loop 	
-							break;	//sai do while		
+				while(fread(&produto, sizeof(produto), 1, fp) == 1)							
+				{	
+					if(produto.id == aux and !produto.excluido)
+					{
+						valido = false;
+						break;
 					}
 				}	
+				
+				if(!valido)
+				{
+					textbackground(cor_fundo);
+					gotoxy(38, 8); clreol(70);
+					textbackground(12);
+					gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
+					Sleep(1500);
+					textbackground(cor_fundo);
+					gotoxy(38, 8); clreol(70);
+					gotoxy(39, 8);
+					k = 0; 	//continua no loop
+				}
+				else break;	
 			}
 		}	
 		
 	}while(k == 0);
 	
-	produto.id = atoi(id);   // converte a string para int e manda para a struct
-	
+	produto.id = aux;   // converte a string para int e manda para a struct
+					
 	return; 
 }
 
