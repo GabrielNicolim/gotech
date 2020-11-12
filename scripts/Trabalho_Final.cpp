@@ -281,9 +281,9 @@ void cadastro_visual()
 		borda();
 		tabela_tipos();
 		
-		gotoxy(20, 31); printf("Digite 0 no campo de ID para retornar ao menu");
-		
 		textcolor(cor_destaque);
+	
+		gotoxy(20, 31); printf("Digite 0 no campo de ID para retornar ao menu");
 		gotoxy(50, 4); printf("Cadastro de Produtos"); // Mensagem em destaque no meio da tela
 		
 		gotoxy(20, 8); 	printf("Id do produto....: ");				
@@ -389,9 +389,11 @@ void valida_id_recebimento()  // Recebe e valida id
 	int tam;		// Armazena tamanho da string
 	int k,c;   	   // Auxiliares
 	int aux;		//int auxiliar que armazenará a id digitada
-
+	
+	bool valido;
+	
 	do
-	{
+	{	
 		k = 1;  //loop principal
 		c = 0;  //se não for número
 
@@ -447,33 +449,41 @@ void valida_id_recebimento()  // Recebe e valida id
 			}
 			else
 			{
+				valido = true;
+				
 				//aux é int e id é char
 				aux = atoi(id); // converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
-				
+			
 				//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
-				while((fread(&produto.id, sizeof(produto.id), 1, fp) == 1))							
-				{	//Se produto.id for igual a auxiliar E produto não for excluído	
-				if(produto.id == aux && !produto.excluido) //se o id digitado for igual a um já existente e não excluído
-					{	
-							textbackground(cor_fundo);
-							gotoxy(38, 8); clreol(70);
-							textbackground(12);
-							gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
-							Sleep(1500);
-							textbackground(cor_fundo);
-							gotoxy(38, 8); clreol(70);
-							gotoxy(39, 8);
-							k = 0; 	//continua no loop 	
-							break;	//sai do while		
+				while(fread(&produto, sizeof(produto), 1, fp) == 1)							
+				{	
+					if(produto.id == aux and !produto.excluido)
+					{
+						valido = false;
+						break;
 					}
 				}	
+				
+				if(!valido)
+				{
+					textbackground(cor_fundo);
+					gotoxy(38, 8); clreol(70);
+					textbackground(12);
+					gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
+					Sleep(1500);
+					textbackground(cor_fundo);
+					gotoxy(38, 8); clreol(70);
+					gotoxy(39, 8);
+					k = 0; 	//continua no loop
+				}
+				else break;	
 			}
 		}	
 		
 	}while(k == 0);
 	
-	produto.id = atoi(id);   // converte a string para int e manda para a struct
-	
+	produto.id = aux;   // converte a string para int e manda para a struct
+					
 	return; 
 }
 
@@ -769,6 +779,7 @@ void info_de_sistema() // Apresenta as informações do sistema
 	printf("Deixamos nosso agradecimento a professora Ariane Scarelli e ");
 	gotoxy(20, 27); printf("K%ctia Zambombon, por compartilharem conosco parte de seus conhecimentos.",160);
 	
+	textcolor(cor_destaque);
 	gotoxy(20, 30); printf("Pressione 0 para retornar ao menu"); 
 	
 	char c;
@@ -812,78 +823,101 @@ void consulta_geral()
 	abrir_arquivo();
 	
 	cursor(0); // Desliga o cursor
-				
-	gera_tabela(5);	// Gera borda e tabela inicial
 	
-	do
-	{			
-		limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
-		limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
+	bool vazio = true;  // Verifica se o arquivo bin está vazio 
+	
+	while(fread(&produto, sizeof(produto), 1, fp) == 1)
+	{
+		if(!produto.excluido)
+		{
+			vazio = false;
+			break;
+		}
+	}
+	
+	if(!vazio)
+	{
+		gera_tabela(5);	// Gera borda e tabela inicial
 		
-		textcolor(cor_texto);
-		
-		gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
-		gotoxy(107, 4);	printf("%d", pag); // Número da página 
-		
-		contl= 1;    //reseta o contador de linha
-		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
-		
-		rewind(fp);
-		
-		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+		do
 		{			
-			if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
-			{
-				if(!produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+			limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
+			limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
+			
+			textcolor(cor_texto);
+			
+			gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
+			gotoxy(107, 4);	printf("%d", pag); // Número da página 
+			
+			contl= 1;    //reseta o contador de linha
+			linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
+			
+			rewind(fp);
+			
+			while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+			{			
+				if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
 				{
-					completa_tabela(linha);    //preenche a tabela
-					linha += 2; 
+					if(!produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+					{
+						completa_tabela(linha);    //preenche a tabela
+						linha += 2; 
+					}
 				}
+				
+				if(contl == limite) break; //se a linha atual for igual ao limite quebra
+				else contl++; //adiciona mais uma linha ao contador
 			}
 			
-			if(contl == limite) break; //se a linha atual for igual ao limite quebra
-			else contl++; //adiciona mais uma linha ao contador
-		}
+			gotoxy(20,34); 
+			
+			fflush(stdin);
+			
+			retornar = getch();
+			
+			switch(retornar)
+			{
+				case char(77): // Se a seta direita for pressionada
+					if(pag < 10) 
+					{
+						pag++; // Avança a página | Limita pag a 10 
+						rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+						gera_tabela(5);
+					}	
+					break;
+					
+				case char(75): // Se a seta da esquerda
+					if(pag > 1) 				
+					{
+						pag--; // Volta a pagina
+						rewind(fp);	
+						gera_tabela(5);	
+					} 			
+					break;
+			}
+			
+		}while (retornar != '0');  
+			
+		// Se 0 for pressionado 
 		
-		gotoxy(20,34); 
+		textbackground(12);
+		gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
+		printf("Voltando ao Menu...");
+		Sleep(1500);
+		textbackground(cor_fundo);
 		
-		fflush(stdin);
-		
-		retornar = getch();
-		
-		switch(retornar)
-		{
-			case char(77): // Se a seta direita for pressionada
-				if(pag < 10) 
-				{
-					pag++; // Avança a página | Limita pag a 10 
-					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-					gera_tabela(5);
-				}	
-				break;
-				
-			case char(75): // Se a seta da esquerda
-				if(pag > 1) 				
-				{
-					pag--; // Volta a pagina
-					rewind(fp);	
-					gera_tabela(5);	
-				} 			
-				break;
-		}
-		
-	}while (retornar != '0');  
-		
-	// Se 0 for pressionado 
-	
-	textbackground(12);
-	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-	printf("Voltando ao Menu...");
-	Sleep(1500);
-	textbackground(cor_fundo);
-	
-	fclose(fp);	// fecha o arquivo
-	return;    // Retorna ao submenu
+		fclose(fp);	// fecha o arquivo
+		return;    // Retorna ao submenu
+	}
+	else
+	{
+		borda();
+		textcolor(cor_destaque); 
+		gotoxy(32, 16); printf("[ N%co h%c nenhum item registrado! Por favor registre algo ]", 198,160);
+		getche();
+		fclose(fp);	// fecha o arquivo
+		return; 
+	}			
 }
 
 // Revisão Final para entrega => 05/11/2020 
@@ -896,6 +930,10 @@ void consulta_geral()
 
 void consulta_id()   //consulta por id
 {	
+	
+	int k;
+	int aux;
+	int id_busca; // Armazena id digitado pelo usuário durante a busca 
 		
 	abrir_arquivo();
 	
@@ -905,11 +943,9 @@ void consulta_id()   //consulta por id
 	{
 		// Construção visual
 		borda();
-		tabela_tipos();
 		
-		int k=0;
-		int aux = 0;
-		int id_busca; // Armazena id digitado pelu usuário durante a busca
+		k = 0;
+		aux = 0; 
 			
 		textcolor(cor_destaque);
 		gotoxy(54, 4); printf("Consulta por ID");
@@ -932,6 +968,7 @@ void consulta_id()   //consulta por id
 		else if(aux == 3)  //retorno de 3 significa que o id é válido
 		{
 			rewind(fp);	
+			
 			while( !feof(fp) )  //enquanto no for o fim de um arquivo...
 			{
 				if(fread(&produto, sizeof(produto), 1, fp) == 1 && !produto.excluido && produto.id == id_busca)
@@ -951,6 +988,8 @@ void consulta_id()   //consulta por id
 
 					completa_tabela_vertical(43); //Apresenta-se ao usuário o registro pesquisado
 					
+					tabela_tipos();
+					
 					textcolor(cor_destaque);
 					gotoxy(20,30);printf("Pressione uma tecla para continuar...");
 					
@@ -965,8 +1004,8 @@ void consulta_id()   //consulta por id
 			if(k == 0)
 			{
 				textcolor(cor_destaque); 
-				gotoxy(21,23);printf("-----> C%cdigo inexistente! <-----",162);
-				gotoxy(21,24);printf("Pressione uma tecla para redigitar");
+				gotoxy(50, 18);printf("[ C%cdigo inexistente ]",162);
+				gotoxy(20, 30);printf("Pressione uma tecla para redigitar...");
 				
 				getch();
 				
@@ -1027,7 +1066,13 @@ void consulta_tipo_recebimento()
 	do{
 		borda();
 		
-		textcolor(cor_texto); tabela_tipos();
+		textcolor(cor_texto); 
+		
+		textcolor(cor_destaque);
+    
+    	gotoxy(36, 18);    printf(" P - Perif%crico       G - Gpu      C - Cpu", 130);
+    	gotoxy(36, 20);    printf(" M - Mobo             F - Fonte    W - Cabos");
+    	gotoxy(36, 22);    printf(" A - Armazenamento    R - Ram      O - Outros");
 		
 		textcolor(cor_destaque);
 		gotoxy(52, 4); printf("Consulta por Tipo", 198);
@@ -1072,79 +1117,110 @@ void consulta_tipo_recebimento()
 }
 
 void consulta_tipo(char aux)
-{
-	int contl = 1, limite, limiteAnte, pag= 1, linha; // Funções Auxiliares
-	char retornar;
-	
+{	
 	abrir_arquivo();
 	
 	cursor(0); // Desliga o cursor
 	
 	gera_tabela(5);	// Gera borda e tabela inicial
-				
-	do
+	
+	bool vazio;
+	
+	vazio = true;
+	
+	while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
 	{
-		switch(retornar)
+		if(produto.tipo == aux && !produto.excluido) 
 		{
-			case 77: // Se a seta direita for pressionada
-				if(pag < 10) 
-				{
-					pag++; // Avança a página | Limita pag a 10 
-					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-					gera_tabela(5);
-				}	
-				break;
-				
-			case 75: // Se a seta da esquerda
-				if(pag > 1) 				
-				{
-					pag--; // Volta a pagina
-					rewind(fp);	
-					gera_tabela(5);	
-				}			
-				break;
+			vazio = false;
 		}
-				
-		limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
-		limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
-		
-		textcolor(cor_texto);
-		
-		gotoxy(20,31);  printf("Pressione 0 para voltar");
-		gotoxy(107,4);	printf("%d", pag); // Número da página 
-		gotoxy(107,6);	printf("%c", aux); // Tipo pesquisado
-		
-		contl= 1;    //reseta o contador de linha
-		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
-		
-		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
-		{			
-			if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
-			{
-				if(produto.tipo == aux && !produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
-				{
-					completa_tabela(linha);    //preenche a tabela
-					linha += 2; 
-				}
-			}
-			if(contl == limite) //se a linha atual for igual ao limite quebra
-				break; 
-				
-			contl++; //adiciona mais uma linha ao contador
-		}
-		
-		gotoxy(20,34); 
-		retornar = getch();
+	}
+	
+	if(!vazio)
+	{
+		rewind(fp);
 			
-	}while (retornar != '0');  
+		int contl , limite, limiteAnte, pag, linha; // Funções Auxiliares
+		char retornar;
+	
+		contl = 1;
+		pag = 1;
 		
-	// Se 0 for pressionado 
-	cursor(0);
-	textbackground(12);
-	gotoxy(54, 35);			 // Apresenta mensagem a baixo da borda
-	printf("Voltando...");
-	Sleep(1500);
-	textbackground(cor_fundo);
+		do
+		{
+			switch(retornar)
+			{
+				case 77: // Se a seta direita for pressionada
+					if(pag < 10) 
+					{
+						pag++; // Avança a página | Limita pag a 10 
+						rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+						gera_tabela(5);
+					}	
+					break;
+					
+				case 75: // Se a seta da esquerda
+					if(pag > 1) 				
+					{
+						pag--; // Volta a pagina
+						rewind(fp);	
+						gera_tabela(5);	
+					}			
+					break;
+			}
+					
+			limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
+			limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
+			 
+			textcolor(cor_texto);
+			
+			gotoxy(20,31);  printf("Pressione 0 para voltar");
+			gotoxy(107,4);	printf("%d", pag); // Número da página 
+			gotoxy(107,6);	printf("%c", aux); // Tipo pesquisado
+			
+			contl= 1;    //reseta o contador de linha
+			linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
+			
+			
+			
+			while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+			{			
+				if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
+				{
+					if(produto.tipo == aux && !produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+					{
+						completa_tabela(linha);    //preenche a tabela
+						linha += 2; 
+					}
+				}
+				if(contl == limite) //se a linha atual for igual ao limite quebra
+					break; 
+					
+				contl++; //adiciona mais uma linha ao contador
+			}
+			
+			gotoxy(20,34); 
+			retornar = getch();
+				
+		}while (retornar != '0');  
+			
+		// Se 0 for pressionado 
+		cursor(0);
+		textbackground(12);
+		gotoxy(54, 35);			 // Apresenta mensagem a baixo da borda
+		printf("Voltando...");
+		Sleep(1500);
+		
+		textbackground(cor_fundo);
+	}		
+	else
+	{
+		borda();
+		textcolor(cor_destaque); 
+		gotoxy(28, 16); printf("[ N%co h%c nenhum item desse tipo registrado! Por favor registre algo ]", 198,160);
+		
+		getche(); 
+	}
 	
 	fclose(fp);	// fecha o arquivo
 	
@@ -1156,18 +1232,15 @@ void consulta_nome()
 	
 	char aux[50], comp[50]; // Armazena nome  
 	int tam, k, j;
-	char c;
 	
 	do{
 	
 		borda();
-		tabela_tipos();
 			
 		cursor(1);
 			
 		textcolor(cor_destaque); 
 		gotoxy(52, 4); printf("Consulta por Nome");
-		gotoxy(20,31);  printf("Pressione 0 para voltar a pesquisa");
 		gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
 		textcolor(cor_texto);
 		
@@ -1191,48 +1264,50 @@ void consulta_nome()
 		cursor(0);
 		
 		abrir_arquivo();
+				
+		k = 1;
 		
-		do
-		{		
-			k = 0;
-			
-			rewind(fp);
-			
-			while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
-			{			
+		rewind(fp);
+		
+		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+		{			
+			strcpy(comp, produto.nome);
 				
-				strcpy(comp, produto.nome);
-				
-				if(strstr(strlwr(comp),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
-				{
-					gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
-					gotoxy(20,12);	printf ("|  ID                |                                                           |");
-			   		gotoxy(20,13);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,14);	printf ("|  Nome              |                                                           |");
-					gotoxy(20,15);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
-					gotoxy(20,17);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
-					gotoxy(20,19);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
-					gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
-					
-					completa_tabela_vertical(43);    //preenche a tabela
-					k = 0;
-					break;
-				} 
-				else k = 1;		
-			}
-			
-			if(k == 1) 
+			if(strstr(strlwr(comp),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
 			{
-				textcolor(cor_destaque);
-				gotoxy(45, 20); printf("*** Nome n%co encontrado ***", 198);
-			}
-					
-			c = getch();
+				gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
+				gotoxy(20,12);	printf ("|  ID                |                                                           |");
+		   		gotoxy(20,13);	printf ("|--------------------------------------------------------------------------------|");
+				gotoxy(20,14);	printf ("|  Nome              |                                                           |");
+				gotoxy(20,15);	printf ("|--------------------------------------------------------------------------------|");
+				gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
+				gotoxy(20,17);	printf ("|--------------------------------------------------------------------------------|");
+				gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
+				gotoxy(20,19);	printf ("|--------------------------------------------------------------------------------|");
+				gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
+				gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
+				
+				completa_tabela_vertical(43);    //preenche a tabela
+				
+				tabela_tipos();
+				
+				k = 0;
+				break;
+			} 
+			else k = 1;		
+		}
 		
-		}while(c != '0');
+		if(k == 1) 
+		{
+			textcolor(cor_destaque);
+			gotoxy(48, 18); printf("[ Nome n%co encontrado ]", 198);			
+		}
+				
+		textcolor(cor_destaque);
+		gotoxy(20, 30); printf("Pressione uma tecla para redigitar...");	
+			
+			
+		getch();
 	
 	}while(aux[0] != '0');
 	
@@ -1256,7 +1331,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 		if(abrir_arquivo_alterar() == 0) //abre o arquivo no modo de alteração de dados   
 		{
 			textcolor(cor_destaque);
-			gotoxy(50, 4); printf("Exclus%co de dados", 198);
+			gotoxy(52, 4); printf("Exclus%co de dados", 198);
 			gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ",162);
 			
 			textcolor(cor_texto);
@@ -1329,19 +1404,22 @@ void excluir_dados() //exclusao lógica (continua no binário)
 							
 							completa_tabela_vertical(43); //Apresenta-se ao usuário o registro a ser excluído
 							
+							textcolor(cor_destaque);
+							gotoxy(20,30);printf("Pressione uma tecla para continuar...");
+					
 					   		textcolor(cor_destaque);
-						   	gotoxy(19,24); printf("Confirma exclus%co ? (S/N): ",198);
+						   	gotoxy(20,24); printf("Confirma exclus%co ? (S/N): ", 198);
 						   	
 						   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
 							do 
 						   	{
 						   		fflush(stdin);
 						   		textcolor(cor_texto);
-						    	gotoxy(46,24); conf = getche(); // Confirmação 
+						    	gotoxy(47,24); conf = getche(); // Confirmação 
 						    	
 						    	if(conf != 's' && conf != 'S' && conf != 'n' && conf != 'N') 
 						    	{
-						    		gotoxy(46, 24); clreol(5);	
+						    		gotoxy(47, 24); clreol(5);	
 								}
 								
 						   	}while( conf != 's' && conf != 'S' && conf != 'n' && conf != 'N' );
@@ -1351,7 +1429,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 						   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
 								if(fseek (fp, fposicao-(sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, 
 								{															//funciona igual o rewind(fp); porém pode ser usado em verificações pois retorna algo
-									gotoxy(20,11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
 									Sleep(1500);
 									return;
 								}
@@ -1363,7 +1441,8 @@ void excluir_dados() //exclusao lógica (continua no binário)
 									cursor(0);
 									fflush (fp);
 									textcolor(cor_destaque);
-									gotoxy(19,26);printf("Cadastro exclu%cdo com sucesso!",161);
+									gotoxy(20,26);printf("Cadastro exclu%cdo com sucesso!",161);
+									
 									getch();
 									
 									fflush(fp);			// limpeza de buffers 
@@ -1378,8 +1457,13 @@ void excluir_dados() //exclusao lógica (continua no binário)
 					if (F==0 && aux_codigo!=0)  //código não encontrado
 					{
 						cursor(0);
+						
 						textcolor(cor_destaque);
-						gotoxy(42,20);printf("****** C%cdigo n%co encontrado! ******",162,198);
+						gotoxy(46, 18);printf("[ C%cdigo n%co encontrado ]",162,198);
+						
+						textcolor(cor_destaque);
+						gotoxy(20,30);printf("Pressione uma tecla para retornar...");
+					
 						getch();
 						
 						fflush(fp);			// limpeza de buffers 
