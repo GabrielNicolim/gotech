@@ -905,6 +905,7 @@ void consulta_geral()
 		textcolor(cor_destaque); 
 		gotoxy(34, 16); printf("N%co h%c nenhum item registrado! Por favor registre algo", 198,160);
 		getche();
+		fclose(fp);	// fecha o arquivo
 		return; 
 	}			
 }
@@ -919,6 +920,10 @@ void consulta_geral()
 
 void consulta_id()   //consulta por id
 {	
+	
+	int k;
+	int aux;
+	int id_busca; // Armazena id digitado pelo usuário durante a busca 
 		
 	abrir_arquivo();
 	
@@ -930,9 +935,8 @@ void consulta_id()   //consulta por id
 		borda();
 		tabela_tipos();
 		
-		int k=0;
-		int aux = 0;
-		int id_busca; // Armazena id digitado pelu usuário durante a busca
+		k = 0;
+		aux = 0; 
 			
 		textcolor(cor_destaque);
 		gotoxy(54, 4); printf("Consulta por ID");
@@ -988,8 +992,8 @@ void consulta_id()   //consulta por id
 			if(k == 0)
 			{
 				textcolor(cor_destaque); 
-				gotoxy(21,23);printf("-----> C%cdigo inexistente! <-----",162);
-				gotoxy(21,24);printf("Pressione uma tecla para redigitar");
+				gotoxy(50, 18);printf("[ C%cdigo inexistente ]",162);
+				gotoxy(20, 30);printf("Pressione uma tecla para redigitar...");
 				
 				getch();
 				
@@ -1179,7 +1183,6 @@ void consulta_nome()
 	
 	char aux[50], comp[50]; // Armazena nome  
 	int tam, k, j;
-	char c;
 	
 	do{
 	
@@ -1213,48 +1216,48 @@ void consulta_nome()
 		cursor(0);
 		
 		abrir_arquivo();
+				
+		k = 1;
 		
-		do
-		{		
-			k = 0;
-			
-			rewind(fp);
-			
-			while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
-			{			
+		rewind(fp);
+		
+		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
+		{			
+			strcpy(comp, produto.nome);
 				
-				strcpy(comp, produto.nome);
-				
-				if(strstr(strlwr(comp),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
-				{
-					gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
-					gotoxy(20,12);	printf ("|  ID                |                                                           |");
-			   		gotoxy(20,13);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,14);	printf ("|  Nome              |                                                           |");
-					gotoxy(20,15);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
-					gotoxy(20,17);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
-					gotoxy(20,19);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
-					gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
-					
-					completa_tabela_vertical(43);    //preenche a tabela
-					k = 0;
-					break;
-				} 
-				else k = 1;		
-			}
-			
-			if(k == 1) 
+			if(strstr(strlwr(comp),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
 			{
-				textcolor(cor_destaque);
-				gotoxy(45, 20); printf("*** Nome n%co encontrado ***", 198);
-			}
-					
-			c = getch();
+				gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
+				gotoxy(20,12);	printf ("|  ID                |                                                           |");
+		   		gotoxy(20,13);	printf ("|--------------------------------------------------------------------------------|");
+				gotoxy(20,14);	printf ("|  Nome              |                                                           |");
+				gotoxy(20,15);	printf ("|--------------------------------------------------------------------------------|");
+				gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
+				gotoxy(20,17);	printf ("|--------------------------------------------------------------------------------|");
+				gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
+				gotoxy(20,19);	printf ("|--------------------------------------------------------------------------------|");
+				gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
+				gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
+				
+				completa_tabela_vertical(43);    //preenche a tabela
+				
+				k = 0;
+				break;
+			} 
+			else k = 1;		
+		}
 		
-		}while(c != '0');
+		if(k == 1) 
+		{
+			textcolor(cor_destaque);
+			gotoxy(48, 18); printf("[ Nome n%co encontrado ]", 198);			
+		}
+				
+		textcolor(cor_destaque);
+		gotoxy(20, 30); printf("Pressione uma tecla para redigitar...");	
+			
+			
+		getch();
 	
 	}while(aux[0] != '0');
 	
@@ -1278,7 +1281,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 		if(abrir_arquivo_alterar() == 0) //abre o arquivo no modo de alteração de dados   
 		{
 			textcolor(cor_destaque);
-			gotoxy(50, 4); printf("Exclus%co de dados", 198);
+			gotoxy(50, 6); printf("Exclus%co de dados", 198);
 			gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ",162);
 			
 			textcolor(cor_texto);
