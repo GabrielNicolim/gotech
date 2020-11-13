@@ -713,15 +713,15 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 		// Menu 
 		
 		textcolor(cor_texto);
-		gotoxy(45, 19);  printf("Geral");
-		gotoxy(45, 21);  printf("Busca por ID");
-		gotoxy(45, 23);  printf("Busca por Tipo");
-		gotoxy(45, 25);  printf("Busca por Nome"); 
-		gotoxy(45, 27);  printf("Excluir dados");
-		gotoxy(45, 29);  printf("Retornar ao In%ccio", 161);
+		gotoxy(50, 19);  printf("Geral");
+		gotoxy(50, 21);  printf("Busca por ID");
+		gotoxy(50, 23);  printf("Busca por Tipo");
+		gotoxy(50, 25);  printf("Busca por Nome"); 
+		gotoxy(50, 27);  printf("Excluir Dados");
+		gotoxy(50, 29);  printf("Retornar ao In%ccio", 161);
 		
 		int escolha;
-		escolha = navegar_menu(19, 29, 43);
+		escolha = navegar_menu(19, 29, 48);
 		
 		switch(escolha)
 		{
@@ -748,15 +748,24 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 
 void alteracao()
 {
-
 	borda(); 
 	
 	textcolor(cor_destaque); 
 	gotoxy(52, 4); printf("Altera%c%co de Dados", 135, 198);
 	
-	getche(); 
+	int escolha;
 	
-	return; 
+	textcolor(cor_texto);
+	 
+	gotoxy(50, 19); printf("Altera%c%co Geral", 135, 198);
+	gotoxy(50, 21); printf("Alterar Nome");
+	gotoxy(50, 23); printf("Alterar Quantidade");
+	gotoxy(50, 25); printf("Alterar Tipo"); 
+	gotoxy(50, 27); printf("Alterar Pre%co", 135);
+	gotoxy(50, 29); printf("Sair");
+	
+	escolha = navegar_menu(19, 29, 48); 
+	
 }
 
 void info_de_sistema() // Apresenta as informações do sistema
