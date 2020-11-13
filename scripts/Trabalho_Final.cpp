@@ -19,8 +19,8 @@
 #include <time.h>
 #include <strings.h>
 
-// Versão 2.4
-#define versao 2.4
+// Versão 2.5
+#define versao 2.5
 
 // Definição de cores 
 #define cor_fundo 3
@@ -84,7 +84,6 @@ int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a po
 
 // Fução de construção do menu da tela inicial
 void menu_ini();
-
 // Função para gerar a parte visual do cadastro 
 void cadastro_visual();
 // Recebe os dados de registro
@@ -95,6 +94,9 @@ void consulta_id(); // Encontra o produto pelo id
 
 // Função para gerar o sub menu de pesquisa
 void sub_menu();
+
+// Permite a alteração de valores 
+void alteracao(); 
 
 // Função para apresentar as Informações do Sistema
 void info_de_sistema();
@@ -163,7 +165,7 @@ main()
     system("mode con:cols=120 lines=40");  // Define o tamanho do console
     
 	srand(time(NULL));
-	random_menu = rand() % 4; // Escolhe o menu que será exibido ao usuário
+	random_menu = rand() % 3; // Escolhe o menu que será exibido ao usuário
 	
     loading();
 	inicio(); // Função de construção da tela inicial
@@ -216,10 +218,6 @@ void inicio() // Apresenta tela de inicio
 				logo(32, 8); 	
 				break;
 			case 3:				// Ram + logo
-				ram(37, 4); 	
-				logo(32, 10);
-				break;
-			case 4:				// Ram + logo
 				mobo(83, 6); 		
 				logo(20, 8);
 				break;		
@@ -237,13 +235,14 @@ void menu_ini()
 	
 	gotoxy(50, 19); printf("Cadastro");
 	gotoxy(50, 21); printf("Pesquisa");
-	gotoxy(50, 23); printf("Info do Sistema");
-	gotoxy(50, 25); printf("Sair");
+	gotoxy(50, 23); printf("Altera%c%co", 135,198); 
+	gotoxy(50, 25); printf("Info do Sistema");
+	gotoxy(50, 27); printf("Sair");
 	
 	// Chama navegação com setas
 	
 	int escolha;
-	escolha = navegar_menu(19, 25, 48);
+	escolha = navegar_menu(19, 27, 48);
 	
 	switch(escolha)
 	{
@@ -254,9 +253,12 @@ void menu_ini()
 			sub_menu();
 			break;
 		case 2:
+			alteracao(); 
+			break; 
+		case 3:
 			info_de_sistema();
 			break;
-		case 3:
+		case 4:
 			sair();
 			break;
 	}
@@ -366,6 +368,21 @@ void cadastro_recebimento()
 			fflush( fp ); //limpa buffer arquivo 
 			
 			borda();
+			
+			int random;
+			
+			srand(time(NULL));
+			random = rand() % 3;
+	
+			switch(random_menu)
+			{
+				case 0 ... 1:
+					ram(55, 8);
+					break;
+				case 2 ... 3: 
+					gpu(58, 8);
+					break;
+			}
 			
 			textcolor(cor_destaque);
 			gotoxy(18,11); printf("Dados salvos com sucesso!");
@@ -727,6 +744,19 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 				return; // Retorna ao menu inicial 
 		} 
 	}
+}
+
+void alteracao()
+{
+
+	borda(); 
+	
+	textcolor(cor_destaque); 
+	gotoxy(52, 4); printf("Altera%c%co de Dados", 135, 198);
+	
+	getche(); 
+	
+	return; 
 }
 
 void info_de_sistema() // Apresenta as informações do sistema
