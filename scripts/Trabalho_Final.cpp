@@ -122,6 +122,8 @@ void valida_tipo_recebimento();
 // Valida preço digitado
 void valida_preco_recebimento();
 
+int obtem_id_alteracao();
+
 FILE *fp; //Ponteiro para arquivo
 
 int random_menu; // Var que armazena numero aleatório ente 0 e 4 para gerar um menu diferente 
@@ -525,9 +527,6 @@ void valida_nome_recebimento() // Recebe e valida nome
 		else break;
 	}
 	
-	gotoxy(39, 10); clreol(70);
-	gotoxy(39, 10); printf("%s", aux);
-	
 	strcpy(produto.nome, aux);
 	
 	return; 
@@ -748,24 +747,401 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 
 void alteracao()
 {
-	borda(); 
+	int id;
+
+	do
+	{
+		borda(); 
+		
+		textcolor(cor_destaque); 
+		gotoxy(52, 4); printf("Altera%c%co de Dados", 135, 198);
+		
+		int escolha;
+		
+		textcolor(cor_texto);
+		 
+		gotoxy(50, 19); printf("Altera%c%co Geral", 135, 198);
+		gotoxy(50, 21); printf("Alterar Nome");
+		gotoxy(50, 23); printf("Alterar Quantidade");
+		gotoxy(50, 25); printf("Alterar Tipo"); 
+		gotoxy(50, 27); printf("Alterar Pre%co", 135);
+		gotoxy(50, 29); printf("Sair");
+		
+		escolha = navegar_menu(19, 29, 48); 
+		
+		if(escolha == 0) // Se alteraçõa geral for escolhida
+		{		
+			id = obtem_id_alteracao();
+			
+			if(id == 0) continue; // ignora o restante do if
+			
+			borda();
+			
+			tabela_tipos();
+			
+			textcolor(cor_destaque);
+			
+			gotoxy(56, 4); printf("Altera%c%c Geral", 135, 198); // Mensagem em destaque no meio da tela
+			
+			gotoxy(20, 8); printf("Nome do Produto..: ");		
+			gotoxy(20, 10); printf("Quantidade.......: ");			
+			gotoxy(20, 12); printf("Tipo.............: ");					
+			gotoxy(20, 14); printf("Preco Unit%crio...: ",160);
+			
+			cursor(1);
+			textcolor(cor_texto);
+					
+			/// Alteração do nome /// Recebimento do novo nome ///
+			
+			char aux_nome[50]; // Armazena nome | Armazena nome sem espaço 
 	
-	textcolor(cor_destaque); 
-	gotoxy(52, 4); printf("Altera%c%co de Dados", 135, 198);
+			int k, j; 		 // Var auxiliar 
+			int tam;	// Armazena tamanho da string
+			
+			gotoxy(39, 8);
+			
+			while(true)
+			{
+				k = 0;
+				j = 0;
+				
+				fflush(stdin);
+				gets(aux_nome);
+				
+				tam = strlen(aux_nome);
+				
+				if(tam == 0) gotoxy(39, 8); // Se nada for digitado
+				else break;
+			}
+			
+			/// Alreração de Quantidade /// Recebimento de nova quantidade ///
+			
+			int c;
+			
+			char aux_quantidade[50];
+			
+			gotoxy(39, 10);
+			
+			do
+			{
+				fflush(stdin);
+				
+				k = 1;
+				c = 0;
+				
+				gets(aux_quantidade);
+				
+				tam = strlen(aux_quantidade); // Tamanho da string
+				
+				if(tam == 0)	// Se nada for digitado pergunta novamente
+				{
+					gotoxy(39, 10);
+					k = 0;
+				} 
+				else 
+				{
+					for(int i = 0; i < tam; i++) 
+					{
+						if(aux_quantidade[i] != '0' && aux_quantidade[i] != '1' && aux_quantidade[i] != '2' && aux_quantidade[i] != '3' && aux_quantidade[i] != '4' && aux_quantidade[i] != '5' && aux_quantidade[i] != '6' && aux_quantidade[i] != '7' && aux_quantidade[i] != '8' && aux_quantidade[i] != '9') 
+						{ // Se não é numérico 
+							c = 1;	// Apresenta erro
+							break;
+						}
+						else // Se é numérico
+						{
+							k = 1;
+							c = 0;
+						} 
+					}	
+					
+					if(c == 1) // Erro
+					{
+						k = 0;	// Repete a pergunta
+						
+						textbackground(cor_fundo);
+						gotoxy(39, 10); clreol(72);
+						textbackground(12);
+						gotoxy(39, 10); printf("[ERRO] Quantidade inv%clida",160);
+						Sleep(1000); // tempo de erro na tela
+						textbackground(cor_fundo);
+						gotoxy(39, 10); clreol(72);
+						gotoxy(39, 10);
+					}
+				}
+			}while(k == 0);
+			
+			/// Alteração de tipo /// Recebimento de novo tipo ///
+			
+			char aux_tipo;
+ 			
+ 			gotoxy(39, 12);
+ 			
+		 	do
+		 	{
+		 		
+		 		fflush(stdin);
+		 	
+		 		aux_tipo = getche();
+				
+				aux_tipo = toupper(aux_tipo);
+				
+				// Verifica se é um dos tipos listados
+				if(aux_tipo == 'P' || aux_tipo == 'G' || aux_tipo == 'C' || aux_tipo == 'M' || aux_tipo == 'F' || aux_tipo == 'W' || aux_tipo == 'A' || aux_tipo == 'R' || aux_tipo == 'O') break;
+				else // Apresenta erro
+				{
+					textbackground(cor_fundo);
+					gotoxy(39, 12); clreol(72);
+					textbackground(12);
+					gotoxy(39, 12); printf("[ERRO] Tipo inv%clido",160);			
+					Sleep(1000); // tempo de erro na tela
+					textbackground(cor_fundo);
+					gotoxy(39, 12); clreol(72);
+					gotoxy(39, 12);
+				}
+				
+			}while(true);
+			
+			/// Alteração de Preço /// Recebimento do novo preço ///
+			
+			char aux_preco[30];
+			char* end; // Ponteiro de conversão 
+			float num;
+			
+			gotoxy(39, 14);
+			
+			do
+			{	
+				fflush(stdin);
+				
+				gets(aux_preco);
+				
+				tam = strlen(aux_preco); // Recebe tamanho da string
+				
+				k = 0;
+				
+				if(tam == 0) gotoxy(39, 14); // Se nada for digitado
+				else
+				{
+					for(int i = 0; i < tam; i++)
+					{
+						if((aux_preco[i] < '0' || aux_preco[i] > '9') && aux_preco[i] != '.') // Verifica se é numérico
+						{ 
+							// Erro
+							
+							k = 1;
+								
+							textbackground(cor_fundo);
+							gotoxy(39, 14); clreol(72);
+							textbackground(12);
+							gotoxy(39, 14); printf("[ERRO] Valor invalido");			
+							Sleep(1000); // Tempo de erro
+							textbackground(cor_fundo);
+							gotoxy(39, 14); clreol(72);
+							gotoxy(39, 14);	
+							
+							break;
+						}
+					}			
+					
+					if(k == 0) // Se valor for numérico
+					{
+						num = strtod(aux_preco, &end); // Converte para float
+						
+						if(num > -1) break; // Se valor positivo
+						else // Se valor negativo 
+						{
+							// Erro
+							textbackground(cor_fundo);
+							gotoxy(39, 14); clreol(72);
+							textbackground(12);
+							gotoxy(39, 14); printf("[ERRO] Valor inv%clido",160);			
+							Sleep(1000);
+							textbackground(cor_fundo);
+							gotoxy(39, 14); clreol(72);
+							gotoxy(39, 14);	
+						}
+					}
+				}
+				
+			}while(true);
+			
+			textcolor(cor_destaque);
+			
+			gotoxy(20, 24); printf("Confirmar Altera%c%ces? ", 135, 228); 
+			
+			textcolor(cor_texto);
+			
+			char confirmar;
+			
+			do
+			{
+				confirmar = getche();
+				
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(42, 24); clreol(10);
+				
+				if(confirmar == 's' || confirmar == 'S')
+				{
+					abrir_arquivo_alterar();
+
+					while(fread(&produto, sizeof(produto), 1, fp) == 1)	
+					{
+						if(produto.id == id and !produto.excluido)
+						{
+							strcpy(produto.nome, aux_nome);
+							produto.quantidade = atoi(aux_quantidade); // Retorna quantidade inteira
+							produto.tipo = aux_tipo;
+							produto.preco_unitario = num; 
+							
+							break;
+						}
+					}
+				}
+			}
+			while(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N');
+			
+			fclose(fp);
+			
+			id = 0; 
+		}
+		else if(escolha == 1)
+		{
+			id = obtem_id_alteracao();
+		}
+		else if(escolha == 2)
+		{
+			id = obtem_id_alteracao();
+		}
+		else if(escolha == 3)
+		{
+			id = obtem_id_alteracao();
+		}
+		else if(escolha == 4)
+		{
+			id = obtem_id_alteracao();
+		}
+		else if(escolha == 5) break;
+		
+	}while(id == 0);
 	
-	int escolha;
 	
-	textcolor(cor_texto);
-	 
-	gotoxy(50, 19); printf("Altera%c%co Geral", 135, 198);
-	gotoxy(50, 21); printf("Alterar Nome");
-	gotoxy(50, 23); printf("Alterar Quantidade");
-	gotoxy(50, 25); printf("Alterar Tipo"); 
-	gotoxy(50, 27); printf("Alterar Pre%co", 135);
-	gotoxy(50, 29); printf("Sair");
 	
-	escolha = navegar_menu(19, 29, 48); 
+	return;
+}
+
+int obtem_id_alteracao()
+{		
+	char id[30];
+	int tam;		// Armazena tamanho da string
+	int k, c;   	   // Auxiliares
+	int aux;		//int auxiliar que armazenará a id digitada
 	
+	bool valido;
+	
+	abrir_arquivo();
+	
+	
+	do
+	{
+		borda();
+		
+		cursor(1);
+		
+		textcolor(cor_destaque);
+		
+		gotoxy(54, 4); printf("Recebimento de ID"); 
+		gotoxy(20, 8); 	printf("Id do produto (0 para sair): ");	
+		
+		textcolor(cor_texto);
+			
+		k = 1;  //loop principal
+		c = 0;  //se não for número
+
+		rewind(fp);
+		
+		fflush(stdin);
+		
+		gets(id);
+		
+		tam = strlen(id); // pega tamanho da string e joga em uma int tamanho
+		
+		if(tam == 0) // Se nada foi digitado 	
+		{
+			gotoxy(49,8);	// Retorna a posição de inicio e pergunta novamente
+			k = 0;
+		} 
+		else if(id[0] == '0')	// Se o primeiro digito de id for igual a 0 
+		{
+			cursor(0);
+			textbackground(12);
+			gotoxy(54, 35);			 // Apresenta mensagem a baixo da borda
+			printf("Retornando...");
+			Sleep(1500);
+			return 0; // Retorna 0 para que a func de alteracao saia do loop 
+		} 
+		else 
+		{
+			if(tam > 6) c = 1; // Define como invalido se id > 6 
+			else 
+			{
+				for(int i = 0; i < tam; i++) // verifica caractere por caractere se é número
+				{
+					if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
+					{
+						c = 1; //marca id como invalido para cair no if mais embaixo
+						break;
+					}
+				} 	
+			}
+			
+			if(c == 1)  // Erro se não for numerico ou for muito grande
+			{
+				k = 0; //continua no loop 
+				
+				textbackground(cor_fundo);
+				gotoxy(49, 8); clreol(62);
+				textbackground(12);
+				gotoxy(49, 8); printf("[ERRO] ID inv%clido",160);
+				Sleep(1500);
+				textbackground(cor_fundo);
+				gotoxy(49, 8); clreol(62);
+				gotoxy(49,8);				
+			}
+			else
+			{
+				valido = false;
+				
+				//aux é int e id é char
+				aux = atoi(id); // converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
+			
+				//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
+				while(fread(&produto, sizeof(produto), 1, fp) == 1)							
+				{	
+					if(produto.id == aux and !produto.excluido)
+					{
+						valido = true; // Se o id for encontrado ele passa a ser valido
+						break;
+					}
+				}	
+				
+				if(!valido)
+				{
+					textcolor(cor_destaque);
+					cursor(0);
+					 
+					gotoxy(40, 16); printf("[ Nenhum item com este ID foi encontrado ]", 198,160);
+					
+					getch();
+					k = 0; 	//continua no loop
+				}
+				else break;	
+			}
+		}	
+		
+	}while(k == 0);
+	
+	fclose(fp);
+	
+	return aux; 
 }
 
 void info_de_sistema() // Apresenta as informações do sistema
