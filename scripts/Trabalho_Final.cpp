@@ -987,12 +987,29 @@ void alteracao()
 					{
 						if(produto.id == id and !produto.excluido)
 						{
+							int fposicao = ftell(fp); // guarda a posição do registro atual do arquivo 
+							
 							strcpy(produto.nome, aux_nome);
-							produto.quantidade = atoi(aux_quantidade); // Retorna quantidade inteira
+							produto.quantidade = atoi(aux_quantidade); // Retorna quantidade em int
 							produto.tipo = aux_tipo;
 							produto.preco_unitario = num; 
 							
+							if(fseek (fp, fposicao-(sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
+								{														// porém pode ser usado em verificações pois retorna algo
+									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+									Sleep(1500);
+									return;
+								}
+								
+							if(fwrite(&produto, sizeof(produto), 1, fp) != 1)   //depois que colocou o "cursor" do leitor em cima da linha correta
+							{													//usa-se o fwrite para salvar as alterações
+								textcolor(RED);
+								gotoxy(79, 22); printf("Erro na escrita do arquivo!");
+								textcolor(cor_texto);
+							}
 							break;
+							
+							fflush(fp);
 						}
 					}
 				}
@@ -1003,28 +1020,26 @@ void alteracao()
 			
 			id = 0; 
 		}
-		else if(escolha == 1)
+		else if(escolha == 1) // Alterar Nome
 		{
 			id = obtem_id_alteracao();
 		}
-		else if(escolha == 2)
+		else if(escolha == 2) //Alterar Quantidade
 		{
 			id = obtem_id_alteracao();
 		}
-		else if(escolha == 3)
+		else if(escolha == 3) //Alterar Tipo
 		{
 			id = obtem_id_alteracao();
 		}
-		else if(escolha == 4)
+		else if(escolha == 4) //Alterar Preço
 		{
 			id = obtem_id_alteracao();
 		}
-		else if(escolha == 5) break;
+		else if(escolha == 5) break; //sair do menu
 		
 	}while(id == 0);
-	
-	
-	
+		
 	return;
 }
 
