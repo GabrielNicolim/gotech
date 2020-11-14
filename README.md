@@ -8,7 +8,7 @@
 <h3>Bibliotecas utilizadas: </h3>
 <li><a href = "https://www.ime.usp.br/~pf/algoritmos/apend/stdio.h.html">Stdio.h</a>
 <li><a href = "https://www.programmingsimplified.com/c/conio.h">Conio.h</a>
-<li><a href = "https://www.tutorialspoint.com/c_standard_library/locale_h.htm">Locale.h</a>
+<li><a href = "http://linguagemc.com.br/a-biblioteca-math-h/">Math.h</a>
 <li><a href = "https://en.wikipedia.org/wiki/Windows.h">Windows.h</a>
 <li><a href = "https://pt.wikipedia.org/wiki/Time.h">Time.h</a>
 <li><a href = "http://linguagemc.com.br/a-biblioteca-string-h/">String.h</a>
