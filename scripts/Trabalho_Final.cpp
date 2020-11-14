@@ -294,7 +294,7 @@ void cadastro_visual()
 		gotoxy(20, 10); printf("Nome do Produto..: ");		
 		gotoxy(20, 12); printf("Quantidade.......: ");			
 		gotoxy(20, 14); printf("Tipo.............: ");					
-		gotoxy(20, 16); printf("Preco Unit%crio...: ",160);		
+		gotoxy(20, 16); printf("Pre%co Unit%crio...: ", 135, 160);		
 			
 		cadastro_recebimento(); // Recebe as respostas do usuário
 		
@@ -765,7 +765,7 @@ void alteracao()
 		gotoxy(50, 23); printf("Alterar Quantidade");
 		gotoxy(50, 25); printf("Alterar Tipo"); 
 		gotoxy(50, 27); printf("Alterar Pre%co", 135);
-		gotoxy(50, 29); printf("Sair");
+		gotoxy(50, 29); printf("Retornar ao In%ccio", 161);
 		
 		escolha = navegar_menu(19, 29, 48); 
 		
@@ -786,7 +786,7 @@ void alteracao()
 			gotoxy(20, 8); printf("Nome do Produto..: ");		
 			gotoxy(20, 10); printf("Quantidade.......: ");			
 			gotoxy(20, 12); printf("Tipo.............: ");					
-			gotoxy(20, 14); printf("Preco Unit%crio...: ",160);
+			gotoxy(20, 14); printf("Pre%co Unit%crio...: ", 135, 160);
 			
 			cursor(1);
 			textcolor(cor_texto);
@@ -979,7 +979,7 @@ void alteracao()
 				
 				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(42, 24); clreol(10);
 				
-				if(confirmar == 's' || confirmar == 'S')
+				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
 					abrir_arquivo_alterar();
 
@@ -989,12 +989,14 @@ void alteracao()
 						{
 							int fposicao = ftell(fp); // guarda a posição do registro atual do arquivo 
 							
+							// Alteração
+							
 							strcpy(produto.nome, aux_nome);
 							produto.quantidade = atoi(aux_quantidade); // Retorna quantidade em int
 							produto.tipo = aux_tipo;
 							produto.preco_unitario = num; 
 							
-							if(fseek (fp, fposicao-(sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
+							if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
 								{														// porém pode ser usado em verificações pois retorna algo
 									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
 									Sleep(1500);
@@ -1023,18 +1025,456 @@ void alteracao()
 		else if(escolha == 1) // Alterar Nome
 		{
 			id = obtem_id_alteracao();
+			
+			if(id == 0) continue; // ignora o restante do if
+			
+			borda();
+			
+			textcolor(cor_destaque);
+			
+			gotoxy(54, 4); printf("Altera%c%c de nome", 135, 198); // Mensagem em destaque no meio da tela
+			
+			gotoxy(20, 8); printf("Nome do Produto..: ");		
+
+			cursor(1);
+			textcolor(cor_texto);
+					
+			/// Alteração do nome /// Recebimento do novo nome ///
+			
+			char aux_nome[50]; // Armazena nome | Armazena nome sem espaço 
+	
+			int k, j; 		 // Var auxiliar 
+			int tam;	// Armazena tamanho da string
+			
+			gotoxy(39, 8);
+			
+			while(true)
+			{
+				k = 0;
+				j = 0;
+				
+				fflush(stdin);
+				gets(aux_nome);
+				
+				tam = strlen(aux_nome);
+				
+				if(tam == 0) gotoxy(39, 8); // Se nada for digitado
+				else break;
+			}
+			
+			char confirmar;
+			
+			textcolor(cor_destaque);
+			
+			gotoxy(20, 24); printf("Confirmar Altera%c%ces? ", 135, 228); 
+			
+			textcolor(cor_texto);
+			
+			do
+			{
+				confirmar = getche();
+				
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(42, 24); clreol(10);
+				
+				if(confirmar == 's' || confirmar == 'S') // Confirmação 
+				{
+					abrir_arquivo_alterar();
+
+					while(fread(&produto, sizeof(produto), 1, fp) == 1)	
+					{
+						if(produto.id == id and !produto.excluido)
+						{
+							int fposicao = ftell(fp); // guarda a posição do registro atual do arquivo 
+							
+							// Alteração
+							
+							strcpy(produto.nome, aux_nome);
+					
+							if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
+								{														// porém pode ser usado em verificações pois retorna algo
+									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+									Sleep(1500);
+									return;
+								}
+								
+							if(fwrite(&produto, sizeof(produto), 1, fp) != 1)   //depois que colocou o "cursor" do leitor em cima da linha correta
+							{													//usa-se o fwrite para salvar as alterações
+								textcolor(RED);
+								gotoxy(79, 22); printf("Erro na escrita do arquivo!");
+								textcolor(cor_texto);
+							}
+							break;
+							
+							fflush(fp);
+						}
+					}
+				}
+			}
+			while(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N');
+			
+			fclose(fp);
+			
+			id = 0; 
 		}
 		else if(escolha == 2) //Alterar Quantidade
 		{
 			id = obtem_id_alteracao();
+			
+			if(id == 0) continue; // ignora o restante do if
+			
+			borda();
+			
+			textcolor(cor_destaque);
+			
+			gotoxy(52, 4); printf("Altera%c%co de Quantidade", 135, 198); // Mensagem em destaque no meio da tela
+				
+			gotoxy(20, 8); printf("Quantidade.......: ");			
+			
+			cursor(1);
+			
+			textcolor(cor_texto);
+				
+			int c, k, tam;
+			
+			char aux_quantidade[50];
+			
+			gotoxy(39, 8);
+			
+			do
+			{
+				fflush(stdin);
+				
+				k = 1;
+				c = 0;
+				
+				gets(aux_quantidade);
+				
+				tam = strlen(aux_quantidade); // Tamanho da string
+				
+				if(tam == 0)	// Se nada for digitado pergunta novamente
+				{
+					gotoxy(39, 8);
+					k = 0;
+				} 
+				else 
+				{
+					for(int i = 0; i < tam; i++) 
+					{
+						if(aux_quantidade[i] != '0' && aux_quantidade[i] != '1' && aux_quantidade[i] != '2' && aux_quantidade[i] != '3' && aux_quantidade[i] != '4' && aux_quantidade[i] != '5' && aux_quantidade[i] != '6' && aux_quantidade[i] != '7' && aux_quantidade[i] != '8' && aux_quantidade[i] != '9') 
+						{ // Se não é numérico 
+							c = 1;	// Apresenta erro
+							break;
+						}
+						else // Se é numérico
+						{
+							k = 1;
+							c = 0;
+						} 
+					}	
+					
+					if(c == 1) // Erro
+					{
+						k = 0;	// Repete a pergunta
+						
+						textbackground(cor_fundo);
+						gotoxy(39, 8); clreol(72);
+						textbackground(12);
+						gotoxy(39, 8); printf("[ERRO] Quantidade inv%clida",160);
+						Sleep(1000); // tempo de erro na tela
+						textbackground(cor_fundo);
+						gotoxy(39, 8); clreol(72);
+						gotoxy(39, 8);
+					}
+				}
+			}while(k == 0);
+			
+			char confirmar;
+			
+			textcolor(cor_destaque);
+			
+			gotoxy(20, 24); printf("Confirmar Altera%c%ces? ", 135, 228); 
+			
+			textcolor(cor_texto);
+			
+			do
+			{
+				confirmar = getche();
+				
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(42, 24); clreol(10);
+				
+				if(confirmar == 's' || confirmar == 'S') // Confirmação 
+				{
+					abrir_arquivo_alterar();
+
+					while(fread(&produto, sizeof(produto), 1, fp) == 1)	
+					{
+						if(produto.id == id and !produto.excluido)
+						{
+							int fposicao = ftell(fp); // guarda a posição do registro atual do arquivo 
+							
+							// Alteração
+							
+							produto.quantidade = atoi(aux_quantidade);
+					
+							if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
+							{														// porém pode ser usado em verificações pois retorna algo
+								gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+								Sleep(1500);
+								return;
+							}
+								
+							if(fwrite(&produto, sizeof(produto), 1, fp) != 1)   //depois que colocou o "cursor" do leitor em cima da linha correta
+							{													//usa-se o fwrite para salvar as alterações
+								textcolor(RED);
+								gotoxy(79, 22); printf("Erro na escrita do arquivo!");
+								textcolor(cor_texto);
+							}
+							break;
+							
+							fflush(fp);
+						}
+					}
+				}
+			}
+			while(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N');
+			
+			fclose(fp);
+			
+			id = 0; 
 		}
 		else if(escolha == 3) //Alterar Tipo
 		{
 			id = obtem_id_alteracao();
+			
+			if(id == 0) continue; // ignora o restante do if
+			
+			borda();
+			
+			tabela_tipos();
+			
+			textcolor(cor_destaque);
+			
+			gotoxy(52, 4); printf("Altera%c%c de Tipo", 135, 198); // Mensagem em destaque no meio da tela
+					
+			gotoxy(20, 8); printf("Tipo.............: ");					
+
+			cursor(1);
+			textcolor(cor_texto);
+			
+			char aux_tipo;
+ 			
+ 			gotoxy(39, 8);
+ 			
+		 	do
+		 	{
+		 		
+		 		fflush(stdin);
+		 	
+		 		aux_tipo = getche();
+				
+				aux_tipo = toupper(aux_tipo);
+				
+				// Verifica se é um dos tipos listados
+				if(aux_tipo == 'P' || aux_tipo == 'G' || aux_tipo == 'C' || aux_tipo == 'M' || aux_tipo == 'F' || aux_tipo == 'W' || aux_tipo == 'A' || aux_tipo == 'R' || aux_tipo == 'O') break;
+				else // Apresenta erro
+				{
+					textbackground(cor_fundo);
+					gotoxy(39, 8); clreol(72);
+					textbackground(12);
+					gotoxy(39, 8); printf("[ERRO] Tipo inv%clido",160);			
+					Sleep(1000); // tempo de erro na tela
+					textbackground(cor_fundo);
+					gotoxy(39, 8); clreol(72);
+					gotoxy(39, 8);
+				}
+				
+			}while(true);
+			
+			textcolor(cor_destaque);
+			
+			gotoxy(20, 24); printf("Confirmar Altera%c%ces? ", 135, 228); 
+			
+			textcolor(cor_texto);
+			
+			char confirmar;
+			
+			do
+			{
+				confirmar = getche();
+				
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(42, 24); clreol(10);
+				
+				if(confirmar == 's' || confirmar == 'S') // Confirmação 
+				{
+					abrir_arquivo_alterar();
+
+					while(fread(&produto, sizeof(produto), 1, fp) == 1)	
+					{
+						if(produto.id == id and !produto.excluido)
+						{
+							int fposicao = ftell(fp); // guarda a posição do registro atual do arquivo 
+							
+							// Alteração
+							produto.tipo = aux_tipo;
+							
+							if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
+								{														// porém pode ser usado em verificações pois retorna algo
+									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+									Sleep(1500);
+									return;
+								}
+								
+							if(fwrite(&produto, sizeof(produto), 1, fp) != 1)   //depois que colocou o "cursor" do leitor em cima da linha correta
+							{													//usa-se o fwrite para salvar as alterações
+								textcolor(RED);
+								gotoxy(79, 22); printf("Erro na escrita do arquivo!");
+								textcolor(cor_texto);
+							}
+							break;
+							
+							fflush(fp);
+						}
+					}
+				}
+			}
+			while(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N');
+			
+			fclose(fp);
+			
+			id = 0; 
 		}
 		else if(escolha == 4) //Alterar Preço
 		{
 			id = obtem_id_alteracao();
+			
+			if(id == 0) continue; // ignora o restante do if
+			
+			borda();
+			
+			textcolor(cor_destaque);
+			
+			gotoxy(56, 4); printf("Altera%c%c de Pre%co", 135, 198, 135); // Mensagem em destaque no meio da tela
+							
+			gotoxy(20, 8); printf("Pre%co Unit%crio...: ", 135, 160);
+			
+			cursor(1);
+			textcolor(cor_texto);		
+			
+			char aux_preco[30];
+			char* end; // Ponteiro de conversão 
+			float num;
+			int k, tam;
+			
+			gotoxy(39, 8);
+			
+			do
+			{	
+				fflush(stdin);
+				
+				gets(aux_preco);
+				
+				tam = strlen(aux_preco); // Recebe tamanho da string
+				
+				k = 0;
+				
+				if(tam == 0) gotoxy(39, 8); // Se nada for digitado
+				else
+				{
+					for(int i = 0; i < tam; i++)
+					{
+						if((aux_preco[i] < '0' || aux_preco[i] > '9') && aux_preco[i] != '.') // Verifica se é numérico
+						{ 
+							// Erro
+							
+							k = 1;
+								
+							textbackground(cor_fundo);
+							gotoxy(39, 8); clreol(72);
+							textbackground(12);
+							gotoxy(39, 8); printf("[ERRO] Valor inv%clido", 160);			
+							Sleep(1000); // Tempo de erro
+							textbackground(cor_fundo);
+							gotoxy(39, 8); clreol(72);
+							gotoxy(39, 8);	
+							
+							break;
+						}
+					}			
+					
+					if(k == 0) // Se valor for numérico
+					{
+						num = strtod(aux_preco, &end); // Converte para float
+						
+						if(num > -1) break; // Se valor positivo
+						else // Se valor negativo 
+						{
+							// Erro
+							textbackground(cor_fundo);
+							gotoxy(39, 8); clreol(72);
+							textbackground(12);
+							gotoxy(39, 8); printf("[ERRO] Valor inv%clido",160);			
+							Sleep(1000);
+							textbackground(cor_fundo);
+							gotoxy(39, 8); clreol(72);
+							gotoxy(39, 8);	
+						}
+					}
+				}
+				
+			}while(true);
+					
+			textcolor(cor_destaque);
+			
+			gotoxy(20, 24); printf("Confirmar Altera%c%ces? ", 135, 228); 
+			
+			textcolor(cor_texto);
+			
+			char confirmar;
+			
+			do
+			{
+				confirmar = getche();
+				
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(42, 24); clreol(10);
+				
+				if(confirmar == 's' || confirmar == 'S') // Confirmação 
+				{
+					abrir_arquivo_alterar();
+
+					while(fread(&produto, sizeof(produto), 1, fp) == 1)	
+					{
+						if(produto.id == id and !produto.excluido)
+						{
+							int fposicao = ftell(fp); // guarda a posição do registro atual do arquivo 
+							
+							// Alteração
+							produto.preco_unitario = num; 
+							
+							if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
+								{														// porém pode ser usado em verificações pois retorna algo
+									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+									Sleep(1500);
+									return;
+								}
+								
+							if(fwrite(&produto, sizeof(produto), 1, fp) != 1)   //depois que colocou o "cursor" do leitor em cima da linha correta
+							{													//usa-se o fwrite para salvar as alterações
+								textcolor(RED);
+								gotoxy(79, 22); printf("Erro na escrita do arquivo!");
+								textcolor(cor_texto);
+							}
+							break;
+							
+							fflush(fp);
+						}
+					}
+				}
+			}
+			while(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N');
+			
+			fclose(fp);
+			
+			id = 0; 
 		}
 		else if(escolha == 5) break; //sair do menu
 		
