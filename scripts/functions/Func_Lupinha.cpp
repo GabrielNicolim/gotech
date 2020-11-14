@@ -40,64 +40,52 @@ main()
 
 void lupa(int ic, int il)
 {
-	textbackground(15);  //12 linhas
+	textbackground(3);  //12 linhas
 	system("cls");
 	
 	// Linha 1 - Borda Preta
 	textcolor(0);
-	gotoxy(ic+6, il); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);	
+	// Linha 1 - Borda Preta
+	gotoxy(ic+4, il); 		printf("%c%c%c%c%c%c%c%c%c%c%c",220 ,220, 219, 219, 219, 219, 219, 219, 219, 220, 220);	
 	// Linha 2  
-	gotoxy(ic+3, il+1); printf("%c%c%c", 219, 219, 219);
-	gotoxy(ic+13, il+1); printf("%c%c%c", 219, 219, 219);
+	gotoxy(ic+2, il+1); 	printf("%c%c%c%c", 220, 219, 219, 223);
+	gotoxy(ic+13, il+1); 	printf("%c%c%c%c", 223, 219, 219, 220);
 	//linha 3
-	gotoxy(ic+1, il+2); printf("%c%c", 219, 219);
-	gotoxy(ic+16, il+2); printf("%c%c", 219, 219);	
+	gotoxy(ic+1, il+2); 	printf("%c%c", 219, 223);
+	gotoxy(ic+16, il+2); 	printf("%c%c", 223, 219);	
 	//linha 4
-	gotoxy(ic, il+3);  printf("%c", 219);
-	gotoxy(ic+18, il+3); printf("%c", 219);	
+	gotoxy(ic, il+3);  		printf("%c%c", 219, 223);
+	gotoxy(ic+17, il+3); 	printf("%c%c", 223, 219);	
 	//linha 5
-	gotoxy(ic, il+4);	 printf("%c", 219);
-	gotoxy(ic+18, il+4); printf("%c", 219);	
+	gotoxy(ic, il+4);	 	printf("%c", 219);
+	gotoxy(ic+18, il+4);	printf("%c", 219);	
 	//linha 6
-	gotoxy(ic, il+5);  printf("%c", 219);
-	gotoxy(ic+18, il+5); printf("%c", 219);	
+	gotoxy(ic, il+5);  		printf("%c%c", 219, 220);
+	gotoxy(ic+17, il+5);	printf("%c%c", 220, 219);	
 	//linha 7
-	gotoxy(ic+1, il+6); printf("%c%c", 219, 219);
-	gotoxy(ic+16, il+6); printf("%c%c", 219, 219);	
+	gotoxy(ic+1, il+6);		printf("%c%c", 219, 220);
+	gotoxy(ic+16, il+6);	printf("%c%c", 220, 219);	
 	// Linha 8  
-	gotoxy(ic+3, il+7); printf("%c%c%c", 219, 219, 219);
-	gotoxy(ic+13, il+7); printf("%c%c%c", 219, 219, 219);
+	gotoxy(ic+2, il+7); 	printf("%c%c%c%c", 223, 219, 219, 220);
+	gotoxy(ic+13, il+7); 	printf("%c%c%c%c", 220, 219, 219, 223);
 	// Linha 9 
-	gotoxy(ic+6, il+8); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+4, il+8); 	printf("%c%c%c%c%c%c%c%c%c%c%c",223 ,223, 219, 219, 219, 219, 219, 219, 219, 223, 223);		
 	
-	//Interior Lupa
-	textcolor(3);
-	gotoxy(ic+6, il+1); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+3, il+2); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+1, il+3); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+1, il+4); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+1, il+5); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+3, il+6); printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+6, il+7); printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
 	//brilhinho
 	textcolor(15);
 	gotoxy(ic+3, il+4); printf("%c", 219);
-	gotoxy(ic+4, il+5); printf("%c%c", 219, 219);
-	gotoxy(ic+7, il+6); printf("%c", 219);
+	gotoxy(ic+4, il+5); printf("%c%c%c", 219, 219, 220);
+	gotoxy(ic+7, il+6); printf("%c%c", 219, 220);
 	
 	//cabo
-	textcolor(BLACK);
-	gotoxy(ic+18, il+5); printf("%c%c%c", 219, 219, 219);
-	gotoxy(ic+18, il+6); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+16, il+7); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+18, il+8); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+21, il+9); printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+24, il+10);printf("%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+26, il+10);printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+26, il+11);printf("%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
-	
-	
-	gotoxy(ic+25, il+15);
+	textcolor(9);
+	gotoxy(ic+18, il+6); printf("%c%c", 219,220);
+	gotoxy(ic+16, il+7); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 220);
+	gotoxy(ic+15, il+8); printf("%c%c%c%c%c%c%c%c%c", 223, 223, 219, 219, 219, 219, 219, 219,220);
+	gotoxy(ic+18, il+9); printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);			//cabo
+	gotoxy(ic+20, il+10); printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);
+	gotoxy(ic+22, il+11);printf("%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219);
+	gotoxy(ic+24, il+12);printf("%c%c%c%c%c", 223, 219, 219, 219, 219,223);
 	
 	// Acabou :D
 }
