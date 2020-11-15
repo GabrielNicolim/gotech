@@ -8,7 +8,8 @@
 			
 		CTI - Bauru - 2020
 		
-	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.	
+	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
+	
 */
 
 #include <stdio.h>
