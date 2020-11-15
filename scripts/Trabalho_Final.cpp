@@ -62,8 +62,9 @@ void consulta_tipo(char aux);
 void consulta_nome();
 void excluir_dados();
 void gera_tabela(int li);  
+void gera_tabela_vertical(int li); 
 void completa_tabela(int linha);
-void completa_tabela_vertical(int coluna); 
+void completa_tabela_vertical(int coluna, int linha); 
 void tabela_tipos();
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
 void cadastro_visual();
@@ -95,6 +96,8 @@ void valida_nome_recebimento();
 void valida_tipo_recebimento();
 // Valida preço digitado
 void valida_preco_recebimento();
+// mensagem de erro alterável
+void erro_apagar (int col, int lin, int tipo_erro, int apagar);
 
 // Alteração
  
@@ -176,7 +179,7 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(32+i, 20);printf("%c", 219);
-		Sleep(50);
+		Sleep(10);
 	}
 	
 	textcolor(cor_texto);
@@ -447,17 +450,7 @@ void valida_id_recebimento()  // Recebe e valida id
 			if(c == 1)  // Erro se não for numerico ou for muito grande
 			{
 				k = 0; //continua no loop 
-				
-				cursor(0);	
-				textbackground(cor_fundo);
-				gotoxy(38, 8); clreol(72);
-				textbackground(12);
-				gotoxy(39, 8); printf("[ERRO] ID inv%clido",160);
-				Sleep(1500);
-				textbackground(cor_fundo);
-				gotoxy(39, 8); clreol(72);
-				cursor(1);	
-				gotoxy(39,8);				
+				erro_apagar( 38, 8, 0 , 70); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar	
 			}
 			else
 			{
@@ -478,16 +471,7 @@ void valida_id_recebimento()  // Recebe e valida id
 				
 				if(!valido)
 				{
-					cursor(0);	
-					textbackground(cor_fundo);
-					gotoxy(38, 8); clreol(70);
-					textbackground(12);
-					gotoxy(39, 8); printf("[ERRO] ID j%c cadastrado", 131);
-					Sleep(1500);
-					textbackground(cor_fundo);
-					gotoxy(38, 8); clreol(70);
-					cursor(1);	
-					gotoxy(39, 8);
+					erro_apagar( 38, 8, 0 , 70); //coluna, linha, tipo de erro: "[ERRO] ID já cadastrado" e quantidade a se apagar	
 					k = 0; 	//continua no loop
 				}
 				else break;	
@@ -567,17 +551,7 @@ void valida_quantidade_recebimento() // Recebe e valida quantidade
 			if(c == 1) // Erro
 			{
 				k = 0;	// Repete a pergunta
-				
-				cursor(0);	
-				textbackground(cor_fundo);
-				gotoxy(39, 12); clreol(72);
-				textbackground(12);
-				gotoxy(39, 12); printf("[ERRO] Quantidade inv%clida",160);
-				Sleep(1000); // tempo de erro na tela
-				textbackground(cor_fundo);
-				gotoxy(39, 12); clreol(72);
-				cursor(1);	
-				gotoxy(39, 12);
+				erro_apagar( 39, 12, 2 , 70); //coluna, linha e tipo de erro: "[ERRO] Quantidade Inválida" quantidade a se apagar	
 			}
 		}
 	}while(k == 0);
@@ -604,16 +578,7 @@ void valida_tipo_recebimento() // Recebe e valida tipo
 		if(aux == 'P' || aux == 'G' || aux == 'C' || aux == 'M' || aux == 'F' || aux == 'W' || aux == 'A' || aux == 'R' || aux == 'O') break;
 		else // Apresenta erro
 		{
-			cursor(0);	
-			textbackground(cor_fundo);
-			gotoxy(39, 14); clreol(72);
-			textbackground(12);
-			gotoxy(39, 14); printf("[ERRO] Tipo inv%clido",160);			
-			Sleep(1000); // tempo de erro na tela
-			textbackground(cor_fundo);
-			gotoxy(39, 14); clreol(72);
-			cursor(1);	
-			gotoxy(39, 14);
+			erro_apagar( 39, 14, 3 , 70); //coluna, linha, tipo de erro: "[ERRO] Tipo inválido" e quantidade a se apagar	
 		}
 		
 	}while(true);
@@ -652,17 +617,8 @@ void valida_preco_recebimento() // Recebe preço e valida
 					
 					k = 1;
 					
-					cursor(0);	
-					textbackground(cor_fundo);
-					gotoxy(39, 16); clreol(72);
-					textbackground(12);
-					gotoxy(39, 16); printf("[ERRO] Valor invalido");			
-					Sleep(1000); // Tempo de erro
-					textbackground(cor_fundo);
-					gotoxy(39, 16); clreol(72);
-					cursor(1);	
-					gotoxy(39, 16);	
-					
+					erro_apagar( 39, 16, 4 , 70 ); //coluna, linha , tipo de erro: "[ERRO] Valor inválido" equantidade a se apagar	
+										
 					break;
 				}
 			}			
@@ -675,16 +631,7 @@ void valida_preco_recebimento() // Recebe preço e valida
 				else // Se valor negativo 
 				{
 					// Erro
-					cursor(0);	
-					textbackground(cor_fundo);
-					gotoxy(39, 16); clreol(72);
-					textbackground(12);
-					gotoxy(39, 16); printf("[ERRO] Valor inv%clido",160);			
-					Sleep(1000);
-					textbackground(cor_fundo);
-					gotoxy(39, 16); clreol(72);
-					cursor(1);	
-					gotoxy(39, 16);	
+					erro_apagar( 39, 16, 4 ,70); //coluna, linha, tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 				}
 			}
 		}
@@ -693,6 +640,53 @@ void valida_preco_recebimento() // Recebe preço e valida
 	produto.preco_unitario = num; 
 	
 	return; 
+}
+
+void erro_apagar(int col, int lin, int tipo_erro, int apagar)
+{
+	cursor(0);	
+	textbackground(cor_fundo);
+	gotoxy(col, lin); clreol(apagar);
+	textbackground(12);
+	gotoxy(col, lin); //seta o cursor no lugar para apresentar o erro
+	switch(tipo_erro)
+	{
+		case 0:
+			printf("[ERRO] ID inv%clido",160);	//[ERRO] Id inválido
+			break;
+		case 1:
+			printf("[ERRO] ID j%c cadastrado", 131); //[ERRO] Id já cadastrado
+			break;
+		case 2:
+			printf("[ERRO] Quantidade inv%clida",160); //[ERRO] Quantidade inválida
+			break;
+		case 3:
+			printf("[ERRO] Tipo inv%clido",160);	//[ERRO] Tipo inválido
+			break;
+		case 4:
+			printf("[ERRO] Valor inv%clido",160); //[ERRO] Valor inválido
+			break;
+		case 5:
+			printf("[ERRO] aaaaaa",160);
+			break;
+		case 6:
+			printf("[ERRO] bbbbbb",160);
+			break;
+		case 7:
+			printf("[ERRO] cccccc",160);
+			break;
+		case 8:
+			printf("[ERRO] dddddd",160);
+			break;	
+		default:
+			printf("[ERRO] Valor inv%clido",160);
+			break;
+	}	
+	Sleep(1000);
+	textbackground(cor_fundo);
+	gotoxy(col, lin); clreol(apagar);
+	cursor(1);	
+	gotoxy(col, lin);	
 }
 
 void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu 
@@ -752,7 +746,7 @@ void alteracao()
 		HDD(49, 4);
 		
 		textcolor(cor_texto);
-		 
+				
 		gotoxy(50, 19); printf("Altera%c%co Geral", 135, 198);
 		gotoxy(50, 21); printf("Alterar Nome");
 		gotoxy(50, 23); printf("Alterar Quantidade");
@@ -778,10 +772,22 @@ void alteracao()
 			
 			gotoxy(56, 4); printf("Altera%c%co Geral", 135, 198); // Mensagem em destaque no meio da tela
 			
-			gotoxy(20, 8); printf("Nome do Produto..: ");		
-			gotoxy(20, 10); printf("Quantidade.......: ");			
-			gotoxy(20, 12); printf("Tipo.............: ");					
-			gotoxy(20, 14); printf("Pre%co Unit%crio...: ", 135, 160);
+			textcolor(cor_texto);
+			
+			gotoxy(20,5);	printf("-Dados originais:");
+			
+			//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+			//=================================================================================
+			gera_tabela_vertical(7);  //faz a tabela e já completa ela automaticamente
+			//=================================================================================
+
+			gotoxy(20,21);	printf("-Novos dados:");	
+			textcolor(cor_destaque);
+			
+			gotoxy(20, 23); printf("Nome do Produto..: ");		
+			gotoxy(20, 25); printf("Quantidade.......: ");			
+			gotoxy(20, 27); printf("Tipo.............: ");					
+			gotoxy(20, 29); printf("Pre%co Unit%crio...: ", 135, 160);
 			
 			cursor(1);
 			
@@ -794,7 +800,7 @@ void alteracao()
 			int k, j; 		 // Var auxiliar 
 			int tam;	// Armazena tamanho da string
 			
-			gotoxy(39, 8);
+			gotoxy(39, 23);
 			
 			while(true)
 			{
@@ -806,7 +812,7 @@ void alteracao()
 				
 				tam = strlen(aux_nome);
 				
-				if(tam == 0) gotoxy(39, 8); // Se nada for digitado
+				if(tam == 0) gotoxy(39, 23); // Se nada for digitado
 				else break;
 			}
 			
@@ -816,7 +822,7 @@ void alteracao()
 			
 			char aux_quantidade[50];
 			
-			gotoxy(39, 10);
+			gotoxy(39, 25);
 			
 			do
 			{
@@ -831,7 +837,7 @@ void alteracao()
 				
 				if(tam == 0)	// Se nada for digitado pergunta novamente
 				{
-					gotoxy(39, 10);
+					gotoxy(39, 25);
 					k = 0;
 				} 
 				else 
@@ -854,16 +860,8 @@ void alteracao()
 					{
 						k = 0;	// Repete a pergunta
 						
-						cursor(0);
-						textbackground(cor_fundo);
-						gotoxy(39, 10); clreol(72);
-						textbackground(12);
-						gotoxy(39, 10); printf("[ERRO] Quantidade inv%clida",160);
-						Sleep(1000); // tempo de erro na tela
-						textbackground(cor_fundo);
-						gotoxy(39, 10); clreol(72);
-						cursor(1);
-						gotoxy(39, 10);
+						erro_apagar( 39, 25, 2 , 70 ); //coluna, linha, tipo de erro: "[ERRO] Quantidade inválida" e quantidade a se apagar	
+
 					}
 				}
 			}while(k == 0);
@@ -872,7 +870,7 @@ void alteracao()
 			
 			char aux_tipo;
  			
- 			gotoxy(39, 12);
+ 			gotoxy(39, 27);
  			
 		 	do
 		 	{
@@ -887,16 +885,7 @@ void alteracao()
 				if(aux_tipo == 'P' || aux_tipo == 'G' || aux_tipo == 'C' || aux_tipo == 'M' || aux_tipo == 'F' || aux_tipo == 'W' || aux_tipo == 'A' || aux_tipo == 'R' || aux_tipo == 'O') break;
 				else // Apresenta erro
 				{
-					cursor(0);
-					textbackground(cor_fundo);
-					gotoxy(39, 12); clreol(72);
-					textbackground(12);
-					gotoxy(39, 12); printf("[ERRO] Tipo inv%clido",160);			
-					Sleep(1000); // tempo de erro na tela
-					textbackground(cor_fundo);
-					gotoxy(39, 12); clreol(72);
-					cursor(1);
-					gotoxy(39, 12);
+					erro_apagar( 39, 27, 3, 70 ); //coluna, linha e tipo de erro: "[ERRO] Tipo inválido" e quantidade a se apagar	
 				}
 				
 			}while(true);
@@ -907,7 +896,7 @@ void alteracao()
 			char* end; // Ponteiro de conversão 
 			float num;
 			
-			gotoxy(39, 14);
+			gotoxy(39, 29);
 			
 			do
 			{	
@@ -919,7 +908,7 @@ void alteracao()
 				
 				k = 0;
 				
-				if(tam == 0) gotoxy(39, 14); // Se nada for digitado
+				if(tam == 0) gotoxy(39, 29); // Se nada for digitado
 				else
 				{
 					for(int i = 0; i < tam; i++)
@@ -929,17 +918,8 @@ void alteracao()
 							// Erro
 							
 							k = 1;
-								
-							cursor(0);
-							textbackground(cor_fundo);
-							gotoxy(39, 14); clreol(72);
-							textbackground(12);
-							gotoxy(39, 14); printf("[ERRO] Valor invalido");			
-							Sleep(1000); // Tempo de erro
-							textbackground(cor_fundo);
-							gotoxy(39, 14); clreol(72);
-							cursor(1);
-							gotoxy(39, 14);	
+							
+							erro_apagar( 39, 29, 4 , 70); //coluna, linha e tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 							
 							break;
 						}
@@ -953,16 +933,7 @@ void alteracao()
 						else // Se valor negativo 
 						{
 							// Erro
-							cursor(0);
-							textbackground(cor_fundo);
-							gotoxy(39, 14); clreol(72);
-							textbackground(12);
-							gotoxy(39, 14); printf("[ERRO] Valor inv%clido",160);			
-							Sleep(1000);
-							textbackground(cor_fundo);
-							gotoxy(39, 14); clreol(72);
-							cursor(1);
-							gotoxy(39, 14);	
+							erro_apagar( 39, 29, 4 , 70); //coluna, linha e tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 						}
 					}
 				}
@@ -971,7 +942,7 @@ void alteracao()
 			
 			textcolor(cor_destaque);
 			
-			gotoxy(20, 24); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(60, 24); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -983,7 +954,7 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 24); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(88, 24); clreol(10);
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1004,7 +975,7 @@ void alteracao()
 							
 							if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
 								{														// porém pode ser usado em verificações pois retorna algo
-									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+									gotoxy(60, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
 									Sleep(1500);
 									return;
 								}
@@ -1036,11 +1007,21 @@ void alteracao()
 			
 			borda();
 			
+			textcolor(cor_texto);
+			
+			gotoxy(20,5);	printf("-Dados originais:");
+			
+			//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+			//=================================================================================
+			gera_tabela_vertical(7);  //faz a tabela e já completa ela automaticamente
+			//=================================================================================
+
+			gotoxy(20,21);	printf("-Novos dados:");	
 			textcolor(cor_destaque);
 			
 			gotoxy(54, 4); printf("Altera%c%co de nome", 135, 198); // Mensagem em destaque no meio da tela
 			
-			gotoxy(20, 8); printf("Nome do Produto..: ");		
+			gotoxy(20, 25); printf("Nome do Produto..: ");		
 
 			cursor(1);
 			
@@ -1053,7 +1034,7 @@ void alteracao()
 			int k, j; 		 // Var auxiliar 
 			int tam;	// Armazena tamanho da string
 			
-			gotoxy(39, 8);
+			gotoxy(39, 25);
 			
 			while(true)
 			{
@@ -1065,13 +1046,13 @@ void alteracao()
 				
 				tam = strlen(aux_nome);
 				
-				if(tam == 0) gotoxy(39, 8); // Se nada for digitado
+				if(tam == 0) gotoxy(39, 25); // Se nada for digitado
 				else break;
 			}
 			
 			textcolor(cor_destaque);
 			
-			gotoxy(20, 24); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -1083,7 +1064,7 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 24); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 27); clreol(10);
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1101,7 +1082,7 @@ void alteracao()
 					
 							if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
 								{														// porém pode ser usado em verificações pois retorna algo
-									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+									gotoxy(20, 29);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
 									Sleep(1500);
 									return;
 								}
@@ -1133,11 +1114,20 @@ void alteracao()
 			
 			borda();
 			
+			textcolor(cor_texto);
+			
+			gotoxy(20,5);	printf("-Dados originais:");
+			
+			//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+			//=================================================================================
+			gera_tabela_vertical(7);  //faz a tabela e já completa ela automaticamente
+     		//=================================================================================
+			gotoxy(20,23);	printf("-Novos dados:");	
 			textcolor(cor_destaque);
 			
 			gotoxy(52, 4); printf("Altera%c%co de Quantidade", 135, 198); // Mensagem em destaque no meio da tela
 				
-			gotoxy(20, 8); printf("Quantidade.......: ");			
+			gotoxy(20, 25); printf("Quantidade.......: ");			
 			
 			cursor(1);
 			
@@ -1147,7 +1137,7 @@ void alteracao()
 			
 			char aux_quantidade[50];
 			
-			gotoxy(39, 8);
+			gotoxy(39, 25);
 			
 			do
 			{
@@ -1162,7 +1152,7 @@ void alteracao()
 				
 				if(tam == 0)	// Se nada for digitado pergunta novamente
 				{
-					gotoxy(39, 8);
+					gotoxy(39, 25);
 					k = 0;
 				} 
 				else 
@@ -1185,23 +1175,14 @@ void alteracao()
 					{
 						k = 0;	// Repete a pergunta
 						
-						cursor(0);
-						textbackground(cor_fundo);
-						gotoxy(39, 8); clreol(72);
-						textbackground(12);
-						gotoxy(39, 8); printf("[ERRO] Quantidade inv%clida",160);
-						Sleep(1000); // tempo de erro na tela
-						textbackground(cor_fundo);
-						gotoxy(39, 8); clreol(72);
-						cursor(1);
-						gotoxy(39, 8);
+						erro_apagar( 39, 25, 2, 70 ); //coluna, linha e tipo de erro: "[ERRO] Quantidade inválida" e quantidade a se apagar	
 					}
 				}
 			}while(k == 0);
 			
 			textcolor(cor_destaque);
 			
-			gotoxy(20, 24); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -1213,7 +1194,7 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 24); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 27); clreol(10);
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1263,13 +1244,23 @@ void alteracao()
 			
 			borda();
 			
-			tabela_tipos();
+			textcolor(cor_texto);
 			
+			gotoxy(20,5);	printf("-Dados originais:");
+			
+			//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+			//=================================================================================
+			gera_tabela_vertical(7);  //faz a tabela e já completa ela automaticamente
+	     	//=================================================================================
+	     	
+			gotoxy(20,23);	printf("-Novos dados:");	
 			textcolor(cor_destaque);
+			
+			tabela_tipos();
 			
 			gotoxy(52, 4); printf("Altera%c%co de Tipo", 135, 198); // Mensagem em destaque no meio da tela
 					
-			gotoxy(20, 8); printf("Tipo.............: ");					
+			gotoxy(20, 25); printf("Tipo.............: ");					
 
 			cursor(1);
 			
@@ -1277,7 +1268,7 @@ void alteracao()
 			
 			char aux_tipo;
  			
- 			gotoxy(39, 8);
+ 			gotoxy(39, 25);
  			
 		 	do
 		 	{
@@ -1292,23 +1283,14 @@ void alteracao()
 				if(aux_tipo == 'P' || aux_tipo == 'G' || aux_tipo == 'C' || aux_tipo == 'M' || aux_tipo == 'F' || aux_tipo == 'W' || aux_tipo == 'A' || aux_tipo == 'R' || aux_tipo == 'O') break;
 				else // Apresenta erro
 				{
-					cursor(0);
-					textbackground(cor_fundo);
-					gotoxy(39, 8); clreol(72);
-					textbackground(12);
-					gotoxy(39, 8); printf("[ERRO] Tipo inv%clido",160);			
-					Sleep(1000); // tempo de erro na tela
-					textbackground(cor_fundo);
-					gotoxy(39, 8); clreol(72);
-					cursor(1);
-					gotoxy(39, 8);
+					erro_apagar( 39, 25, 3 , 70 ); //coluna, linha e tipo de erro: "[ERRO] Tipo inválido" e quantidade a se apagar	
 				}
 				
 			}while(true);
 			
 			textcolor(cor_destaque);
 			
-			gotoxy(20, 24); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -1318,7 +1300,7 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 24); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 27); clreol(10);
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1367,11 +1349,20 @@ void alteracao()
 			
 			borda();
 			
+			textcolor(cor_texto);
+			
+			gotoxy(20,5);	printf("-Dados originais:");
+			
+			//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+			//=================================================================================
+			gera_tabela_vertical(7);  //faz a tabela e já completa ela automaticamente
+            //=================================================================================
+			gotoxy(20,23);	printf("-Novos dados:");	
 			textcolor(cor_destaque);
 			
 			gotoxy(56, 4); printf("Altera%c%co de Pre%co", 135, 198, 135); // Mensagem em destaque no meio da tela
 							
-			gotoxy(20, 8); printf("Pre%co Unit%crio...: ", 135, 160);
+			gotoxy(20, 25); printf("Pre%co Unit%crio...: ", 135, 160);
 			
 			cursor(1);
 			
@@ -1382,7 +1373,7 @@ void alteracao()
 			float num;
 			int k, tam;
 			
-			gotoxy(39, 8);
+			gotoxy(39, 25);
 			
 			do
 			{	
@@ -1394,7 +1385,7 @@ void alteracao()
 				
 				k = 0;
 				
-				if(tam == 0) gotoxy(39, 8); // Se nada for digitado
+				if(tam == 0) gotoxy(39, 25); // Se nada for digitado
 				else
 				{
 					for(int i = 0; i < tam; i++)
@@ -1405,16 +1396,7 @@ void alteracao()
 							
 							k = 1;
 							
-							cursor(0);
-							textbackground(cor_fundo);
-							gotoxy(39, 8); clreol(72);
-							textbackground(12);
-							gotoxy(39, 8); printf("[ERRO] Valor inv%clido", 160);			
-							Sleep(1000); // Tempo de erro
-							textbackground(cor_fundo);
-							gotoxy(39, 8); clreol(72);
-							cursor(1); 
-							gotoxy(39, 8);	
+							erro_apagar( 39, 25, 4, 70 ); //coluna, linha e tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 							
 							break;
 						}
@@ -1428,16 +1410,7 @@ void alteracao()
 						else // Se valor negativo 
 						{
 							// Erro
-							cursor(0);
-							textbackground(cor_fundo);
-							gotoxy(39, 8); clreol(72);
-							textbackground(12);
-							gotoxy(39, 8); printf("[ERRO] Valor inv%clido",160);			
-							Sleep(1000);
-							textbackground(cor_fundo);
-							gotoxy(39, 8); clreol(72);
-							cursor(1); 
-							gotoxy(39, 8);	
+							erro_apagar( 39, 8, 4 , 70); //coluna, linha e tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 						}
 					}
 				}
@@ -1446,7 +1419,7 @@ void alteracao()
 					
 			textcolor(cor_destaque);
 			
-			gotoxy(20, 24); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -1456,7 +1429,7 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 24); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 27); clreol(10);
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1569,16 +1542,7 @@ int obtem_id_alteracao()
 			{
 				k = 0; //continua no loop 
 				
-				cursor(0);
-				textbackground(cor_fundo);
-				gotoxy(49, 8); clreol(62);
-				textbackground(12);
-				gotoxy(49, 8); printf("[ERRO] ID inv%clido",160);
-				Sleep(1500);
-				textbackground(cor_fundo);
-				gotoxy(49, 8); clreol(62);
-				cursor(1); 
-				gotoxy(49,8);				
+				erro_apagar( 49, 8 ,0 , 70); //coluna, linha e tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar				
 			}
 			else
 			{
@@ -1810,7 +1774,8 @@ void consulta_geral()
 		borda();
 		textcolor(cor_destaque); 
 		gotoxy(32, 16); printf("[ N%co h%c nenhum item registrado! Por favor registre algo ]", 198,160);
-		getche();
+		gotoxy(42, 30); printf("Pressione qualquer tecla para voltar");
+		getch();
 		fclose(fp);	// fecha o arquivo
 		return; 
 	}			
@@ -1843,15 +1808,8 @@ void consulta_id()   //consulta por id
 		if(aux == 0) break;
 		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
 		{
-			cursor(0);
-			gotoxy(47, 7); clreol(50);
-			textbackground(12); 
-			textcolor(cor_texto);
-			printf("Id inv%clido", 160);
-			Sleep(1000);
-			textbackground(cor_fundo);
-			cursor(1); 
-			gotoxy(47, 7); clreol(50);	
+			erro_apagar(47, 7, 0 , 60); //coluna, linha e tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar	
+
 		} 
 		else if(aux == 3)  //retorno de 3 significa que o id é válido
 		{
@@ -1861,20 +1819,10 @@ void consulta_id()   //consulta por id
 			{
 				if(fread(&produto, sizeof(produto), 1, fp) == 1 && !produto.excluido && produto.id == id_busca)
 				{					
-		
-					gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
-					gotoxy(20,12);	printf ("|  ID                |                                                           |");
-			   		gotoxy(20,13);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,14);	printf ("|  Nome              |                                                           |");
-					gotoxy(20,15);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
-					gotoxy(20,17);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
-					gotoxy(20,19);	printf ("|--------------------------------------------------------------------------------|");
-					gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
-					gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
-
-					completa_tabela_vertical(43); //Apresenta-se ao usuário o registro pesquisado
+					//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+			   		//=================================================================================
+			   		gera_tabela_vertical(11);
+					//=================================================================================
 					
 					tabela_tipos();
 					
@@ -1985,15 +1933,7 @@ void consulta_tipo_recebimento()
 		
 			if(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' )
 			{
-				cursor(0); 
-				textbackground(cor_fundo); // Apresenta erro
-				textbackground(12);
-				gotoxy(64, 7); printf("[ERRO] Tipo inv%clido",160);			
-				Sleep(1000); // tempo de erro na tela
-				textbackground(cor_fundo);
-				cursor(1); 
-				gotoxy(64, 7); clreol(30);
-				//gotoxy(39, 14);
+				erro_apagar( 64, 7, 3 , 35); //coluna, linha e tipo de erro: "[ERRO] Tipo inválido" e quantidade a se apagar	
 			}
 			
 		}while(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' );
@@ -2174,19 +2114,10 @@ void consulta_nome()
 				
 			if(strstr(strlwr(comp),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
 			{
-				gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
-				gotoxy(20,12);	printf ("|  ID                |                                                           |");
-		   		gotoxy(20,13);	printf ("|--------------------------------------------------------------------------------|");
-				gotoxy(20,14);	printf ("|  Nome              |                                                           |");
-				gotoxy(20,15);	printf ("|--------------------------------------------------------------------------------|");
-				gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
-				gotoxy(20,17);	printf ("|--------------------------------------------------------------------------------|");
-				gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
-				gotoxy(20,19);	printf ("|--------------------------------------------------------------------------------|");
-				gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
-				gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
-				
-				completa_tabela_vertical(43);    //preenche a tabela
+				//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+		   		//=================================================================================
+		   		gera_tabela_vertical(11);
+				//=================================================================================
 				
 				tabela_tipos();
 				
@@ -2264,12 +2195,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 		    	
 		    	if(k == 1) // Se um caractere não numérico for digitado
 		    	{
-		    		textcolor(cor_texto);
-		    		gotoxy(77, 7); clreol(34);
-					textbackground(12);
-		    		gotoxy(77, 7); printf("[ERRO] Id Inv%clido", 160);
-					Sleep(1000);
-					textbackground(cor_fundo); gotoxy(77, 7); clreol(34);
+		    		erro_apagar( 77, 7, 0 , 34); //coluna, linha e tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar	
 				}
 		    	else // Se o ID for valido e numérico
 		    	{ 
@@ -2290,19 +2216,10 @@ void excluir_dados() //exclusao lógica (continua no binário)
 					   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
 					   		
 					   		textcolor(cor_texto);
-					   		gotoxy(20,11);	printf ("+--------------------------------------------------------------------------------+");
-							gotoxy(20,12);	printf ("|  ID                |                                                           |");
-					   		gotoxy(20,13);	printf ("|--------------------------------------------------------------------------------|");
-							gotoxy(20,14);	printf ("|  Nome              |                                                           |");
-							gotoxy(20,15);	printf ("|--------------------------------------------------------------------------------|");
-							gotoxy(20,16);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
-							gotoxy(20,17);	printf ("|--------------------------------------------------------------------------------|");
-							gotoxy(20,18);	printf ("|  Quantidade        |                                                           |");
-							gotoxy(20,19);	printf ("|--------------------------------------------------------------------------------|");
-							gotoxy(20,20);	printf ("|  Tipo              |                                                           |");
-							gotoxy(20,21);	printf ("+--------------------------------------------------------------------------------+");
-							
-							completa_tabela_vertical(43); //Apresenta-se ao usuário o registro a ser excluído
+					   		//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+					   		//=================================================================================
+					   		gera_tabela_vertical(11);
+							//=================================================================================
 							
 							textcolor(cor_destaque);
 							gotoxy(20,30);printf("Pressione uma tecla para continuar...");
@@ -2489,18 +2406,28 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 	}
 }
 
-
-void completa_tabela_vertical(int coluna)  //função para colocar os dados na tabela
-{	
+	void gera_tabela_vertical(int li)
+{
+	gotoxy(20,li);		printf ("+--------------------------------------------------------------------------------+");
+	gotoxy(20,li+1);	printf ("|  ID                |                                                           |");
+	gotoxy(20,li+2);	printf ("|--------------------------------------------------------------------------------|");
+	gotoxy(20,li+3);	printf ("|  Nome              |                                                           |");
+	gotoxy(20,li+4);	printf ("|--------------------------------------------------------------------------------|");
+	gotoxy(20,li+5);	printf ("|  Pre%co Unit%crio    |                                                           |", 135, 160);
+	gotoxy(20,li+6);	printf ("|--------------------------------------------------------------------------------|");
+	gotoxy(20,li+7);	printf ("|  Quantidade        |                                                           |");
+	gotoxy(20,li+8);	printf ("|--------------------------------------------------------------------------------|");
+	gotoxy(20,li+9);	printf ("|  Tipo              |                                                           |");
+	gotoxy(20,li+10);	printf ("+--------------------------------------------------------------------------------+");	
+	
 	if(!produto.excluido)
 	{
 		int tam = strlen(produto.nome); 
-			
-		gotoxy(coluna, 12); printf("%d", produto.id);
-		gotoxy(coluna, 14); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
-		gotoxy(coluna, 16); printf("%.2f", produto.preco_unitario);
-		gotoxy(coluna, 18); printf("%d", produto.quantidade);
-		gotoxy(coluna, 20); printf("%c", produto.tipo);	
+		gotoxy(43, li+1); printf("%d", produto.id);
+		gotoxy(43, li+3); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
+		gotoxy(43, li+5); printf("%.2f", produto.preco_unitario);
+		gotoxy(43, li+7); printf("%d", produto.quantidade);
+		gotoxy(43, li+9); printf("%c", produto.tipo);	
 	}
 }
 
