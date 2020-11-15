@@ -136,6 +136,13 @@ struct estrutura
 	
 }produto;
 
+/*
+	Revisão Final | Ultima Parte
+	
+	- Linhas Inuteis removidas
+	- Erros lógicos resolvidos
+	
+*/
 
 main()
 {
@@ -3290,16 +3297,3 @@ void clreol(int x)  //função customizada e mais versátil para o programa do clre
        for(int i=0; i < x; i++)
            printf("\b");		//volta X vezes o cursor para trás para a posição original após limpar a linha
 }
-
-/*
-
-	Revisão Final - 5/11/2020
-	
-	- Linhas extras removidas
-	- Espaçamentos adicionados
-	- Comentários adicionados
-	- Alteraçõs nas funções de exclusão e apresentação
-	- Erros de "Recursividade" removidos
-	- Pendências de memória corrigidos 
-	
-*/
