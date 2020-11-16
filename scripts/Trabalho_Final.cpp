@@ -1877,8 +1877,8 @@ int valida_id_consulta(int *id_final)
 		{
 			cursor(0);
 			textbackground(12);
-			gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-			printf("Voltando ao menu...");
+			gotoxy(55, 35);			 // Apresenta mensagem a baixo da borda
+			printf("Voltando...");
 			Sleep(1500);
 			return 0;
 		}
@@ -1946,6 +1946,12 @@ void consulta_tipo_recebimento()
 		
 	}while(aux != '0');
 	
+	cursor(0);
+	textbackground(12);
+	gotoxy(54, 35);			 // Apresenta mensagem a baixo da borda
+	printf("Voltando...");
+	Sleep(1500);
+		
 	return;
 }
 
@@ -1991,7 +1997,7 @@ void consulta_tipo(char aux)
 			
 			textcolor(cor_texto);
 			
-			gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
+			gotoxy(20, 31); printf("Pressione 0 para voltar a escolha do tipo");
 			gotoxy(107, 4);	printf("%d", pag); // Número da página 
 			gotoxy(107, 6); printf("%c", aux);
 			
@@ -2062,7 +2068,7 @@ void consulta_tipo(char aux)
 	}
 	
 	fclose(fp);	// fecha o arquivo
-	
+		
 	return;
 }
 
@@ -2098,7 +2104,15 @@ void consulta_nome()
 		}while(tam == 0);
 		
 		if(aux[0] == '0')
+		{
+			cursor(0);
+			textbackground(12);
+			gotoxy(54, 35);			 // Apresenta mensagem a baixo da borda
+			printf("Voltando...");
+			Sleep(1500);
+		
 			return;
+		}	
 		
 		cursor(0);
 		
@@ -2178,8 +2192,8 @@ void excluir_dados() //exclusao lógica (continua no binário)
 			{
 				cursor(0);
 				textbackground(12);
-				gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
-				printf("Voltando ao menu...");
+				gotoxy(55, 35);			 // Apresenta mensagem a baixo da borda
+				printf("Voltando...");
 				Sleep(1500);
 			} 
 		    else // Se algo diferente de 0 for digitado
