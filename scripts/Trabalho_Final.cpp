@@ -12,6 +12,8 @@
 	
 */
 
+// Ao abrir a info de sistema pressione 1 
+
 #include <stdio.h>
 #include <math.h>
 #include <windows.h>
@@ -43,6 +45,7 @@ void clreol(int x);
 void loading();
 void inicio(); 
 void borda(); 
+void agradecimento();
 
 // Desenhos 
 
@@ -1586,6 +1589,11 @@ void info_de_sistema() // Apresenta as informações do sistema
 {
 	borda();
 	
+	char c;
+	
+	do
+	{
+		
 	int inix = 20, iniy = 9; // Controla o eixo x e y das informações
 	
 	// Apresenta as informações do sistema
@@ -1625,25 +1633,27 @@ void info_de_sistema() // Apresenta as informações do sistema
 	gotoxy(20, 19); printf("simular um sistema de gerenciamento de estoque de uma loja de inform%ctica em C/C++.",160);
 	gotoxy(20, 21); printf("Para a realiza%c%co desse projeto utilizamos fun%c%ces de cabe%calho da conio.c e conio.h.",135,198,135,228,135);
 	gotoxy(20, 23); printf("Podem ser registrados perif%cricos e outras pe%cas de computador.",130,135);
-	
-	textcolor(cor_destaque);
-	gotoxy(20, 25); printf("Agradecimentos: ");
-	textcolor(cor_texto);
-	printf("Deixamos nosso agradecimento a professora Ariane Scarelli e ");
-	gotoxy(20, 27); printf("K%ctia Zambombon, por compartilharem conosco parte de seus conhecimentos.",160);
-	
+		
 	textcolor(cor_destaque);
 	gotoxy(20, 30); printf("Pressione 0 para retornar ao menu"); 
 	
-	char c;
-	
-	do
-	{
 		fflush(stdin); 
 		
 		c =	getch();
-			
+		
+		if(c == '1')
+		{
+			agradecimento(); 
+		}	
+		
 	}while(c != '0');
+	
+	cursor(0);
+	textcolor(cor_texto);
+	textbackground(12);
+	gotoxy(52, 35);			 // Apresenta mensagem a baixo da borda
+	printf("Voltando ao Menu...");
+	Sleep(1500);
 	
 	return; 
 }
@@ -3186,6 +3196,94 @@ void HDD(int ic, int il)
 	gotoxy(ic+10,il+4);		printf("%c",223);
 	
 	textbackground(cor_fundo);
+}
+
+void agradecimento()
+{
+	Sleep(1000);
+	
+	textbackground(0);
+	system("Cls");
+
+	int cb = 15, lc = 120; // (cor de fundo, cor da borda, limite de coluna)
+	
+	textcolor(cor_texto);
+	
+	for(int i = 9; i <= (lc - 8); i++) // Parte de cima da borda
+	{
+		gotoxy(i,2);printf("%c",219);
+	}
+	for (int i = 9; i <= (lc - 8); i++) // Parte de baixo da borda 
+	{
+		gotoxy(i,33);printf("%c",219);
+	}
+	for (int i=2; i <= 33; i++) // Borda esquerda 
+	{
+		gotoxy(10,i);printf("%c",219);
+		gotoxy(9,i);printf("%c",219);
+	}
+	for (int i=2; i <= 33; i++) // Borda direita
+	{
+		gotoxy(112,i);printf("%c",219);
+		gotoxy(111,i);printf("%c",219);
+	}
+	
+	printf("\n\n\n\n");
+	
+	char linha[100];
+	
+	strcpy(linha, "Agradecimento");
+	
+	gotoxy(55, 4);
+	
+	for(int i = 0; i < strlen(linha); i++)
+	{
+		printf("%c", linha[i]);
+//		Sleep(50);
+	}
+	
+	strcpy(linha, "Deixamos nossos agradecimentos a professora Ariane Scarelli e ");
+	
+	gotoxy(14, 6);
+	
+	for(int i = 0; i < strlen(linha); i++)
+	{
+		printf("%c", linha[i]);
+//		Sleep(50);
+	}
+	
+	strcpy(linha, "Katia Zambombon, por compartilharem conosco parte de seus conhecimentos durante este ano.");
+	
+	gotoxy(14, 8);
+	
+	for(int i = 0; i < strlen(linha); i++)
+	{
+		if(i == 1)
+		{
+			putchar(160);
+		}
+		else
+		{
+			printf("%c", linha[i]);
+	//		Sleep(50);	
+		}	
+	}
+	
+	strcpy(linha, "Obrigado a voces, ");
+	
+	gotoxy(14, 10);
+	
+	for(int i = 0; i < strlen(linha); i++)
+	{
+			printf("%c", linha[i]);
+	//		Sleep(50);			
+	}
+	
+	getch();
+	
+	borda();
+	
+	return;
 }
 
 void textcolor(int newcolor) // Define a cor do texto
