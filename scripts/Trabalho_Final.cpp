@@ -3300,9 +3300,21 @@ void agradecimento()
 		}			
 	}
 	
+	strcpy(linha, "------------------------------------------------------------------------------------------");
+	
+	Sleep(50);
+	
+	gotoxy(14, 16);
+	
+	for(int i = 0; i < strlen(linha); i++)
+	{
+			printf("%c", linha[i]);
+			Sleep(20);				
+	}
+	
 	strcpy(linha, "Parabens");
 	
-	gotoxy(14, 20);
+	gotoxy(26, 20);
 	
 	for(int i = 0; i < strlen(linha); i++)
 	{
@@ -3316,7 +3328,7 @@ void agradecimento()
 	
 	strcpy(linha, "Pelo otimo");
 	
-	gotoxy(14, 22);
+	gotoxy(26, 22);
 	
 	for(int i = 0; i < strlen(linha); i++)
 	{
@@ -3328,9 +3340,9 @@ void agradecimento()
 		}				
 	}
 	
-	strcpy(linha, "Trabalho :)");
+	strcpy(linha, "Trabalho :D");
 	
-	gotoxy(14, 24);
+	gotoxy(26, 24);
 	
 	for(int i = 0; i < strlen(linha); i++)
 	{
@@ -3338,10 +3350,39 @@ void agradecimento()
 		Sleep(50);				
 	}
 	
+	gotoxy(62, 22); printf("%c", 176); Sleep(50);
+	
+	gotoxy(61, 21); printf("%c", 176); gotoxy(63, 21); printf("%c", 176); Sleep(50);
+	
+	gotoxy(60, 20); printf("%c", 176); gotoxy(64, 20); printf("%c", 176); Sleep(50);
+	
+	gotoxy(57, 19); printf("%c%c%c", 176, 176, 176); gotoxy(65, 19); printf("%c%c%c", 176, 176, 176); Sleep(50);
+	
+	gotoxy(56, 20); printf("%c", 176); gotoxy(68, 20); printf("%c", 176); Sleep(50);
+	
+	gotoxy(55, 21); printf("%c", 176); gotoxy(69, 21); printf("%c", 176); Sleep(50);
+	
+	gotoxy(56, 22); printf("%c", 176); gotoxy(68, 22); printf("%c", 176); Sleep(50);
+	
+	gotoxy(57, 23); printf("%c", 176); gotoxy(67, 23); printf("%c", 176); Sleep(50);
+	
+	gotoxy(58, 24); printf("%c", 176); gotoxy(66, 24); printf("%c", 176); Sleep(50);
+	
+	gotoxy(59, 25); printf("%c", 176); gotoxy(65, 25); printf("%c", 176); Sleep(50);
+	
+	gotoxy(60, 26); printf("%c", 176); gotoxy(64, 26); printf("%c", 176); Sleep(50);
+	
+	gotoxy(61, 27); printf("%c", 176); gotoxy(63, 27); printf("%c", 176); Sleep(50);
+	
+	gotoxy(62, 28); printf("%c", 176); Sleep(50);
+	
 	char c;
 	
 	do
 	{
+		textcolor(6); gotoxy(14, 31); printf("Pressione 0 para voltar"); Sleep(200);
+		textcolor(cor_texto); gotoxy(14, 31); printf("Pressione 0 para voltar");
+		
 		c = getch();
 		
 	}while(c != '0');
