@@ -136,7 +136,7 @@ int abrir_arquivo_alterar()
 struct estrutura
 {
 	long id;
-	char nome[50];
+	char nome[100];
 	long quantidade;
 	char tipo;
 	float preco_unitario;
@@ -494,7 +494,7 @@ void valida_id_recebimento()  // Recebe e valida id
 
 void valida_nome_recebimento() // Recebe e valida nome
 {
-	char aux[50]; // Armazena nome | Armazena nome sem espaço 
+	char aux[100]; // Armazena nome | Armazena nome sem espaço 
 	
 	int k, j, tam; 		 // Var auxiliar || Armazena tamanho da string
 
@@ -2434,7 +2434,7 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 	}
 }
 
-	void gera_tabela_vertical(int li)
+void gera_tabela_vertical(int li)
 {
 	gotoxy(20,li);		printf ("+--------------------------------------------------------------------------------+");
 	gotoxy(20,li+1);	printf ("|  ID                |                                                           |");
@@ -2451,6 +2451,8 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 	if(!produto.excluido)
 	{
 		int tam = strlen(produto.nome); 
+		
+		if(tam > 57) tam = 57;
 		gotoxy(43, li+1); printf("%d", produto.id);
 		gotoxy(43, li+3); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
 		gotoxy(43, li+5); printf("%.2f", produto.preco_unitario);
@@ -3243,7 +3245,7 @@ void agradecimento()
 	
 	strcpy(linha, "Deixamos nossos agradecimentos a professora Ariane Scarelli e ");
 	
-	gotoxy(14, 6);
+	gotoxy(14, 8);
 	
 	for(int i = 0; i < strlen(linha); i++)
 	{
@@ -3253,7 +3255,7 @@ void agradecimento()
 	
 	strcpy(linha, "Katia Zambombon, por compartilharem conosco parte de seus conhecimentos durante este ano.");
 	
-	gotoxy(14, 8);
+	gotoxy(14, 10);
 	
 	for(int i = 0; i < strlen(linha); i++)
 	{
@@ -3270,7 +3272,7 @@ void agradecimento()
 	
 	strcpy(linha, "Obrigado a voces, por nos fazerem gostar de programar e a cada aula, ainda que a distancia,");
 	
-	gotoxy(14, 10);
+	gotoxy(14, 12);
 	
 	for(int i = 0; i < strlen(linha); i++)
 	{
@@ -3285,7 +3287,7 @@ void agradecimento()
 	
 	strcpy(linha, "passarem seus conteúdos de maneira exemplar, exclarecendo todas as duvidas que tivemos.");
 	
-	gotoxy(14, 12);
+	gotoxy(14, 14);
 	
 	for(int i = 0; i < strlen(linha); i++)
 	{
@@ -3296,6 +3298,44 @@ void agradecimento()
 			printf("%c", linha[i]);
 			Sleep(50);	
 		}			
+	}
+	
+	strcpy(linha, "Parabens");
+	
+	gotoxy(14, 20);
+	
+	for(int i = 0; i < strlen(linha); i++)
+	{
+		if(i == 5) printf("%c", 130);
+		else
+		{
+			printf("%c", linha[i]);
+			Sleep(50);	
+		}				
+	}
+	
+	strcpy(linha, "Pelo otimo");
+	
+	gotoxy(14, 22);
+	
+	for(int i = 0; i < strlen(linha); i++)
+	{
+		if(i == 5) printf("%c", 162);
+		else
+		{
+			printf("%c", linha[i]);
+			Sleep(50);	
+		}				
+	}
+	
+	strcpy(linha, "Trabalho :)");
+	
+	gotoxy(14, 24);
+	
+	for(int i = 0; i < strlen(linha); i++)
+	{
+		printf("%c", linha[i]);
+		Sleep(50);				
 	}
 	
 	char c;
