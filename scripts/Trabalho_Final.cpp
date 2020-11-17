@@ -23,7 +23,7 @@
 #include <time.h>
 #include <strings.h>
 
-#define versao 2.8
+#define versao 3.2
 
 // Definição de cores 
 
@@ -145,6 +145,8 @@ struct estrutura
 }produto;
 
 /*
+	 => 16/ 11 / 2020 <= 
+	
 	Revisão Final | Ultima Parte
 	
 	- Linhas Inuteis removidas
@@ -184,7 +186,7 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(32+i, 20);printf("%c", 219);
-		Sleep(10);
+		Sleep(50);
 	}
 	
 	textcolor(cor_texto);
