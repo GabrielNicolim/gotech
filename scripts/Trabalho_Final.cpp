@@ -12,7 +12,9 @@
 	
 */
 
-// Ao abrir a info de sistema pressione 1 
+// ========================================================= //
+// Função secreta ==> Ao abrir a info de sistema pressione 1 //
+// ========================================================= // 
 
 #include <stdio.h>
 #include <math.h>
@@ -3204,30 +3206,25 @@ void agradecimento()
 	
 	textbackground(0);
 	system("Cls");
-
-	int cb = 15, lc = 120; // (cor de fundo, cor da borda, limite de coluna)
 	
 	textcolor(cor_texto);
 	
-	for(int i = 9; i <= (lc - 8); i++) // Parte de cima da borda
+	for(int i = 8; i <= 112; i++)
 	{
-		gotoxy(i,2);printf("%c",219);
-	}
-	for (int i = 9; i <= (lc - 8); i++) // Parte de baixo da borda 
-	{
-		gotoxy(i,33);printf("%c",219);
-	}
-	for (int i=2; i <= 33; i++) // Borda esquerda 
-	{
-		gotoxy(10,i);printf("%c",219);
-		gotoxy(9,i);printf("%c",219);
-	}
-	for (int i=2; i <= 33; i++) // Borda direita
-	{
-		gotoxy(112,i);printf("%c",219);
-		gotoxy(111,i);printf("%c",219);
+		gotoxy(i, 2); printf("%c", 219);
+		gotoxy(i, 33); printf("%c", 219);
+		Sleep(20); 
 	}
 	
+	for(int i = 2; i < 33; i++)
+	{
+		gotoxy(8, i); printf("%c", 219);
+		gotoxy(9, i); printf("%c", 219);
+		gotoxy(112, (35 - i)); printf("%c", 219); 
+		gotoxy(111, (35 - i)); printf("%c", 219); 
+		Sleep(20);
+	}
+	 
 	printf("\n\n\n\n");
 	
 	char linha[100];
@@ -3239,7 +3236,7 @@ void agradecimento()
 	for(int i = 0; i < strlen(linha); i++)
 	{
 		printf("%c", linha[i]);
-//		Sleep(50);
+		Sleep(50);
 	}
 	
 	strcpy(linha, "Deixamos nossos agradecimentos a professora Ariane Scarelli e ");
@@ -3249,7 +3246,7 @@ void agradecimento()
 	for(int i = 0; i < strlen(linha); i++)
 	{
 		printf("%c", linha[i]);
-//		Sleep(50);
+		Sleep(50);
 	}
 	
 	strcpy(linha, "Katia Zambombon, por compartilharem conosco parte de seus conhecimentos durante este ano.");
@@ -3265,21 +3262,47 @@ void agradecimento()
 		else
 		{
 			printf("%c", linha[i]);
-	//		Sleep(50);	
+			Sleep(50);	
 		}	
 	}
 	
-	strcpy(linha, "Obrigado a voces, ");
+	strcpy(linha, "Obrigado a voces, por nos fazerem gostar de programar e a cada aula, ainda que a distancia,");
 	
 	gotoxy(14, 10);
 	
 	for(int i = 0; i < strlen(linha); i++)
 	{
+		if(i == 14) printf("%c", 136);
+		else if(i == 85) printf("%c", 131);
+		else
+		{
 			printf("%c", linha[i]);
-	//		Sleep(50);			
+			Sleep(50);	
+		}			
 	}
 	
-	getch();
+	strcpy(linha, "passarem seus conteúdos de maneira exemplar, exclarecendo todas as duvidas que tivemos.");
+	
+	gotoxy(14, 12);
+	
+	for(int i = 0; i < strlen(linha); i++)
+	{
+		if(i == 19) printf("%c", 163); 
+		else if(i == 68) printf("%c", 163);
+		else
+		{
+			printf("%c", linha[i]);
+			Sleep(50);	
+		}			
+	}
+	
+	char c;
+	
+	do
+	{
+		c = getch();
+		
+	}while(c != '0');
 	
 	borda();
 	
