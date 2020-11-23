@@ -136,7 +136,7 @@ int abrir_arquivo_alterar()
 struct estrutura
 {
 	long id;
-	char nome[150];  // espaço da tela de cadastro
+	char nome[194];  // espaço da tela de cadastro
 	long quantidade;
 	char tipo;
 	float preco_unitario;
@@ -802,7 +802,7 @@ void alteracao()
 					
 			/// Alteração do nome /// Recebimento do novo nome ///
 			
-			char aux_nome[50]; // Armazena nome | Armazena nome sem espaço 
+			char aux_nome[97]; // Armazena nome | Armazena nome sem espaço 
 	
 			int k, j; 		 // Var auxiliar 
 			int tam;	// Armazena tamanho da string
@@ -2087,7 +2087,7 @@ void consulta_tipo(char aux)
 void consulta_nome()
 {
 	
-	char aux[50], comp[50]; // Armazena nome  
+	char aux[80], comp[80]; // Armazena nome  
 	int tam, k, j;
 	
 	do{
