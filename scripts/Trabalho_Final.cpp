@@ -12,10 +12,6 @@
 	
 */
 
-// ========================================================= //
-// Função secreta ==> Ao abrir a info de sistema pressione 1 //
-// ========================================================= // 
-
 #include <stdio.h>
 #include <math.h>
 #include <windows.h>
