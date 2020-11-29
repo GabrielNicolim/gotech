@@ -296,7 +296,7 @@ void cadastro_visual()
 		
 		textcolor(cor_destaque);
 		
-		gotoxy(20, 28); printf("Deseja realizar mais um cadastro? (S/N): ");
+		gotoxy(20, 26); printf("Deseja realizar mais um cadastro? (S/N): ");
 	
 		do{
 			
@@ -476,7 +476,7 @@ void valida_id_recebimento()  // Recebe e valida id
 				
 				if(!valido)
 				{
-					erro_apagar( 38, 8, 0 , 70); //coluna, linha, tipo de erro: "[ERRO] ID já cadastrado" e quantidade a se apagar	
+					erro_apagar( 39, 8, 0 , 70); //coluna, linha, tipo de erro: "[ERRO] ID já cadastrado" e quantidade a se apagar	
 					k = 0; 	//continua no loop
 				}
 				else break;	
@@ -935,7 +935,7 @@ void alteracao()
 			
 			textcolor(cor_destaque);
 			
-			gotoxy(60, 31); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(70, 31); printf("Confirmar Altera%c%ces? (S/N): ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -947,7 +947,10 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(88, 31); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') 
+				{
+					gotoxy(99, 31); clreol(10);
+				}
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1045,7 +1048,7 @@ void alteracao()
 			
 			textcolor(cor_destaque);
 			
-			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N): ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -1057,7 +1060,10 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 27); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N')
+				{
+					gotoxy(49, 27); clreol(10);
+				} 
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1175,7 +1181,7 @@ void alteracao()
 			
 			textcolor(cor_destaque);
 			
-			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N): ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -1187,7 +1193,10 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 27); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N')
+				{
+					gotoxy(49, 27); clreol(10);
+				} 
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1251,8 +1260,10 @@ void alteracao()
 			
 			tabela_tipos(58,37,1);
 			
-			gotoxy(72, 4); printf("Altera%c%co de Tipo", 135, 198); // Mensagem em destaque no meio da tela
-					
+			textcolor(cor_destaque);
+			
+			gotoxy(74, 4); printf("Altera%c%co de Tipo", 135, 198); // Mensagem em destaque no meio da tela
+				
 			gotoxy(20, 25); printf("Tipo.............: ");					
 
 			cursor(1);
@@ -1283,7 +1294,7 @@ void alteracao()
 			
 			textcolor(cor_destaque);
 			
-			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N): ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -1293,7 +1304,10 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 27); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N')
+				{
+					gotoxy(49, 27); clreol(10);
+				} 
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1412,7 +1426,7 @@ void alteracao()
 					
 			textcolor(cor_destaque);
 			
-			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N) ", 135, 228); 
+			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N): ", 135, 228); 
 			
 			textcolor(cor_texto);
 			
@@ -1422,7 +1436,10 @@ void alteracao()
 			{
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') gotoxy(48, 27); clreol(10);
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N')
+				{
+					gotoxy(49, 27); clreol(10);
+				} 
 				
 				if(confirmar == 's' || confirmar == 'S') // Confirmação 
 				{
@@ -1559,7 +1576,7 @@ int obtem_id_alteracao()
 					textcolor(cor_destaque);
 					cursor(0);
 					 
-					gotoxy(80, 16); printf("[ Nenhum item com este ID foi encontrado ]", 198,160);
+					gotoxy(61, 16); printf("[ Nenhum item com este ID foi encontrado ]", 198,160);
 					
 					getch();
 					k = 0; 	//continua no loop
