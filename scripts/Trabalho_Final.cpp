@@ -15,6 +15,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <windows.h>
+#include <wincon.h>
+#include <winuser.h>
 #include <conio.h>
 #include <time.h>
 #include <strings.h>
@@ -28,7 +30,7 @@
 #define cor_texto 15
 #define cor_destaque 0
 
-text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 40, 1, 1}; // Define os limites para linha (35) e coluna (80)
+text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 37, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
 // Funções conio.c
 
@@ -155,7 +157,19 @@ struct estrutura
 main()
 {
 	SetConsoleTitle("GoTech"); 		   // Define o nome do console
-    system("mode con:cols=160 lines=40");  // Define o tamanho do console
+    system("mode con:cols=160 lines=37");  // Define o tamanho do console
+    
+    //======================================================================
+	//Pega o tamanho do monitor e joga o programa pro meio do monitor
+	//======================================================================
+	
+    DWORD dwWidth = GetSystemMetrics(SM_CXSCREEN);  // essas funções pegam o tamanho da tela em pixels (ex: 1920 x 1080)
+	DWORD dwHeight = GetSystemMetrics(SM_CYSCREEN);
+    
+    HWND wh = GetConsoleWindow(); // precisa disso pro MoveWindow  (HWND é como é indentificada a janela do Windows "identificador de janelas" 
+    MoveWindow(wh, dwWidth/8 , dwHeight/8 , 1320, 740, TRUE); // move a janela para uma cordenada determinada a setando num tamanho determinado de 20 em 20
+    
+    //======================================================================
     
 	srand(time(NULL));
 	random_menu = rand() % 3; // Escolhe o menu que será exibido ao usuário
@@ -1670,7 +1684,7 @@ void sair() // Finaliza a execução do programa
 	
 	fclose(fp);
 	
-	textcolor(cor_fundo); gotoxy(80, 37); // Esconde mensagem de encerramento 
+	textcolor(cor_fundo); gotoxy(80, 34); // Esconde mensagem de encerramento 
 	
 	exit(1);
 }
@@ -2625,7 +2639,6 @@ void borda()
 		gotoxy(151,i);printf("%c",219);
 	}
 	
-	printf("\n\n\n\n");
 }
 
 void disquete(int ic, int il)
