@@ -6,7 +6,7 @@
 :dart: <b>Objetivo: </b>Gerenciamento de estoque<br>
 <hr>
 <h3>Bibliotecas utilizadas: </h3>
-<li><a href = "https://www.ime.usp.br/~pf/algoritmos/apend/stdio.h.html">Stdio.h</a>
+<li><a href = "https://pt.wikipedia.org/wiki/Stdio.h">Stdio.h</a>
 <li><a href = "https://www.programmingsimplified.com/c/conio.h">Conio.h</a>
 <li><a href = "http://linguagemc.com.br/a-biblioteca-math-h/">Math.h</a>
 <li><a href = "https://en.wikipedia.org/wiki/Windows.h">Windows.h</a>
