@@ -10,6 +10,8 @@
 <li><a href = "https://www.programmingsimplified.com/c/conio.h">Conio.h</a>
 <li><a href = "http://linguagemc.com.br/a-biblioteca-math-h/">Math.h</a>
 <li><a href = "https://en.wikipedia.org/wiki/Windows.h">Windows.h</a>
+<li><a href = "https://docs.microsoft.com/en-us/windows/console/getconsolewindow">Wincon.h</a>
+<li><a href = "https://docs.microsoft.com/en-us/windows/win32/api/winuser/">Winuser.h</a>
 <li><a href = "https://pt.wikipedia.org/wiki/Time.h">Time.h</a>
 <li><a href = "http://linguagemc.com.br/a-biblioteca-string-h/">String.h</a>
 <br>
