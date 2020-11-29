@@ -2011,7 +2011,7 @@ void consulta_tipo(char aux)
 				}
 				
 				if(contl == limite) break; //se a linha atual for igual ao limite quebra
-				else contl++; //adiciona mais uma linha ao contador
+				else if(!produto.excluido and produto.tipo == aux) contl++; //adiciona mais uma linha ao contador
 			}
 			
 			gotoxy(20,34); 
