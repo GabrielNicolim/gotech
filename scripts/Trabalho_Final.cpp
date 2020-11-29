@@ -167,7 +167,7 @@ main()
 	DWORD dwHeight = GetSystemMetrics(SM_CYSCREEN);
     
     HWND wh = GetConsoleWindow(); // precisa disso pro MoveWindow  (HWND é como é indentificada a janela do Windows "identificador de janelas" 
-    MoveWindow(wh, dwWidth/8 , dwHeight/8 , 1320, 760, TRUE); // move a janela para uma cordenada determinada a setando num tamanho determinado de 20 em 20
+    MoveWindow(wh, dwWidth/8 , dwHeight/8 , 1300, 720, TRUE); // move a janela para uma cordenada determinada a setando num tamanho determinado de 20 em 20
     
     //======================================================================
     
