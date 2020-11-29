@@ -30,7 +30,7 @@
 #define cor_texto 15
 #define cor_destaque 0
 
-text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 37, 1, 1}; // Define os limites para linha (35) e coluna (80)
+text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
 // Funções conio.c
 
@@ -167,7 +167,7 @@ main()
 	DWORD dwHeight = GetSystemMetrics(SM_CYSCREEN);
     
     HWND wh = GetConsoleWindow(); // precisa disso pro MoveWindow  (HWND é como é indentificada a janela do Windows "identificador de janelas" 
-    MoveWindow(wh, dwWidth/8 , dwHeight/8 , 1320, 740, TRUE); // move a janela para uma cordenada determinada a setando num tamanho determinado de 20 em 20
+    MoveWindow(wh, dwWidth/8 , dwHeight/8 , 1320, 760, TRUE); // move a janela para uma cordenada determinada a setando num tamanho determinado de 20 em 20
     
     //======================================================================
     
@@ -313,6 +313,7 @@ void cadastro_visual()
 		gotoxy(20, 26); printf("Deseja realizar mais um cadastro? (S/N): ");
 	
 		do{
+			textcolor(cor_texto);
 			
 			fflush(stdin);
 			
@@ -320,12 +321,11 @@ void cadastro_visual()
 			
 			if(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S')
 			{
-				Sleep(80);
-				gotoxy(20, 28); clreol(70); printf("Valor inv%clido! digite novamente (S/N): ", 160);
-				Sleep(20); gotoxy(60, 28); clreol(1);
+				erro_apagar(61,26,4,70);
 			}
 				
 		}while(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S');
+		textcolor(cor_destaque);
 		
 		system("cls");
 		
