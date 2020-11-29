@@ -572,6 +572,17 @@ void valida_quantidade_recebimento() // Recebe e valida quantidade
 				k = 0;	// Repete a pergunta
 				erro_apagar( 39, 12, 2 , 70); //coluna, linha e tipo de erro: "[ERRO] Quantidade Inválida" quantidade a se apagar	
 			}
+			else if(atoi(aux) > 9999999)
+			{
+				k = 0;	// Repete a pergunta
+				gotoxy(39, 12); clreol(40);
+				cursor(0);
+				textcolor(cor_texto); textbackground(12); printf("[ERRO] N%co Temos estoque suficiente", 198);
+				Sleep(1000);
+				textbackground(cor_fundo);
+				cursor(1);	
+				gotoxy(39, 12); clreol(40);
+			}
 		}
 	}while(k == 0);
 	
@@ -868,7 +879,17 @@ void alteracao()
 						k = 0;	// Repete a pergunta
 						
 						erro_apagar( 39, 25, 2 , 70 ); //coluna, linha, tipo de erro: "[ERRO] Quantidade inválida" e quantidade a se apagar	
-
+					}
+					else if(atoi(aux_quantidade) > 9999999)
+					{
+						k = 0;
+						gotoxy(39, 25); clreol(40);
+						cursor(0);
+						textcolor(cor_texto); textbackground(12); printf("[ERRO] N%co Temos estoque suficiente", 198);
+						Sleep(1000);
+						textbackground(cor_fundo);
+						cursor(1);	
+						gotoxy(39, 25); clreol(40);
 					}
 				}
 			}while(k == 0);
@@ -1189,6 +1210,17 @@ void alteracao()
 						k = 0;	// Repete a pergunta
 						
 						erro_apagar( 39, 25, 2, 70 ); //coluna, linha e tipo de erro: "[ERRO] Quantidade inválida" e quantidade a se apagar	
+					}
+					else if(atoi(aux_quantidade) > 9999999)
+					{
+						k = 0;
+						gotoxy(39, 25); clreol(40);
+						cursor(0);
+						textcolor(cor_texto); textbackground(12); printf("[ERRO] N%co Temos estoque suficiente", 198);
+						Sleep(1000);
+						textbackground(cor_fundo);
+						cursor(1);	
+						gotoxy(39, 25); clreol(40);
 					}
 				}
 			}while(k == 0);
