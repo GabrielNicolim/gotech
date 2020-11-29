@@ -1769,7 +1769,7 @@ void consulta_geral()
 		borda();
 		textcolor(cor_destaque); 
 		gotoxy(52, 16); printf("[ N%co h%c nenhum item registrado! Por favor registre algo ]", 198,160);
-		gotoxy(42, 30); printf("Pressione qualquer tecla para voltar");
+		gotoxy(62, 30); printf("Pressione qualquer tecla para voltar");
 		getch();
 		fclose(fp);	// fecha o arquivo
 		return; 
@@ -1835,7 +1835,7 @@ void consulta_id()   //consulta por id
 			if(k == 0)
 			{
 				textcolor(cor_destaque); 
-				gotoxy(50, 18);printf("[ C%cdigo inexistente ]",162);
+				gotoxy(71, 18);printf("[ C%cdigo inexistente ]",162);
 				gotoxy(20, 30);printf("Pressione uma tecla para redigitar...");
 				
 				getch();
@@ -2078,7 +2078,7 @@ void consulta_nome()
 		cursor(1);
 			
 		textcolor(cor_destaque); 
-		gotoxy(52, 4); printf("Consulta por Nome");
+		gotoxy(72, 4); printf("Consulta por Nome");
 		gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
 		textcolor(cor_texto);
 		
@@ -2137,7 +2137,7 @@ void consulta_nome()
 		if(k == 1) 
 		{
 			textcolor(cor_destaque);
-			gotoxy(68, 18); printf("[ Nome n%co encontrado ]", 198);			
+			gotoxy(69, 18); printf("[ Nome n%co encontrado ]", 198);			
 		}
 				
 		textcolor(cor_destaque);
@@ -2285,7 +2285,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 						cursor(0);
 						
 						textcolor(cor_destaque);
-						gotoxy(66, 18);printf("[ C%cdigo n%co encontrado ]",162,198);
+						gotoxy(68, 18);printf("[ C%cdigo n%co encontrado ]",162,198);
 						
 						textcolor(cor_destaque);
 						gotoxy(20,30);printf("Pressione uma tecla para retornar...");
@@ -2313,7 +2313,7 @@ void tabela_tipos(int c, int l, int L)
     
     gotoxy(c,l);    printf(" P - Perif%crico       G - Gpu      C - Cpu",130);
     gotoxy(c,l+L);    printf(" M - Mobo             F - Fonte    W - Cabos");
-    gotoxy(c,l+L);    printf(" A - Armazenamento    R - Ram      O - Outros");
+    gotoxy(c,l+L+L);    printf(" A - Armazenamento    R - Ram      O - Outros");
 }
 
 int navegar_menu(int ini, int fim, int p)
