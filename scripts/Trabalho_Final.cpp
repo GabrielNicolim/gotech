@@ -111,7 +111,10 @@ void abrir_arquivo()
 {
 	if((fp = fopen("estoque.bin", "ab+")) == NULL) 
 	{
-		gotoxy(15, 11); printf("Erro na abertura do arquivo"); //caso haja um problema com o arquivo
+		system("cls"); borda();
+		textcolor(cor_texto);
+		gotoxy(65, 16); printf("Erro na abertura do arquivo!"); //caso haja um problema com o arquivo
+		gotoxy(1, 33);
 		exit(1);
 	}
 }
@@ -452,7 +455,7 @@ void valida_id_recebimento()  // Recebe e valida id
 			if(c == 1)  // Erro se não for numerico ou for muito grande
 			{
 				k = 0; //continua no loop 
-				erro_apagar( 38, 8, 0 , 70); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar	
+				erro_apagar( 39, 8, 0 , 70); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar	
 			}
 			else
 			{
@@ -668,18 +671,6 @@ void erro_apagar(int col, int lin, int tipo_erro, int apagar)
 		case 4:
 			printf("[ERRO] Valor inv%clido",160); //[ERRO] Valor inválido
 			break;
-		case 5:
-			printf("[ERRO] aaaaaa",160);
-			break;
-		case 6:
-			printf("[ERRO] bbbbbb",160);
-			break;
-		case 7:
-			printf("[ERRO] cccccc",160);
-			break;
-		case 8:
-			printf("[ERRO] dddddd",160);
-			break;	
 		default:
 			printf("[ERRO] Valor inv%clido",160);
 			break;
@@ -1568,7 +1559,7 @@ int obtem_id_alteracao()
 					textcolor(cor_destaque);
 					cursor(0);
 					 
-					gotoxy(40, 16); printf("[ Nenhum item com este ID foi encontrado ]", 198,160);
+					gotoxy(80, 16); printf("[ Nenhum item com este ID foi encontrado ]", 198,160);
 					
 					getch();
 					k = 0; 	//continua no loop
@@ -1777,7 +1768,7 @@ void consulta_geral()
 	{
 		borda();
 		textcolor(cor_destaque); 
-		gotoxy(32, 16); printf("[ N%co h%c nenhum item registrado! Por favor registre algo ]", 198,160);
+		gotoxy(52, 16); printf("[ N%co h%c nenhum item registrado! Por favor registre algo ]", 198,160);
 		gotoxy(42, 30); printf("Pressione qualquer tecla para voltar");
 		getch();
 		fclose(fp);	// fecha o arquivo
@@ -2055,7 +2046,7 @@ void consulta_tipo(char aux)
 		// Se 0 for pressionado 
 		cursor(0);
 		textbackground(12);
-		gotoxy(54, 35);			 // Apresenta mensagem a baixo da borda
+		gotoxy(74, 35);			 // Apresenta mensagem a baixo da borda
 		printf("Voltando...");
 		Sleep(1500);
 	}		
@@ -2109,7 +2100,7 @@ void consulta_nome()
 		{
 			cursor(0);
 			textbackground(12);
-			gotoxy(54, 35);			 // Apresenta mensagem a baixo da borda
+			gotoxy(74, 35);			 // Apresenta mensagem a baixo da borda
 			printf("Voltando...");
 			Sleep(1500);
 		
@@ -2146,7 +2137,7 @@ void consulta_nome()
 		if(k == 1) 
 		{
 			textcolor(cor_destaque);
-			gotoxy(48, 18); printf("[ Nome n%co encontrado ]", 198);			
+			gotoxy(68, 18); printf("[ Nome n%co encontrado ]", 198);			
 		}
 				
 		textcolor(cor_destaque);
@@ -2294,7 +2285,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 						cursor(0);
 						
 						textcolor(cor_destaque);
-						gotoxy(46, 18);printf("[ C%cdigo n%co encontrado ]",162,198);
+						gotoxy(66, 18);printf("[ C%cdigo n%co encontrado ]",162,198);
 						
 						textcolor(cor_destaque);
 						gotoxy(20,30);printf("Pressione uma tecla para retornar...");
