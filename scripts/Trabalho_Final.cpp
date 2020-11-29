@@ -21,7 +21,7 @@
 #include <time.h>
 #include <strings.h>
 
-#define versao 3.2
+#define versao 3.8
 
 // Definição de cores 
 
@@ -657,12 +657,24 @@ void valida_preco_recebimento() // Recebe preço e valida
 			{
 				num = strtod(aux, &end); // Converte para float
 				
-				if(num > -1) break; // Se valor positivo
-				else // Se valor negativo 
+				if(num < 0)
 				{
 					// Erro
 					erro_apagar( 39, 16, 4 ,70); //coluna, linha, tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 				}
+				else if(num > 1000000)
+				{
+					cursor(0);	
+					gotoxy(39, 16); clreol(70);
+					textbackground(12);
+					gotoxy(39, 16); //seta o cursor no lugar para apresentar o erro
+					printf("[ERRO] N%co aceitamos obejos desse valor", 198);
+					Sleep(1000);
+					textbackground(cor_fundo);
+					gotoxy(39, 16); clreol(70);
+					cursor(1);	
+				}
+				else break;
 			}
 		}
 	}while(true);
@@ -956,13 +968,25 @@ void alteracao()
 					if(k == 0) // Se valor for numérico
 					{
 						num = strtod(aux_preco, &end); // Converte para float
-						
-						if(num > -1) break; // Se valor positivo
-						else // Se valor negativo 
+					
+						if(num < 0) // Se valor negativo 
 						{
 							// Erro
 							erro_apagar( 39, 29, 4 , 70); //coluna, linha e tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 						}
+						else if(num > 1000000)
+						{
+							cursor(0);	
+							gotoxy(39, 29); clreol(70);
+							textbackground(12);
+							gotoxy(39, 29); //seta o cursor no lugar para apresentar o erro
+							printf("[ERRO] N%co aceitamos obejos desse valor", 198);
+							Sleep(1000);
+							textbackground(cor_fundo);
+							gotoxy(39, 29); clreol(70);
+							cursor(1);	
+						}
+						else break;
 					}
 				}
 				
@@ -1459,12 +1483,24 @@ void alteracao()
 					{
 						num = strtod(aux_preco, &end); // Converte para float
 						
-						if(num > -1) break; // Se valor positivo
-						else // Se valor negativo 
+						if(num < 0) // Se valor negativo 
 						{
 							// Erro
-							erro_apagar( 39, 8, 4 , 70); //coluna, linha e tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
+							erro_apagar( 39, 29, 4 , 70); //coluna, linha e tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 						}
+						else if(num > 1000000)
+						{
+							cursor(0);	
+							gotoxy(39, 25); clreol(70);
+							textbackground(12);
+							gotoxy(39, 25); //seta o cursor no lugar para apresentar o erro
+							printf("[ERRO] N%co aceitamos obejos desse valor", 198);
+							Sleep(1000);
+							textbackground(cor_fundo);
+							gotoxy(39, 25); clreol(70);
+							cursor(1);	
+						}
+						else break;
 					}
 				}
 				
