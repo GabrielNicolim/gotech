@@ -198,7 +198,7 @@ void loading()
 	for(int i = 0; i <= 52; i++)
 	{
 		gotoxy(52+i, 20);printf("%c", 219);
-		Sleep(10);
+		Sleep(50);
 	}
 	
 	textcolor(cor_texto);
