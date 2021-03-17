@@ -3,7 +3,7 @@
 <h2>Sobre o projeto</h2>
 :computer: <b>Tema: </b>Loja de Informática<br>
 :rocket: <b>Integrantes: </b>Gabriel Nicolim e Felipe Lima<br>
-:dart: <b>Objetivo: </b>Gerenciamento de estoque<br>
+:dart: <b>Objetivo: </b>Gerenciamento de estoque<br><br><br>
 
 <img src="https://user-images.githubusercontent.com/69210720/111396661-555c5000-869e-11eb-84d8-cc96c92d3640.png"/>
 
