@@ -21,18 +21,11 @@
 #include <conio.h>
 #include <time.h>
 #include <strings.h>
+#include "functions\desenhos.h"
 
-#define versao 3.9
+#define versao 4.0
 
-// Definição de cores 
-
-#define cor_fundo 3
-#define cor_borda 1
-#define cor_texto 15
-#define cor_destaque 0
-#define RED 12
-
-text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (35) e coluna (80)
+//text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
 // Funções conio.c
 
@@ -48,16 +41,16 @@ void loading();
 void inicio(); 
 void borda(); 
 
-// Desenhos 
-
-void disquete(int ic, int il); // (coluna de inicio, linha de inicio)
-void logo(int ic, int il);
-void lupa(int ic, int il); 
-void cpu(int ic, int il);
-void gpu(int ic, int il);
-void ram(int ic, int il);
-void mobo(int ic, int il);
-void HDD(int ic, int il);
+/* Desenhos presentes no arquivo desenhos.h (Todos com int ic, int il para escolher posição)
+	-Disquete
+	-Logo
+	-Lupa
+	-CPU
+	-GPU
+	-RAM
+	-Mobo
+	-HDD	
+*/
 
 // Funções de interação com o usuário 
 void consulta_geral();
@@ -91,7 +84,7 @@ int valida_id_consulta(int *id_final);
 // Funções de validação => Validações + Registro
 
 // Valida id no registro
-void valida_id_recebimento();
+int valida_id_recebimento();
 // Valida quantidade no registro
 void valida_quantidade_recebimento();
 // Valida nome no registro
@@ -102,6 +95,7 @@ void valida_tipo_recebimento();
 void valida_preco_recebimento();
 // mensagem de erro alterável
 void erro_apagar (int col, int lin, int tipo_erro, int apagar);
+void voltando_menu(int linha,int coluna, int delay, bool menu);
 
 // Alteração
  
@@ -113,8 +107,7 @@ int random_menu; // Var que armazena numero aleatório ente 0 e 3 para gerar um 
 
 void abrir_arquivo()
 {
-	if((fp = fopen("estoque.bin", "ab+")) == NULL) 
-	{
+	if((fp = fopen("estoque.bin", "ab+")) == NULL){
 		system("cls"); borda();
 		textcolor(cor_texto);
 		gotoxy(65, 16); printf("Erro na abertura do arquivo!"); //caso haja um problema com o arquivo
@@ -125,8 +118,7 @@ void abrir_arquivo()
 
 int abrir_arquivo_alterar()
 {
-	if((fp = fopen("estoque.bin", "rb+")) == NULL) 
-	{
+	if((fp = fopen("estoque.bin", "rb+")) == NULL){
 		cursor(0); 
 		gotoxy(40, 16); printf("N%co foram encontrados dados, cadastre algo!", 198);
 		getch();
@@ -174,7 +166,7 @@ main()
     //======================================================================
     
 	srand(time(NULL));
-	random_menu = rand() % 3; // Escolhe o menu que será exibido ao usuário
+	random_menu = rand() % 3; // Escolhe o menu que será exibido ao usuário de maneira randomizada
 	
     loading();
     
@@ -197,10 +189,9 @@ void loading()
 	
 	textcolor(RED); // Loading vermelho
 	
-	for(int i = 0; i <= 52; i++)
-	{
+	for(int i = 0; i <= 52; i++){
 		gotoxy(52+i, 20);printf("%c", 219);
-		Sleep(30);
+		Sleep(20);
 	}
 	
 	textcolor(cor_texto);
@@ -214,12 +205,10 @@ void loading()
 
 void inicio() // Apresenta tela de inicio
 {	
-	while(true)
-	{
+	while(true){
 		borda(); 
 	
-		switch(random_menu) // Menu aleatorio
-		{
+		switch(random_menu){ // Menu com icone aleatorio	
 			case 0:
 				disquete(38, 6); // Disquete + logo
 				logo(68, 8);
@@ -253,12 +242,9 @@ void menu_ini()
 	
 	// Chama navegação com setas
 	
-	int escolha; 
+	int escolha = navegar_menu(19, 27, 68);
 	
-	escolha = navegar_menu(19, 27, 68);
-	
-	switch(escolha)
-	{
+	switch(escolha){	
 		case 0:
 			cadastro_visual();
 			break;
@@ -275,7 +261,7 @@ void menu_ini()
 			sair();
 			break;
 	}
-	
+		
 	return; 
 }
 
@@ -363,8 +349,7 @@ void cadastro_recebimento()
 		
 		conf = getche();
 		
-		if(conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N')    //verificação de valores
-		{			
+		if(conf != 's' && conf != 'S'	&& conf != 'n' && conf != 'N'){    //verificação de valores				
 			Sleep(100);
 			gotoxy(20, 22); printf("Valor inv%clido! digite novamente (S/N): ",160);
 			Sleep(50); gotoxy(60, 22); clreol(1);
@@ -374,14 +359,13 @@ void cadastro_recebimento()
    	
    	if( conf == 's' || conf == 'S' )
    	{
-		if(fwrite(&produto, sizeof(produto), 1, fp) != 1) 
-		{
+		if(fwrite(&produto, sizeof(produto), 1, fp) != 1){		
 			textcolor(RED);
 			gotoxy(79, 22); printf("Erro na escrita do arquivo!");
 			textcolor(cor_texto);			
 		}
-		else  //se tudo der certo
-		{
+		else{  //se tudo der certo
+		
 			fflush( fp ); //limpa buffer arquivo 
 			
 			borda();
@@ -391,8 +375,7 @@ void cadastro_recebimento()
 			srand(time(NULL));
 			random = rand() % 1;
 	
-			switch(random_menu)
-			{
+			switch(random_menu){		
 				case 0:
 					ram(85, 8);
 					break;
@@ -420,90 +403,72 @@ void cadastro_recebimento()
 // Parte do recebimento de dados 
 // 
 
-void valida_id_recebimento()  // Recebe e valida id
+int valida_id_recebimento()  // Recebe e valida id
 {
 	char id[10];
-	int tam, k, c, aux;		// Armazena tamanho da string | Auxiliares | int auxiliar que armazenará a id digitada
-	bool valido;
+	int tam, aux;		// Armazena tamanho da string | Auxiliar 1 e 2 | int auxiliar que armazenará a id digitada
+	bool valido, mtgrande, vazio;
 	
-	do
-	{	
-		k = 1;  //loop principal
-		c = 0;  //se não for número
-
-		rewind(fp);
+	do{		
+		vazio = true;  //loop principal
+		mtgrande = 0;  //se não for número ou mt grande
 		
 		fflush(stdin);
 		
 		gets(id);
 		
-		tam = strlen(id); // pega tamanho da string e joga em uma int tamanho
+		tam = strlen(id);
 		
-		if(tam == 0) // Se nada foi digitado 	
-		{
-			gotoxy(39, 8);	// Retorna a posição de inicio e pergunta novamente
-			k = 0;
+		if(tam == 0){ // Se nada foi digitado retorna a posição de inicio e pergunta novamente
+			gotoxy(39, 8);	
+			vazio = true; //continua no loop 
 		} 
-		else if(id[0] == '0')	// Se o primeiro digito de id for igual a 0 
-		{
-			cursor(0);
-			textbackground(12);
-			gotoxy(72, 35);			 // Apresenta mensagem a baixo da borda
-			printf("Voltando ao menu...");
-			Sleep(1500);
-			inicio();
+		else if(id[0] == '0'){	// Se o primeiro digito de id for igual a 0 volta pro menu
+			voltando_menu(72,35,1500,true);
+			inicio(); 
 		} 
-		else 
-		{
-			if(tam > 6) c = 1; // Define como invalido se id > 6 
-			else 
-			{
-				for(int i = 0; i < tam; i++) // verifica caractere por caractere se é número
-				{
+		else{
+			if(tam > 6) mtgrande = true; // Define como invalido se id > 6 digitos
+			else{		
+				for(int i = 0; i < tam; i++){ // verifica caractere por caractere se é número			
 					if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
 					{
-						c = 1; //marca id como invalido para cair no if mais embaixo
+						mtgrande = false; //marca id como invalido para cair no if mais embaixo
 						break;
 					}
 				} 	
 			}
 			
-			if(c == 1)  // Erro se não for numerico ou for muito grande
-			{
-				k = 0; //continua no loop 
+			if(mtgrande== true){  // Erro se não for numerico ou for muito grande			
+				vazio = true; 
 				erro_apagar( 39, 8, 0 , 70); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar	
 			}
-			else
-			{
+			else{			
 				valido = true;
 				
-				//aux é int e id é char
+				//aux é int e id é char[10]
 				aux = atoi(id); // converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
 			
+				rewind(fp); //volta pro começo do arquivo
 				//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
-				while(fread(&produto, sizeof(produto), 1, fp) == 1)							
-				{	
-					if(produto.id == aux and !produto.excluido)
-					{
+				while(fread(&produto, sizeof(produto), 1, fp) == 1){																
+					if(produto.id == aux and !produto.excluido){				
 						valido = false;
 						break;
 					}
 				}	
 				
-				if(!valido)
-				{
-					erro_apagar( 39, 8, 0 , 70); //coluna, linha, tipo de erro: "[ERRO] ID já cadastrado" e quantidade a se apagar	
-					k = 0; 	//continua no loop
+				if(!valido){			
+					erro_apagar( 39, 8, 1 , 70); //coluna, linha, tipo de erro: "[ERRO] ID já cadastrado" e quantidade a se apagar	
+					vazio = true; 	//continua no loop
 				}
 				else break;	
 			}
 		}	
 		
-	}while(k == 0);
-	
-	produto.id = aux;   // converte a string para int e manda para a struct
-					
-	return; 
+	}while(vazio);
+						
+	return produto.id = aux;   // retorna para a struct do cadastro o valor ID já verificado
 }
 
 void valida_nome_recebimento() // Recebe e valida nome
@@ -512,8 +477,7 @@ void valida_nome_recebimento() // Recebe e valida nome
 	
 	int k, j, tam; 		 // Var auxiliar || Armazena tamanho da string
 
-	while(true)
-	{
+	while(true){
 		k = 0;
 		j = 0;
 		
@@ -538,8 +502,7 @@ void valida_quantidade_recebimento() // Recebe e valida quantidade
 	int tam;
 	int k, c; // Auxiliares
 	
-	do
-	{
+	do{
 		fflush(stdin);
 		
 		k = 1;
@@ -548,34 +511,28 @@ void valida_quantidade_recebimento() // Recebe e valida quantidade
 		gets(aux);
 		tam = strlen(aux); // Tamanho da string
 		
-		if(tam == 0)	// Se nada for digitado pergunta novamente
-		{
+		if(tam == 0){	// Se nada for digitado pergunta novamente		
 			gotoxy(39, 12);
 			k = 0;
 		} 
-		else 
-		{
-			for(int i = 0; i < tam; i++) 
-			{
+		else {
+			for(int i = 0; i < tam; i++){
 				if(aux[i] != '0' && aux[i] != '1' && aux[i] != '2' && aux[i] != '3' && aux[i] != '4' && aux[i] != '5' && aux[i] != '6' && aux[i] != '7' && aux[i] != '8' && aux[i] != '9') 
 				{ // Se não é numérico 
 					c = 1;	// Apresenta erro
 					break;
 				}
-				else // Se é numérico
-				{
+				else{ // Se é numérico				
 					k = 1;
 					c = 0;
 				} 
 			}	
 			
-			if(c == 1) // Erro
-			{
+			if(c == 1){ // Erro	
 				k = 0;	// Repete a pergunta
 				erro_apagar( 39, 12, 2 , 15); //coluna, linha e tipo de erro: "[ERRO] Quantidade Inválida" quantidade a se apagar	
 			}
-			else if(atoi(aux) > 9999999)
-			{
+			else if(atoi(aux) > 9999999){		
 				k = 0;	// Repete a pergunta
 				erro_apagar( 39, 12, 5, 70); 	//coluna, linha, tipo de erro: "[ERRO] sem estoque suficiente" e quantidade a se apagar
 			}
@@ -591,8 +548,7 @@ void valida_tipo_recebimento() // Recebe e valida tipo
 {
  	char aux;
  	
- 	do
- 	{
+ 	do{	
  		
  		fflush(stdin);
  	
@@ -602,8 +558,7 @@ void valida_tipo_recebimento() // Recebe e valida tipo
 		
 		// Verifica se é um dos tipos listados
 		if(aux == 'P' || aux == 'G' || aux == 'C' || aux == 'M' || aux == 'F' || aux == 'W' || aux == 'A' || aux == 'R' || aux == 'O') break;
-		else // Apresenta erro
-		{
+		else{ // Apresenta erro	
 			erro_apagar( 39, 14, 3 , 70); //coluna, linha, tipo de erro: "[ERRO] Tipo inválido" e quantidade a se apagar	
 		}
 		
@@ -622,8 +577,7 @@ void valida_preco_recebimento() // Recebe preço e valida
 	float num;
 	int k;
 	
-	do
-	{	
+	do{	
 		fflush(stdin);
 		
 		gets(aux);
@@ -635,10 +589,8 @@ void valida_preco_recebimento() // Recebe preço e valida
 		if(tam == 0) gotoxy(39, 16); // Se nada for digitado
 		else
 		{
-			for(int i = 0; i < tam; i++)
-			{
-				if((aux[i] < '0' || aux[i] > '9') && aux[i] != '.') // Verifica se é numérico
-				{ 
+			for(int i = 0; i < tam; i++){		
+				if((aux[i] < '0' || aux[i] > '9') && aux[i] != '.'){ // Verifica se é numérico	 
 					// Erro
 					
 					k = 1;
@@ -679,8 +631,7 @@ void erro_apagar(int col, int lin, int tipo_erro, int apagar)
 	gotoxy(col, lin); clreol(apagar);
 	textbackground(12);
 	gotoxy(col, lin); //seta o cursor no lugar para apresentar o erro
-	switch(tipo_erro)
-	{
+	switch(tipo_erro){
 		case 0:
 			printf("[ERRO] ID inv%clido",160);	//[ERRO] Id inválido
 			break;
@@ -715,8 +666,7 @@ void erro_apagar(int col, int lin, int tipo_erro, int apagar)
 
 void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu 
 {
-	while(true)
-	{
+	while(true){	
 		borda();
 		
 		lupa(63, 4);
@@ -736,8 +686,7 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 		
 		escolha = navegar_menu(19, 29, 68);
 		
-		switch(escolha)
-		{
+		switch(escolha){		
 			case 0:
 				consulta_geral();
 				break;
@@ -763,8 +712,7 @@ void alteracao()
 {
 	int id;
 
-	do
-	{
+	do{
 		borda(); 
 		
 		HDD(69, 4);
@@ -782,8 +730,7 @@ void alteracao()
 		
 		escolha = navegar_menu(19, 29, 68); 
 		
-		if(escolha == 0) // Se alteraçõa geral for escolhida
-		{		
+		if(escolha == 0){ // Se alteraçõa geral for escolhida		
 			id = obtem_id_alteracao();
 			
 			if(id == 0) continue; // ignora o restante do if
@@ -826,8 +773,7 @@ void alteracao()
 			
 			gotoxy(39, 23);
 			
-			while(true)
-			{
+			while(true){
 				k = 0;
 				j = 0;
 				
@@ -848,8 +794,7 @@ void alteracao()
 			
 			gotoxy(39, 25);
 			
-			do
-			{
+			do{
 				fflush(stdin);
 				
 				k = 1;
@@ -859,15 +804,13 @@ void alteracao()
 				
 				tam = strlen(aux_quantidade); // Tamanho da string
 				
-				if(tam == 0)	// Se nada for digitado pergunta novamente
-				{
+				if(tam == 0){	// Se nada for digitado pergunta novamente
 					gotoxy(39, 25);
 					k = 0;
 				} 
 				else 
 				{
-					for(int i = 0; i < tam; i++) 
-					{
+					for(int i = 0; i < tam; i++){
 						if(aux_quantidade[i] != '0' && aux_quantidade[i] != '1' && aux_quantidade[i] != '2' && aux_quantidade[i] != '3' && aux_quantidade[i] != '4' && aux_quantidade[i] != '5' && aux_quantidade[i] != '6' && aux_quantidade[i] != '7' && aux_quantidade[i] != '8' && aux_quantidade[i] != '9') 
 						{ // Se não é numérico 
 							c = 1;	// Apresenta erro
@@ -880,8 +823,7 @@ void alteracao()
 						} 
 					}	
 					
-					if(c == 1) // Erro
-					{
+					if(c == 1){ // Erro
 						k = 0;	// Repete a pergunta
 						
 						erro_apagar( 39, 25, 2 , 70 ); //coluna, linha, tipo de erro: "[ERRO] Quantidade inválida" e quantidade a se apagar	
@@ -906,9 +848,8 @@ void alteracao()
  			
  			gotoxy(39, 27);
  			
-		 	do
-		 	{
-		 		
+		 	do{
+	 		
 		 		fflush(stdin);
 		 	
 		 		aux_tipo = getche();
@@ -932,8 +873,7 @@ void alteracao()
 			
 			gotoxy(39, 29);
 			
-			do
-			{	
+			do{	
 				fflush(stdin);
 				
 				gets(aux_preco);
@@ -945,10 +885,8 @@ void alteracao()
 				if(tam == 0) gotoxy(39, 29); // Se nada for digitado
 				else
 				{
-					for(int i = 0; i < tam; i++)
-					{
-						if((aux_preco[i] < '0' || aux_preco[i] > '9') && aux_preco[i] != '.') // Verifica se é numérico
-						{ 
+					for(int i = 0; i < tam; i++){
+						if((aux_preco[i] < '0' || aux_preco[i] > '9') && aux_preco[i] != '.'){ // Verifica se é numérico
 							// Erro
 							
 							k = 1;
@@ -959,17 +897,17 @@ void alteracao()
 						}
 					}			
 					
-					if(k == 0) // Se valor for numérico
-					{
+					if(k == 0){ // Se valor for numérico
+					
 						num = strtod(aux_preco, &end); // Converte para float
 					
-						if(num < 0) // Se valor negativo 
-						{
+						if(num < 0){ // Se valor negativo 
+
 							// Erro
 							erro_apagar( 39, 29, 4 , 70); //coluna, linha e tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 						}
-						else if(num > 1000000)
-						{
+						else if(num > 1000000){
+						
 							erro_apagar(39,16,6,70);  // coluna, linha, tipo de erro: "[ERRO] Não aceitamos objetos desse valor" e quantidade a se apagar
 						}
 						else break;
@@ -988,12 +926,11 @@ void alteracao()
 			
 			char confirmar;
 			
-			do
-			{
+			do{
+			
 				confirmar = getche();
 				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N') 
-				{
+				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N'){			
 					gotoxy(99, 31); clreol(10);
 				}
 				
@@ -1658,66 +1595,59 @@ void info_de_sistema() // Apresenta as informações do sistema
 	
 	char c;
 	
-	do
-	{
+	do{		
+		int inix = 20, iniy = 9; // Controla o eixo x e y das informações
 		
-	int inix = 20, iniy = 9; // Controla o eixo x e y das informações
-	
-	// Apresenta as informações do sistema
-	textcolor(cor_destaque);
-	gotoxy(74, 4);  printf("Info do Sistema");
-	textbackground(cor_fundo);
-	
-	textcolor(cor_destaque);
-	gotoxy(20, 7); printf("Empresa: ");
-	textcolor(cor_texto);
-	printf("GoTech");
-	
-	textcolor(cor_destaque);
-	gotoxy(20, 9);  printf("Nomes: ");
-	textcolor(cor_texto);
-	printf("Felipe Lima e Gabriel Nicolim");
-	
-	textcolor(cor_destaque);
-	gotoxy(20, 11);  printf("N%cmeros: ",163);
-	textcolor(cor_texto);
-	printf("06 e 08");
-	
-	textcolor(cor_destaque);
-	gotoxy(20, 13);  printf("Turma: ");
-	textcolor(cor_texto);
-	printf("71A");
-	
-	textcolor(cor_destaque);
-	gotoxy(20, 15);  printf("Ano: ");
-	textcolor(cor_texto);
-	printf("2020");
-	
-	textcolor(cor_destaque);
-	gotoxy(20, 17);  printf("Sobre o software: ");
-	textcolor(cor_texto);
-	printf("Nosso software, que hoje se encontra na vers%co %.1f, se destina a simular um sistema de gerenciamento de",198, versao);
-	gotoxy(20, 19); printf("estoque de uma loja de inform%ctica em C/C++.",160);
-	gotoxy(20, 21); printf("Para a realiza%c%co desse projeto utilizamos fun%c%ces de cabe%calho da conio.c e conio.h e file da stdio.h.",135,198,135,228,135);
-	gotoxy(20, 23); printf("Podem ser registrados perif%cricos e outras pe%cas de computador, que mais tarde podem ser alterados e excluidos.",130,135);
+		// Apresenta as informações do sistema
+		textcolor(cor_destaque);
+		gotoxy(74, 4);  printf("Info do Sistema");
+		textbackground(cor_fundo);
 		
-	textcolor(cor_destaque);
-	gotoxy(20, 30); printf("Pressione 0 para retornar ao menu"); 
-	
-		fflush(stdin); 
+		textcolor(cor_destaque);
+		gotoxy(20, 7); printf("Empresa: ");
+		textcolor(cor_texto);
+		printf("GoTech");
 		
-		c =	getch();
+		textcolor(cor_destaque);
+		gotoxy(20, 9);  printf("Nomes: ");
+		textcolor(cor_texto);
+		printf("Felipe Lima e Gabriel Nicolim");
 		
+		textcolor(cor_destaque);
+		gotoxy(20, 11);  printf("N%cmeros: ",163);
+		textcolor(cor_texto);
+		printf("06 e 08");
+		
+		textcolor(cor_destaque);
+		gotoxy(20, 13);  printf("Turma: ");
+		textcolor(cor_texto);
+		printf("71A");
+		
+		textcolor(cor_destaque);
+		gotoxy(20, 15);  printf("Ano: ");
+		textcolor(cor_texto);
+		printf("2020");
+		
+		textcolor(cor_destaque);
+		gotoxy(20, 17);  printf("Sobre o software: ");
+		textcolor(cor_texto);
+		printf("Nosso software, que hoje se encontra na vers%co %.1f, se destina a simular um sistema de gerenciamento de",198, versao);
+		gotoxy(20, 19); printf("estoque de uma loja de inform%ctica em C/C++.",160);
+		gotoxy(20, 21); printf("Para a realiza%c%co desse projeto utilizamos fun%c%ces de cabe%calho da conio.c e conio.h e file da stdio.h.",135,198,135,228,135);
+		gotoxy(20, 23); printf("Podem ser registrados perif%cricos e outras pe%cas de computador, que mais tarde podem ser alterados e excluidos.",130,135);
+			
+		textcolor(cor_destaque);
+		gotoxy(20, 30); printf("Pressione 0 para retornar ao menu"); 
+		
+			fflush(stdin); 
+			
+			c =	getch();
+			
 	}while(c != '0');
+		
+	voltando_menu(72,35,1500,true); // Apresenta mensagem Voltando pro menu... a baixo da borda
 	
-	cursor(0);
-	textcolor(cor_texto);
-	textbackground(12);
-	gotoxy(72, 35);			 // Apresenta mensagem a baixo da borda
-	printf("Voltando ao Menu...");
-	Sleep(1500);
-	
-	return; 
+	return;
 }
 
 void sair() // Finaliza a execução do programa
@@ -1829,16 +1759,10 @@ void consulta_geral()
 					break;
 			}
 			
-		}while (retornar != '0');  
-			
+		}while (retornar != '0');  			
 		// Se 0 for pressionado 
+		voltando_menu(72,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 		
-		textbackground(12);
-		gotoxy(75, 35);			 // Apresenta mensagem a baixo da borda
-		printf("Voltando...");
-		Sleep(1500);
-		
-		fclose(fp);	// fecha o arquivo
 		return;    // Retorna ao submenu
 	}
 	else
@@ -1947,11 +1871,7 @@ int valida_id_consulta(int *id_final)
 		} 
 		else if(id[0] == '0')   //se for digitado 0 como o primeiro número retorna ao submenu
 		{
-			cursor(0);
-			textbackground(12);
-			gotoxy(75, 35);			 // Apresenta mensagem a baixo da borda
-			printf("Voltando...");
-			Sleep(1500);
+			voltando_menu(72,35,1500,false); // Apresenta mensagem Voltando pro menu... abaixo da borda
 			return 0;
 		}
 		else 
@@ -2015,13 +1935,9 @@ void consulta_tipo_recebimento()
 		}
 		
 	}while(aux != '0');
+			
+	voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 	
-	cursor(0);
-	textbackground(12);
-	gotoxy(74, 35);			 // Apresenta mensagem a baixo da borda
-	printf("Voltando...");
-	Sleep(1500);
-		
 	return;
 }
 
@@ -2121,11 +2037,7 @@ void consulta_tipo(char aux)
 		}while (retornar != '0');  
 			
 		// Se 0 for pressionado 
-		cursor(0);
-		textbackground(12);
-		gotoxy(74, 35);			 // Apresenta mensagem a baixo da borda
-		printf("Voltando...");
-		Sleep(1500);
+		voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 	}		
 	else
 	{
@@ -2175,12 +2087,7 @@ void consulta_nome()
 		
 		if(aux[0] == '0')
 		{
-			cursor(0);
-			textbackground(12);
-			gotoxy(74, 35);			 // Apresenta mensagem a baixo da borda
-			printf("Voltando...");
-			Sleep(1500);
-		
+			voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 			return;
 		}	
 		
@@ -2307,11 +2214,7 @@ void consulta_nome()
 				}while (retornar != '0');  
 				
 				// Se 0 for pressionado 
-				
-				textbackground(12);
-				gotoxy(75, 35);			 // Apresenta mensagem a baixo da borda
-				printf("Voltando...");
-				Sleep(1500);
+				voltando_menu(75,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 				
 				fclose(fp);	// fecha o arquivo
 				
@@ -2364,11 +2267,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 		    if(tam == 0) gotoxy(77, 7); // Se nada for digitado
 		    else if(id[0] == '0') // Se 0 for digitado
 			{
-				cursor(0);
-				textbackground(12);
-				gotoxy(75, 35);			 // Apresenta mensagem a baixo da borda
-				printf("Voltando...");
-				Sleep(1500);
+				voltando_menu(75,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 			} 
 		    else // Se algo diferente de 0 for digitado
 		    {
@@ -2580,8 +2479,8 @@ void gera_tabela(int li)
 
 void completa_tabela(int linha)  //função para colocar os dados na tabela
 { 
-	if(!produto.excluido)
-	{
+	if(!produto.excluido){
+		
 		int tam = strlen(produto.nome);
 		
 		if(tam > 66) tam = 66; // define o tamanho máximo a ser apresentado (29 espaços na tabela)
@@ -2596,12 +2495,11 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 
 void gera_tabela_vertical(int li)
 {
-	if(!produto.excluido)
-	{
+	if(!produto.excluido){
+	
 		int tam = strlen(produto.nome); 
 	
-		if(tam > 97)
-		{
+		if(tam > 97){	
 			
 			int x = 0;
 			
@@ -2630,8 +2528,8 @@ void gera_tabela_vertical(int li)
 			gotoxy(43, li+8); printf("%d", produto.quantidade);
 			gotoxy(43, li+10); printf("%c", produto.tipo);
 		}
-		else
-		{
+		else{
+		
 			gotoxy(20,li);		printf ("+------------------------------------------------------------------------------------------------------------------------+");
 			gotoxy(20,li+1);	printf ("|  ID                |                                                                                                   |");
 			gotoxy(20,li+2);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
@@ -2655,766 +2553,24 @@ void gera_tabela_vertical(int li)
 	
 }
 
-void borda() 
-{
-	int cf = cor_fundo, cb = cor_borda, lc = 160; // (cor de fundo, cor da borda, limite de coluna)
-	
-	textbackground(cf); // Define cor do fundo
-	system("cls"); 		//limpa sempre a tela quando é chamada
-	
-	for (int i = 9; i <= (lc - 8); i++) // Parte de cima da borda
-	{
-		textcolor(cb);
-		gotoxy(i,2);printf("%c",219);
-	}
-	for (int i = 9; i <= (lc - 8); i++) // Parte de baixo da borda 
-	{
-		textcolor(cb);
-		gotoxy(i,33);printf("%c",219);
-	}
-	for (int i=2; i <= 33; i++) // Borda esquerda 
-	{
-		textcolor(cb);
-		gotoxy(10,i);printf("%c",219);
-		gotoxy(9,i);printf("%c",219);
-	}
-	for (int i=2; i <= 33; i++) // Borda direita
-	{
-		textcolor(cb);
-		gotoxy(152,i);printf("%c",219);
-		gotoxy(151,i);printf("%c",219);
-	}
-	
-}
-
-void disquete(int ic, int il)
-{
-	
-	// Linha 1 => Borda de cima
-	textcolor(0);
-	gotoxy(ic, il); 
-	for(int i = 0; i < 20; i++) putchar(219);
-	
-	// Linha 2  - tracinho
-	gotoxy(ic, (il+1));
-	printf("%c", 219);
-	
-	for(int i = 0; i < 18; i++) 
-	{
-		if(i == 2 or i == 15) textcolor(8);
-		if(i > 2  and i < 15) 
-		{
-			textcolor(7);
-			if(i > 4 && i < 8) textcolor(0);
-		}
-		else textcolor(9);
-		putchar(219);
-	}
-	
-	textcolor(0);
-	printf("%c", 219);
-	
-	// Linha 3  - tracinho
-	gotoxy(ic, (il+2));
-	printf("%c", 219);
-	
-	for(int i = 0; i < 18; i++) 
-	{
-		if(i == 2 or i == 15) textcolor(8);
-		if(i > 2  and i < 15) 
-		{
-			textcolor(7);
-			if(i > 4 && i < 8) textcolor(0);
-		}
-		else textcolor(9);
-		putchar(219);
-	}
-	
-	textcolor(0);
-	printf("%c", 219);
-	
-	// Linha 4
-	
-	gotoxy(ic, (il+3));
-	
-	printf("%c", 219);
-	textcolor(9);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	
-	// Linha 5
-	
-	gotoxy(ic, (il+4));
-	printf("%c", 219);
-	textcolor(9);
-
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	
-	//Linha 6 - rodelinha com tracin
-	
-	gotoxy(ic, (il+5));
-	
-	printf("%c", 219);
-	for(int i = 0; i < 18; i++) 
-	{	
-		if(i>6 && i <11) 
-		{
-		textcolor(7);
-		if(i == 9) textcolor(8);
-		}
-		else textcolor(9);
-		putchar(219);
-		
-	}
-	textcolor(0);
-	printf("%c", 219);
-	
-	//Linha 7 - rodelinha 
-	
-	gotoxy(ic, (il+6));
-	
-	printf("%c", 219);
-	for(int i = 0; i < 18; i++) 
-	{	
-		if(i>6 && i <11) textcolor(7);
-		else textcolor(9);
-		putchar(219);
-		
-	}
-	textcolor(0);
-	printf("%c", 219);
-	
-	// Linha 8
-	
-	gotoxy(ic, (il+7));
-	
-	printf("%c", 219);
-	textcolor(9);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	
-	// Linha 9
-	
-	gotoxy(ic, (il+8));
-	
-	printf("%c", 219);
-	textcolor(9);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	
-	// Linha 10 => Borda de baixo
-	textcolor(0);
-	gotoxy(ic, (il+9)); 
-	for(int i = 0; i < 20; i++) putchar(219);
-	
-}
-
-void lupa(int ic, int il)
-{	
-	// Linha 1 - Borda Preta
-	textcolor(0);
-	// Linha 1 - Borda Preta
-	gotoxy(ic+4, il); 		printf("%c%c%c%c%c%c%c%c%c%c%c",220 ,220, 219, 219, 219, 219, 219, 219, 219, 220, 220);	
-	// Linha 2  
-	gotoxy(ic+2, il+1); 	printf("%c%c%c%c", 220, 219, 219, 223);
-	gotoxy(ic+13, il+1); 	printf("%c%c%c%c", 223, 219, 219, 220);
-	//linha 3
-	gotoxy(ic+1, il+2); 	printf("%c%c", 219, 223);
-	gotoxy(ic+16, il+2); 	printf("%c%c", 223, 219);	
-	//linha 4
-	gotoxy(ic, il+3);  		printf("%c%c", 219, 223);
-	gotoxy(ic+17, il+3); 	printf("%c%c", 223, 219);	
-	//linha 5
-	gotoxy(ic, il+4);	 	printf("%c", 219);
-	gotoxy(ic+18, il+4);	printf("%c", 219);	
-	//linha 6
-	gotoxy(ic, il+5);  		printf("%c%c", 219, 220);
-	gotoxy(ic+17, il+5);	printf("%c%c", 220, 219);	
-	//linha 7
-	gotoxy(ic+1, il+6);		printf("%c%c", 219, 220);
-	gotoxy(ic+16, il+6);	printf("%c%c", 220, 219);	
-	// Linha 8  
-	gotoxy(ic+2, il+7); 	printf("%c%c%c%c", 223, 219, 219, 220);
-	gotoxy(ic+13, il+7); 	printf("%c%c%c%c", 220, 219, 219, 223);
-	// Linha 9 
-	gotoxy(ic+4, il+8); 	printf("%c%c%c%c%c%c%c%c%c%c%c",223 ,223, 219, 219, 219, 219, 219, 219, 219, 223, 223);		
-	
-	//brilhinho
-	textcolor(15);
-	gotoxy(ic+3, il+4); printf("%c", 219);
-	gotoxy(ic+4, il+5); printf("%c%c%c", 219, 219, 220);
-	gotoxy(ic+7, il+6); printf("%c%c", 219, 220);
-	
-	//cabo
-	textcolor(15);
-	gotoxy(ic+18, il+6); printf("%c%c", 219,220);
-	gotoxy(ic+16, il+7); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 220);
-	gotoxy(ic+15, il+8); printf("%c%c%c%c%c%c%c%c%c", 223, 223, 219, 219, 219, 219, 219, 219,220);
-	gotoxy(ic+18, il+9); printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);			//cabo
-	gotoxy(ic+20, il+10); printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);
-	gotoxy(ic+22, il+11);printf("%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+24, il+12);printf("%c%c%c%c%c", 223, 219, 219, 219, 219,223);
-	
-	// Acabou :D
-}
-
-void logo(int ic, int il)
-{
-	textcolor(0);
-	
-	gotoxy(ic - 2, il + 6); for(int i = 0; i <= 58; i++) printf("_");
-		
-	// Linha 1 do texto
-	gotoxy(ic+1,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+7,il);	printf("%c",187);
-	gotoxy(ic+10,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+16,il);	printf("%c",187);	
-	gotoxy(ic+18,il);	printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);	gotoxy(ic+25,il);	printf("%c",187);
-	gotoxy(ic+27,il);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);		gotoxy(ic+34,il);	printf("%c",187);
-	gotoxy(ic+38,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+44,il);	printf("%c",187);
-	gotoxy(ic+46,il);	printf("%c%c",219,219);										gotoxy(ic+48,il);	printf("%c",187);
-	gotoxy(ic+51,il);	printf("%c%c",219,219);										gotoxy(ic+53,il);	printf("%c",187);
-	
-	//linha 2
-	gotoxy(ic,il+1);	printf("%c%c",219,219);		gotoxy(ic+2,il+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
-	gotoxy(ic+9,il+1);	printf("%c%c",219,219);		gotoxy(ic+11,il+1);	printf("%c%c%c%c",201,205,205,205);
-	gotoxy(ic+15,il+1);	printf("%c%c",219,219);		gotoxy(ic+17,il+1);	printf("%c",187);
-	gotoxy(ic+21,il+1);	printf("%c%c",219,219);		gotoxy(ic+18,il+1);	printf("%c%c%c",200,205,205);
-	gotoxy(ic+27,il+1);	printf("%c%c",219,219);		gotoxy(ic+23,il+1);	printf("%c%c%c",201,205,188);
-	gotoxy(ic+37,il+1);	printf("%c%c",219,219);		gotoxy(ic+29,il+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
-	gotoxy(ic+46,il+1);	printf("%c%c",219,219);		gotoxy(ic+39,il+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
-	gotoxy(ic+51,il+1);	printf("%c%c",219,219);		gotoxy(ic+48,il+1);	printf("%c",186);		gotoxy(ic+53,il+1);	printf("%c",186);
-		
-	//linha 3
-	gotoxy(ic,il+2);	printf("%c%c",219,219);									gotoxy(ic+2,il+2);	printf("%c",186);
-	gotoxy(ic+5,il+2);	printf("%c%c%c",219,219,219);							gotoxy(ic+8,il+2);	printf("%c",187);
-	gotoxy(ic+9,il+2);	printf("%c%c",219,219);									gotoxy(ic+11,il+2);	printf("%c",186);
-	gotoxy(ic+15,il+2);	printf("%c%c",219,219);									gotoxy(ic+17,il+2);	printf("%c",186);
-	gotoxy(ic+21,il+2);	printf("%c%c",219,219);									gotoxy(ic+23,il+2);	printf("%c",186);
-	gotoxy(ic+27,il+2);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic+33,il+2);	printf("%c",187);
-	gotoxy(ic+37,il+2);	printf("%c%c",219,219);									gotoxy(ic+39,il+2);	printf("%c",186);
-	gotoxy(ic+46,il+2);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);	gotoxy(ic+53,il+2);	printf("%c",186);
-	
-	//linha 4
-	gotoxy(ic,il+3);	printf("%c%c",219,219);		gotoxy(ic+2,il+3);	printf("%c",186);
-	gotoxy(ic+6,il+3);	printf("%c%c",219,219);		gotoxy(ic+8,il+3);	printf("%c",186);
-	gotoxy(ic+9,il+3);	printf("%c%c",219,219);		gotoxy(ic+11,il+3);	printf("%c",186);
-	gotoxy(ic+15,il+3);	printf("%c%c",219,219);		gotoxy(ic+17,il+3);	printf("%c",186);
-	gotoxy(ic+21,il+3);	printf("%c%c",219,219);		gotoxy(ic+23,il+3);	printf("%c",186);
-	gotoxy(ic+27,il+3);	printf("%c%c",219,219);		gotoxy(ic+29,il+3);	printf("%c%c%c%c%c",201,205,205,205,188);
-	gotoxy(ic+37,il+3);	printf("%c%c",219,219);		gotoxy(ic+39,il+3);	printf("%c",186);
-	gotoxy(ic+46,il+3);	printf("%c%c",219,219);		gotoxy(ic+48,il+3);	printf("%c%c%c",201,205,205);
-	gotoxy(ic+51,il+3);	printf("%c%c",219,219);		gotoxy(ic+53,il+3);	printf("%c",186);
-		
-	//linha 5
-	gotoxy(ic+1,il+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic,il+4);	printf("%c",200);
-	gotoxy(ic+10,il+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic+7,il+4);	printf("%c%c%c",201,188,200);
-	gotoxy(ic+21,il+4);	printf("%c%c",219,219);									gotoxy(ic+16,il+4);	printf("%c%c",201,188);
-	gotoxy(ic+27,il+4);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);	gotoxy(ic+23,il+4);	printf("%c",186);
-	gotoxy(ic+38,il+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic+34,il+4);	printf("%c",187);
-	gotoxy(ic+46,il+4);	printf("%c%c",219,219);									gotoxy(ic+37,il+4);	printf("%c",200);
-	gotoxy(ic+51,il+4);	printf("%c%c",219,219);									gotoxy(ic+44,il+4);	printf("%c",187);
-	gotoxy(ic+48,il+4);	printf("%c",186);										gotoxy(ic+53,il+4);	printf("%c",186);
-	
-	//linha 6
-		
-	gotoxy(ic+1,il+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
-	gotoxy(ic+10,il+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
-	gotoxy(ic+21,il+5);	printf("%c%c%c",200,205,188);
-	gotoxy(ic+27,il+5);	printf("%c%c%c%c%c%c%c%c",200,205,205,205,205,205,205,188);
-	gotoxy(ic+38,il+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
-	gotoxy(ic+46,il+5);	printf("%c%c%c",200,205,188);
-	gotoxy(ic+51,il+5);	printf("%c%c%c",200,205,188);
-}
-
-void cpu(int ic, int il)
-{	
-	// Linha 1 => Borda de cima
-	textcolor(0);
-	gotoxy(ic, il); 
-	for(int i = 0; i < 20; i++) putchar(219);
-	
-	// Linha 2  - tracinho
-	gotoxy(ic, (il+1));
-
-	printf("%c", 219);
-	textcolor(7);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	textcolor(6);
-	printf("%c", 219);
-	textcolor(0);
-	
-	// Linha 3  - tracinho
-	gotoxy(ic, (il+2));
-	
-	printf("%c", 219);
-	textcolor(7);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	textcolor(6);
-	printf("%c", 219);
-	textcolor(0);
-	
-	// Linha 4
-	
-	gotoxy(ic, (il+3));
-	
-	printf("%c", 219);
-	textcolor(7);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	textcolor(6);
-	printf("%c", 219);
-	textcolor(0);
-	
-	// Linha 5
-	
-	gotoxy(ic, (il+4));
-	
-	printf("%c", 219);
-	textcolor(7);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	textcolor(6);
-	printf("%c", 219);
-	textcolor(0);
-	
-	//Linha 6 - rodelinha com tracin
-	
-	gotoxy(ic, (il+5));
-	
-	printf("%c", 219);
-	textcolor(7);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	textcolor(6);
-	printf("%c", 219);
-	textcolor(0);
-	
-	//Linha 7 - rodelinha 
-	
-	gotoxy(ic, (il+6));
-	
-	printf("%c", 219);
-	textcolor(7);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	textcolor(6);
-	printf("%c", 219);
-	textcolor(0);
-	
-	// Linha 8
-	
-	gotoxy(ic, (il+7));
-	
-	printf("%c", 219);
-	textcolor(7);
-	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
-	printf("%c", 219);
-	textcolor(6);
-	printf("%c", 219);
-	textcolor(0);
-		
-	// Linha 9 
-	textcolor(0);
-	gotoxy(ic, (il+8)); 
-	for(int i = 0; i < 20; i++) putchar(219);
-	textcolor(6);
-	printf("%c", 219);
-	textcolor(0);
-	
-	// Linha 10 => Borda de baixo
-	textcolor(6);
-	gotoxy((ic+1), (il+9)); 
-	for(int i = 0; i < 20; i++) putchar(219);
-	textcolor(0);
-	
-	//escrever cpu
-	gotoxy((ic+3), (il+2)); printf("%c%c%c%c",219,219,219,219);
-	gotoxy((ic+3), (il+3)); printf("%c",219);
-	gotoxy((ic+3), (il+4)); printf("%c",219);      //etra C
-	gotoxy((ic+3), (il+5)); printf("%c",219);
-	gotoxy((ic+3), (il+6)); printf("%c%c%c%c",219,219,219,219);
-	
-	gotoxy((ic+8), (il+2)); printf("%c%c%c%c",219,219,219,219);
-	gotoxy((ic+8), (il+3)); printf("%c",219);		//Letra P
-	gotoxy((ic+11), (il+3)); printf("%c",219);
-	gotoxy((ic+8), (il+4)); printf("%c%c%c%c",219,219,219,219);
-	gotoxy((ic+8), (il+5)); printf("%c",219);
-	gotoxy((ic+8), (il+6)); printf("%c",219);
-	
-	gotoxy((ic+13), (il+2)); printf("%c",219);
-	gotoxy((ic+16), (il+2)); printf("%c",219);
-	gotoxy((ic+13), (il+3)); printf("%c",219);
-	gotoxy((ic+16), (il+3)); printf("%c",219);		//Letra U
-	gotoxy((ic+13), (il+4)); printf("%c",219);
-	gotoxy((ic+16), (il+4)); printf("%c",219);
-	gotoxy((ic+13), (il+5)); printf("%c",219);
-	gotoxy((ic+16), (il+5)); printf("%c",219);
-	gotoxy((ic+13), (il+6)); printf("%c%c%c%c",219,219,219,219);
-	
-	gotoxy((ic), (il+9)); //só pro end do programa não quebrar as coisas
-
-}
-
-void gpu(int ic, int il)
-{	
-	// Linha 1 => Borda de cima
-	gotoxy(ic, il);
-	textcolor(8);
-	printf("%c%c%c", 219, 219, 219);
-	textcolor(7);	
-	for(int i = 0; i < 35; i++) putchar(219);
-	
-	// Linha 2  - começo do cooler
-	gotoxy(ic, (il+1));
-	textcolor(8);
-	printf("  %c", 219);
-	for(int i = 0; i < 35; i++)
-	{
-		textcolor(7);
-		if( i>14 && i<25)
-			textcolor(8);
-		putchar(219);
-	}
-	
-	// Linha 3  
-	gotoxy(ic, (il+2));
-	
-	textcolor(8);
-	printf("  %c", 219);
-	for(int i = 0; i < 35; i++)
-	{
-		textcolor(2);
-		if( i>12 && i<27)
-			textcolor(8);
-		putchar(219);
-	}
-	
-	// Linha 4
-	
-	gotoxy(ic, (il+3));
-	
-	textcolor(8);
-	printf("  %c", 219);
-	for(int i = 0; i < 35; i++)
-	{
-		textcolor(10);
-		if( i>11 && i<28)
-			textcolor(8);
-		putchar(219);
-	}
-	
-	// Linha 5	- meio do cooler
-	gotoxy(ic, (il+4));
-	
-	textcolor(8);
-	printf("  %c", 219);	
-	for(int i = 0; i < 35; i++)
-	{
-		textcolor(10);
-		if( i>10 && i<29)
-			textcolor(8);
-		putchar(219);
-	}
-	
-	//Linha 6 - 
-	
-	gotoxy(ic, (il+5));
-	
-	textcolor(8);
-	printf("  %c", 219);
-	for(int i = 0; i < 35; i++)
-	{
-		textcolor(10);
-		if( i>11 && i<28)
-			textcolor(8);
-		putchar(219);
-	}
-	
-	//Linha 7
-	
-	gotoxy(ic, (il+6));
-	
-	textcolor(8);
-	printf("  %c", 219);
-	for(int i = 0; i < 35; i++)
-	{
-		textcolor(2);
-		if( i>12 && i<27)
-			textcolor(8);
-		putchar(219);
-	}
-	
-	// Linha 8 - final do cooler 
-	
-	gotoxy(ic, (il+7));
-	
-	textcolor(8);
-	printf("  %c", 219);
-	for(int i = 0; i < 35; i++)
-	{
-		textcolor(7);
-		if( i>14 && i<25)
-			textcolor(8);
-		putchar(219);
-	}
-	
-	// Linha 9
-	
-	gotoxy(ic, (il+8));
-	
-	textcolor(8);
-	printf("  %c", 219);
-	textcolor(7);	
-	for(int i = 0; i < 35; i++) putchar(219);
-	
-	// Linha 10 => Borda de baixo
-	gotoxy(ic, (il+9)); 
-	
-	textcolor(8);
-	printf("  %c", 219);
-	textcolor(14);	
-	for(int i = 0; i < 35; i++) 
-		{
-			if(i==4 || i == 18)
-			{
-				textcolor(0);
-				putchar(219);
-				textcolor(14);
-			}
-			if(i>3 && i<18)
-			putchar(219);
-			else
-			printf(" ");
-		}
-	textcolor(0);
-	// Acabou :D
-}
-
-void ram(int ic, int il)
-{	
-	// Linha 1 => Borda de cima
-	gotoxy(ic, il); 
-	
-	textcolor(0); printf("%c", 219);
-	
-	textcolor(2);
-	for(int i = 0; i < 41; i++) putchar(219);
-	
-	textcolor(0); printf("%c", 219);
-	
-	// Linha 2  - tracinho
-	gotoxy(ic, (il+1));
-	
-	textcolor(0); printf(" %c", 219);
-		
-	for(int i = 0; i < 33; i++) 
-	{
-		textcolor(2);
-		if((i+1)%5==0) 
-		{
-			textcolor(7);
-			putchar(219);
-		}	
-		putchar(219);
-	}
-	
-	textcolor(0); printf("%c ", 219);
-	
-	// Linha 3  - tracinho
-	gotoxy(ic, (il+2));
-	
-	textcolor(0); printf("%c", 219);
-	
-	textcolor(2);
-	putchar(219);
-	for(int i = 0; i < 33; i++) 
-	{
-		textcolor(2);
-		if((i+1)%5==0) 
-		{
-			textcolor(7);
-			putchar(219);
-		}	
-		putchar(219);
-	}
-	putchar(219);
-	textcolor(0); printf("%c", 219);
-	
-	// Linha 4
-	
-	gotoxy(ic, (il+3));
-	
-	textcolor(0); printf(" %c", 219);
-	
-	textcolor(2);
-	for(int i = 0; i < 39; i++) putchar(219);
-	
-	textcolor(0); printf("%c ", 219);
-	
-	// Linha 5
-	
-	gotoxy(ic, (il+4));
-	textcolor(0); printf("%c", 219);
-	
-	for(int i = 0; i < 41; i++) 
-	{
-		textcolor(2);
-		if((i+1)%2==0)
-		textcolor(14);
-		putchar(219);
-	}
-	
-	textcolor(0); printf("%c", 219);
-	
-}
-
-void mobo(int ic, int il)
-{
-	// Construir o PCB bruto
-	gotoxy(ic, il); 
-	textcolor(0);	
-	for(int i = 0; i < 20; i++) 
-	{	
-		for(int j = 0; j < 10; j++)
-		{
-		gotoxy((ic+i), (il+j));
-		putchar(219);
-		}
-	}
-	
-	//Construir os detalhes
-	textcolor(7);
-	gotoxy(ic, (il+1)); printf("%c%c",219,219);
-	gotoxy(ic, (il+2)); printf("%c%c",219,219);
-	gotoxy(ic, (il+3)); printf("%c%c",219,219);		//IO traseiro
-	gotoxy(ic, (il+4)); printf("%c%c",219,219);
-	gotoxy(ic, (il+5)); printf("%c%c",219,219);
-	
-	textcolor(7);
-	gotoxy((ic+6), (il+2)); printf("%c",219);
-	gotoxy((ic+6), (il+3)); printf("%c",219);
-	gotoxy((ic+9), (il+2)); printf("%c",219);		//socket do cpu
-	gotoxy((ic+9), (il+3)); printf("%c",219);
-	textcolor(14);
-	gotoxy((ic+7), (il+2)); printf("%c%c",219,219);
-	gotoxy((ic+7), (il+3)); printf("%c%c",219,219);
-	
-	textcolor(2);
-	gotoxy((ic+13), (il+1)); printf("%c",219);
-	gotoxy((ic+13), (il+2)); printf("%c",219);
-	gotoxy((ic+13), (il+3)); printf("%c",219);    //slots de ram e etc
-	gotoxy((ic+13), (il+4)); printf("%c",219);
-	gotoxy((ic+15), (il+1)); printf("%c",219);
-	gotoxy((ic+15), (il+2)); printf("%c",219);
-	gotoxy((ic+15), (il+3)); printf("%c",219);
-	gotoxy((ic+15), (il+4)); printf("%c",219);	
-	gotoxy((ic+18), (il+1)); printf("%c%c",219,219);
-	
-	textcolor(8);
-	gotoxy((ic+18), (il+3)); printf("%c%c",219,219);    //conectores 24 pinos e etc
-	gotoxy((ic+18), (il+4)); printf("%c%c",219,219);
-	
-	gotoxy((ic+4), (il+6)); printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);  //slots pci-e
-	gotoxy((ic+4), (il+8)); printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);
-	
-	textcolor(RED);
-	gotoxy((ic+15), (il+6)); printf("%c%c",219,219); //dissipador do chipset
-	gotoxy((ic+15), (il+7)); printf("%c%c",219,219);
-	
-	textcolor(15);
-	gotoxy((ic+14), (il+9)); printf("%c%c%c%c",219,219,219,219);
-	textcolor(0);
-	
-	gotoxy((ic+10), (il+10));	// tirar o exit do programa de perto
-}
-
-void HDD(int ic, int il)
-{
-	textcolor(0);
-	for(int i = 0; i < 21; i++) 
-	{	
-		for(int j = 0; j < 12; j++)
-		{
-		gotoxy((ic+i), (il+j));
-		putchar(219);
-		}
-	}
-	textbackground(0);
-	textcolor(7);
-	gotoxy(ic+6,il+1);		printf("%c%c%c%c%c%c%c%c%c",220,220,219,219,219,219,219,220,220);
-	gotoxy(ic+4,il+2);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",220,219,219,219,219,219,219,219,219,219,219,219,220);
-	gotoxy(ic+4,il+3);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//disco magnético
-	gotoxy(ic+4,il+4);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//e parafusos
-	gotoxy(ic+5,il+5);		printf("%c%c%c%c%c%c%c%c%c%c%c",223,219,219,219,219,219,219,219,219,219,223);
-	gotoxy(ic+8,il+6);		printf("%c%c%c%c%c",223,223,223,223,223);
-	gotoxy(ic+1,il);		printf("%c",220);	gotoxy(ic+1,il+11);		printf("%c",223);
-	gotoxy(ic+1,il+5);		printf("%c",223);	gotoxy(ic+19,il+5);		printf("%c",223);
-	gotoxy(ic+19,il);		printf("%c",220);	gotoxy(ic+19,il+11);	printf("%c",223);
-		
-	textcolor(2);
-	gotoxy(ic+10,il+7);		printf("%c%c%c%c%c%c%c%c",220,220,220,220,220,220,220,220);
-	gotoxy(ic+10,il+8);		printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219); // pcb
-	gotoxy(ic+12,il+9);		printf("%c%c%c%c%c%c",219,219,219,219,219,219);
-	gotoxy(ic+13,il+10);	printf("%c%c%c%c%c",219,219,219,219,219);
-	textcolor(8);
-	gotoxy(ic+14,il+8);		printf("%c%c%c",219,219,219);
-	gotoxy(ic+15,il+9);		printf("%c%c",219,219);
-	
-	textcolor(7);
-	gotoxy(ic+3,il+6);		printf("%c",220);
-	gotoxy(ic+3,il+7);		printf("%c%c%c",219,219,220);										//baia para a agulha
-	gotoxy(ic+3,il+8);		printf("%c%c%c%c%c",219,219,219,219,220);
-	gotoxy(ic+3,il+9);		printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,220,220);
-	gotoxy(ic+3,il+10);		printf("%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,220,220);
-	
-	textcolor(8);
-	textbackground(7);
-	//gotoxy(ic+9,il+4);		printf("%c",220);
-	gotoxy(ic+9,il+5);		printf("%c",219);
-	gotoxy(ic+8,il+6);		printf("%c%c",219,219);	
-	gotoxy(ic+7,il+7);		printf("%c%c%c",219,219,219);			//agulha
-	gotoxy(ic+6,il+8);		printf("%c%c%c",219,219,219);	
-	gotoxy(ic+5,il+9);		printf("%c%c%c%c",219,219,219,219);
-	gotoxy(ic+6,il+10);		printf("%c%c",223,223);	
-	
-	textcolor(0);
-	gotoxy(ic+9,il+3);		printf("%c%c%c",220,219,220);		///motor para o disco
-	gotoxy(ic+10,il+4);		printf("%c",223);
-	
-	textbackground(cor_fundo);
-}
-
-void textcolor(int newcolor) // Define a cor do texto
+void textcolor(int newcolor) // Define a cor do texto (vActual está aqui)
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
 
    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 
       (csbi.wAttributes & 0xf0) | newcolor);
-   vActual.attribute = (csbi.wAttributes & 0xf0) | newcolor;
+   //vActual.attribute = (csbi.wAttributes & 0xf0) | newcolor;
 }
 
-void textbackground(int newcolor) // Define a cor do fundo
+void textbackground(int newcolor) // Define a cor do fundo (vActual está aqui)
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
 
    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 
       (csbi.wAttributes & 0x0f) | (newcolor << 4));
-   vActual.attribute = (csbi.wAttributes & 0x0f) | (newcolor << 4);
+   //vActual.attribute = (csbi.wAttributes & 0x0f) | (newcolor << 4);
 }
 
 void gotoxy(int x, int y)	// Move o cursor para a coluna e linha desejada
@@ -3425,7 +2581,7 @@ void gotoxy(int x, int y)	// Move o cursor para a coluna e linha desejada
   SetConsoleCursorPosition (GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
 
-void cursor (int x) { 	// Define se o cursor ira aparecer (1) ou não (0)
+void cursor (int x) { 	// Define se o cursor ira aparecer sim(1) ou não(0)
 	switch (x) {
 		case 0: {
 			CONSOLE_CURSOR_INFO cursor = {1, FALSE};
@@ -3442,8 +2598,20 @@ void cursor (int x) { 	// Define se o cursor ira aparecer (1) ou não (0)
 
 void clreol(int x)  //função customizada e mais versátil para o programa do clreol da conio.h
 {
-   for(int i=0; i < x; i++)
-           printf(" ");         //preenche com "vazio/em branco" X espaços escolhidos
-       for(int i=0; i < x; i++)
-           printf("\b");		//volta X vezes o cursor para trás para a posição original após limpar a linha
+	for(int i=0; i < x; i++)
+        printf(" ");         //preenche com "vazio/em branco" X espaços escolhidos
+	for(int i=0; i < x; i++)
+        printf("\b");		//volta X vezes o cursor para trás para a posição original após limpar a linha
+}
+
+void voltando_menu(int linha,int coluna,int delay, bool menu){  //Apresenta a mensagem de voltar ao menu, espera e vai pro menu
+	cursor(0);
+	textbackground(12);
+	gotoxy(linha, coluna);
+	if(menu){
+		printf("Voltando ao menu...");
+	}else{
+		printf("Voltando...");
+	}		 	
+	Sleep(delay);
 }
