@@ -186,7 +186,7 @@ void loading()
 	
 	for(int i = 0; i <= 52; i++){
 		gotoxy(52+i, 20);printf("%c", 219);
-		Sleep(20);
+		Sleep(16);
 	}
 	
 	textcolor(cor_texto);
@@ -234,6 +234,7 @@ void menu_ini()
 	gotoxy(70, 23); printf("Altera%c%co", 135,198); 
 	gotoxy(70, 25); printf("Info de Sistema");
 	gotoxy(70, 27); printf("Sair");
+	gotoxy(150, 41); printf("Vers%co %.1f",198, versao);
 	
 	// Chama navegação com setas
 	
@@ -1603,57 +1604,46 @@ void info_de_sistema() // Apresenta as informações do sistema
 {
 	borda();
 	
-	char c;
+	char input;
 	
 	do{		
-		int inix = 20, iniy = 9; // Controla o eixo x e y das informações
+		int L = 20, C = 7; // Controla o eixo x e y das informações
 		
 		// Apresenta as informações do sistema
-		textcolor(cor_destaque);
-		gotoxy(74, 4);  printf("Info do Sistema");
+		textcolor(cor_destaque); textbackground(15);
+		gotoxy(73, 4);  printf(" Info do Sistema ");
 		textbackground(cor_fundo);
 		
-		textcolor(cor_destaque);
-		gotoxy(20, 7); printf("Empresa: ");
-		textcolor(cor_texto);
-		printf("GoTech");
+		textcolor(cor_destaque);	
+		gotoxy(L, C); 	 printf("Empresa: ");
+		gotoxy(L, C+2);   printf("Nomes: ");
+		gotoxy(L, C+4);  printf("N%cmeros: ",163);
+		gotoxy(L, C+6);  printf("Turma: ");
+		gotoxy(L, C+8);  printf("Ano: ");
+		gotoxy(L, C+10);  printf("Sobre o software: ");
 		
-		textcolor(cor_destaque);
-		gotoxy(20, 9);  printf("Nomes: ");
-		textcolor(cor_texto);
-		printf("Felipe Lima e Gabriel Nicolim");
-		
-		textcolor(cor_destaque);
-		gotoxy(20, 11);  printf("N%cmeros: ",163);
-		textcolor(cor_texto);
-		printf("06 e 08");
-		
-		textcolor(cor_destaque);
-		gotoxy(20, 13);  printf("Turma: ");
-		textcolor(cor_texto);
-		printf("71A");
-		
-		textcolor(cor_destaque);
-		gotoxy(20, 15);  printf("Ano: ");
-		textcolor(cor_texto);
-		printf("2020");
-		
-		textcolor(cor_destaque);
-		gotoxy(20, 17);  printf("Sobre o software: ");
+		textcolor(cor_texto);						
+		gotoxy(L+9, C);	 printf("GoTech");
+		gotoxy(L+7, C+2);   printf("Felipe Lima e Gabriel Nicolim");
+		gotoxy(L+9, C+4);  printf("06 e 08");
+		gotoxy(L+7, C+6);  printf("71A");
+		gotoxy(L+5, C+8);  printf("2020");
+		gotoxy(L, C+10);  printf("Sobre o software: ");
+			
 		textcolor(cor_texto);
 		printf("Nosso software, que hoje se encontra na vers%co %.1f, se destina a simular um sistema de gerenciamento de",198, versao);
 		gotoxy(20, 19); printf("estoque de uma loja de inform%ctica em C/C++.",160);
 		gotoxy(20, 21); printf("Para a realiza%c%co desse projeto utilizamos fun%c%ces de cabe%calho da conio.c e conio.h e file da stdio.h.",135,198,135,228,135);
-		gotoxy(20, 23); printf("Podem ser registrados perif%cricos e outras pe%cas de computador, que mais tarde podem ser alterados e excluidos.",130,135);
+		gotoxy(20, 23); printf("Podem ser registrados perif%cricos e outras pe%cas de computador, que mais tarde podem ser alterados ou excluidos.",130,135);
 			
 		textcolor(cor_destaque);
 		gotoxy(20, 30); printf("Pressione 0 para retornar ao menu"); 
 		
-			fflush(stdin); 
+		fflush(stdin); 
 			
-			c =	getch();
+		input =	getch();
 			
-	}while(c != '0');
+	}while(input != '0');
 		
 	voltando_menu(72,35,1500,true); // Apresenta mensagem Voltando pro menu... a baixo da borda
 	
@@ -1986,8 +1976,8 @@ void consulta_tipo(char aux)
 		
 		gera_tabela(5);	// Gera borda e tabela inicial
 		
-		do
-		{			
+		do{
+			
 			limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
 			limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
 			
@@ -2004,10 +1994,8 @@ void consulta_tipo(char aux)
 			
 			while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
 			{			
-				if(contl > limiteAnte) //se a linha atual for maior que o limite inferior:
-				{
-					if(produto.tipo == aux && !produto.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
-					{
+				if(contl > limiteAnte){ //se a linha atual for maior que o limite inferior:				
+					if(produto.tipo == aux && !produto.excluido){ // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 					
 						completa_tabela(linha);    //preenche a tabela
 						linha += 2; 
 					}
@@ -2023,11 +2011,11 @@ void consulta_tipo(char aux)
 			
 			retornar = getch();
 			
-			switch(retornar)
-			{
+			switch(retornar){
+						
 				case char(77): // Se a seta direita for pressionada
-					if(pag <= pag_limite) 
-					{
+					if(pag <= pag_limite){ 
+					
 						pag++; // Avança a página | Limita pag a 10 
 						rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
 						gera_tabela(5);
@@ -2035,8 +2023,8 @@ void consulta_tipo(char aux)
 					break;
 					
 				case char(75): // Se a seta da esquerda
-					if(pag > 1) 				
-					{
+					if(pag > 1){ 				
+					
 						pag--; // Volta a pagina
 						rewind(fp);	
 						gera_tabela(5);	
@@ -2160,8 +2148,8 @@ void consulta_nome()
 				
 				gera_tabela(5);	// Gera borda e tabela inicial
 				
-				do
-				{			
+				do{
+							
 					limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
 					
 					limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
@@ -2200,8 +2188,8 @@ void consulta_nome()
 					
 					retornar = getch();
 					
-					switch(retornar)
-					{
+					switch(retornar){
+									
 						case char(77): // Se a seta direita for pressionada
 							if(pag <= pag_limite) 
 							{
@@ -2411,20 +2399,18 @@ int navegar_menu(int ini, int fim, int p)
 	cursor(0); // Desativa o cursor
 	
 	int aux = ini; // Recebe posição da seta
-	int c; // Armazena entrada do teclado
+	int input;
 	
-	do
-	{
-		gotoxy(p,aux); printf("%c", 62);	
+	do{	
+		gotoxy(p,aux); printf("%c", 62);	//posição inicial da seta
 			
 		fflush(stdin); 
 		
-		c = getch();
+		input = getch();
 		
 		gotoxy(p,aux); printf(" ");
 		
-		switch(c) 
-		{
+		switch(input){		
 			case 72: // Seta para cima
 				aux -= 2;
 				
@@ -2441,8 +2427,8 @@ int navegar_menu(int ini, int fim, int p)
 				gotoxy(p,aux);printf("%c", 62);
 				break;	
 			case 13:
-			return (aux - ini)/2; // Retorna o valor da opção seleciona => inicia em 0
-			break;	
+				return (aux - ini)/2; // Retorna o valor da opção seleciona => inicia em 0
+				break;	
 		}
 		
 	}while(true);
@@ -2493,7 +2479,7 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 		
 		int tam = strlen(produto.nome);
 		
-		if(tam > 66) tam = 66; // define o tamanho máximo a ser apresentado (29 espaços na tabela)
+		if(tam > 66) tam = 66; // define o tamanho máximo a ser apresentado (66 espaços na tabela)
 		
 		gotoxy(22, linha); printf("%d", produto.id);
 		gotoxy(33, linha); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
@@ -2617,6 +2603,7 @@ void clreol(int x)  //função customizada e mais versátil para o programa do c
 void voltando_menu(int linha,int coluna,int delay, bool menu){  //Apresenta a mensagem de voltar ao menu, espera e vai pro menu
 	cursor(0);
 	textbackground(12);
+	textcolor(cor_texto);
 	gotoxy(linha, coluna);
 	if(menu){
 		printf("Voltando ao menu...");
