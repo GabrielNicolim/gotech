@@ -1,7 +1,7 @@
 <h1 align = "center">Projeto de Fundamento de Processamento de Dados</h1>
 
 <h2>Sobre o projeto</h2>
-Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020 com o conceito de uma loja de computadores com banco de dados feita em C++<br>
+Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020 com o conceito de uma loja de computadores com banco de dados feita em C++<br><br>
 :computer: <b>Tema: </b>Loja de Informática<br>
 :rocket: <b>Integrantes: </b>Gabriel Nicolim e Felipe Lima<br>
 :dart: <b>Objetivo: </b>Gerenciamento de estoque<br><br><br>
@@ -19,4 +19,5 @@ Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020 c
 <li><a href = "https://docs.microsoft.com/en-us/windows/win32/api/winuser/"><cite>Winuser.h</cite></a>
 <li><a href = "https://pt.wikipedia.org/wiki/Time.h"><cite>Time.h</cite></a>
 <li><a href = "http://linguagemc.com.br/a-biblioteca-string-h/"><cite>String.h</cite></a>
+<li><a href = "https://github.com/GabrielNicolim/Trabalho-de-FPD/blob/remaster/scripts/functions/desenhos.h"><cite>desenhos.h</cite></a>
 <br>
