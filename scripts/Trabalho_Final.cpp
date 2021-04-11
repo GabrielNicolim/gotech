@@ -83,16 +83,12 @@ int valida_id_consulta(int *id_final);
 
 // Funções de validação => Validações + Registro
 
-// Valida id no registro
 int valida_id_recebimento();
-// Valida quantidade no registro
 void valida_quantidade_recebimento();
-// Valida nome no registro
 void valida_nome_recebimento();
-// Valida tipo digitado
 void valida_tipo_recebimento();
-// Valida preço digitado
 void valida_preco_recebimento();
+
 // mensagem de erro alterável
 void erro_apagar (int col, int lin, int tipo_erro, int apagar);
 void voltando_menu(int linha,int coluna, int delay, bool menu);
@@ -139,12 +135,11 @@ struct estrutura
 }produto;
 
 /*
-	 => 16/ 11 / 2020 <= 
+	 => 11/ 04 / 2021 <= 
 	
-	Revisão Final | Ultima Parte
+	Revisão REMASTER | ???
 	
-	- Linhas Inuteis removidas
-	- Erros lógicos resolvidos
+	- Funções melhoradas
 	
 */
 
@@ -307,8 +302,7 @@ void cadastro_visual()
 			
 			dnv = getche();
 			
-			if(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S')
-			{
+			if(dnv != 'n' && dnv != 'N' && dnv != 's' && dnv != 'S'){	
 				erro_apagar(61,26,4,70);
 			}
 				
@@ -471,28 +465,44 @@ int valida_id_recebimento()  // Recebe e valida id
 	return produto.id = aux;   // retorna para a struct do cadastro o valor ID já verificado
 }
 
-void valida_nome_recebimento() // Recebe e valida nome
+void valida_nome_recebimento() // Recebe e valida nome retirando espaços extra ( a     palavras -> a palavra)
 {
-	char aux[150]; // Armazena nome | Armazena nome sem espaço 
+	char nome[150];
 	
-	int k, j, tam; 		 // Var auxiliar || Armazena tamanho da string
+	int tam; 		 // Armazena tamanho da string
 
 	while(true){
-		k = 0;
-		j = 0;
-		
-		fflush(stdin);
-		gets(aux);
-		
-		tam = strlen(aux);
+				
+		gets(nome);
+			
+		tam = strlen(nome);
 		
 		if(tam == 0) gotoxy(39, 10); // Se nada for digitado
-		else break;
+		//if(tam > 150) erro_apagar(39,10,4,70); ///valor inválido
+		else{
+			char *output = nome;
+			char *from, *to;
+		    bool space= false;
+		    to=from=output;    //variáveis de ponteiro ficam td igual ao input
+		    while(true){
+		        if(space && *from == ' ' && to[-1] == ' ') //Se tiver marcado com espaço & from & to[-1]
+		            ++from;
+		        else {
+		            if(*from==' ')space = true;		 //Se *from for espaço, space = true, else space = false
+		            else space=false;
+		
+		            *to++ = *from++;   //seta um igual ao outro e soma 1 depois
+					
+		            if(!to[-1])break;
+		        }
+		    } 
+		    strcpy(produto.nome,output);
+		    break;
+		}	
 	}
 	
-	strcpy(produto.nome, aux);
-	
-	return; 
+	//strcpy(nome,produto.nome);	
+	return;             
 }
 
 void valida_quantidade_recebimento() // Recebe e valida quantidade
@@ -601,8 +611,8 @@ void valida_preco_recebimento() // Recebe preço e valida
 				}
 			}			
 			
-			if(k == 0) // Se valor for numérico
-			{
+			if(k == 0){ // Se valor for numérico
+			
 				num = strtod(aux, &end); // Converte para float
 				
 				if(num < 0)
