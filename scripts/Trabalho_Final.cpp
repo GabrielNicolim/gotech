@@ -24,7 +24,7 @@
 #include <strings.h>
 #include "functions\desenhos.h"
 
-#define versao 4.1
+#define versao 4.2
 
 //text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
@@ -1115,58 +1115,7 @@ void alteracao()
 					}
 				}
 			}
-			
-			/*		
-			textcolor(cor_destaque);	
-			gotoxy(20, 27); printf("Confirmar Altera%c%ces? (S/N): ", 135, 228); 			
-			textcolor(cor_texto);
-			
-			char confirmar;
-			
-			do{
-				confirmar = getche();
-				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N'){
-					gotoxy(49, 27); clreol(10);
-				} 
-				
-				if(confirmar == 's' || confirmar == 'S') // Confirmação 
-				{
-					abrir_arquivo_alterar();
-
-					while(fread(&produto, sizeof(produto), 1, fp) == 1)	
-					{
-						if(produto.id == id and !produto.excluido)
-						{
-							int fposicao = ftell(fp); // guarda a posição do registro atual do arquivo 
-							
-							// Alteração
-							produto.preco_unitario = num; 
-							
-							if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
-								{														// porém pode ser usado em verificações pois retorna algo
-									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
-									Sleep(1500);
-									return;
-								}
-								
-							if(fwrite(&produto, sizeof(produto), 1, fp) != 1)   //depois que colocou o "cursor" do leitor em cima da linha correta
-							{													//usa-se o fwrite para salvar as alterações
-								textcolor(RED);
-								gotoxy(79, 22); printf("Erro na escrita do arquivo!");
-								textcolor(cor_texto);
-							}
-							break;
-							
-							fflush(fp);
-						}
-					}
-				}
-			}while(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N');
-			
-			fclose(fp);
-			*/
-			
+					
 			id = 0; 
 		}
 		else if(escolha == 5) break; //sair do menu
