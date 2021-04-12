@@ -11,7 +11,7 @@
 	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
 	
 	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 29) e vActual(2522 e 2532)
-	Versão 4.1 = Funções começando a ser preparadas para serem recicladas e cortar código ao máximo
+	Versão 4.2 = Funções retrabalhadas mas ainda não 100% testadas - pode contem erros
 */
 
 #include <stdio.h>
@@ -88,7 +88,7 @@ void voltando_menu(int linha,int coluna, int delay, bool menu);
 
 // Alteração
 
-bool confirmarSN(int L, int C); 
+bool confirmarSN(int L, int C,int confirmaTipo); 
 int obtem_id_alteracao();
 
 FILE *fp; //Ponteiro para arquivo
@@ -704,12 +704,20 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 	}
 }
 
-bool confirmarSN(int L, int C){
+bool confirmarSN(int L, int C, int confirmaTipo){
 	
 	char confirmar;
 	
-	textcolor(cor_destaque);		
-	gotoxy(L, C); printf("Confirmar Altera%c%ces? (S/N): ", 135, 228); 			
+	gotoxy(L, C); textcolor(cor_destaque);		
+	switch(confirmaTipo){
+		case 0:
+		printf("Confirmar Altera%c%ces? (S/N): ", 135, 228);
+		break;
+		case 1:
+		printf("Confirmar Exclus%co? (S/N): ", 198);
+		L = L - 3;
+		break; 
+	}			
 	textcolor(cor_texto);
 	
 	gotoxy(L+30, C);
@@ -717,8 +725,7 @@ bool confirmarSN(int L, int C){
 		confirmar = getche();
 				
 		if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N'){			
-			//gotoxy(99, 31); clreol(10);
-			erro_apagar(L+30,C,1,10);
+			erro_apagar(L+30,C,10,50);      //erro default do switch
 		}
 		else{
 			if(confirmar == 's' || confirmar == 'S') return true;	// Confirmação
@@ -759,9 +766,9 @@ void alteracao()
 			
 			tabela_tipos(58,37,1);
 			
-			textcolor(cor_destaque);			
+			textcolor(cor_destaque); textbackground(15);			
 			gotoxy(76, 4); printf("Altera%c%co Geral", 135, 198); // Mensagem em destaque no meio da tela
-			textcolor(cor_texto);
+			textcolor(cor_texto);    textbackground(cor_fundo);
 						
 			//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
 			//=================================================================================
@@ -889,7 +896,7 @@ void alteracao()
 			strcpy(aux_nome,valida_nome_recebimento(39,25));
 			
 			//CONFIRMAR PARA ESCREVER NO ARQUIVO
-			if(confirmarSN(20,27)){
+			if(confirmarSN(20,27,0)){  
 				
 				abrir_arquivo_alterar();
 
@@ -954,7 +961,7 @@ void alteracao()
 			long aux_quantidade = valida_quantidade_recebimento(39,25);
 			
 			//CONFIRMAR PARA ESCREVER NO ARQUIVO
-			if(confirmarSN(20,27)){
+			if(confirmarSN(20,27,0)){
 				
 				abrir_arquivo_alterar();
 
@@ -1019,7 +1026,7 @@ void alteracao()
 			char aux_tipo = valida_tipo_recebimento(39,25);
 			
 			//CONFIRMAR PARA ESCREVER NO ARQUIVO
-			if(confirmarSN(20,27)){
+			if(confirmarSN(20,27,0)){
 				
 				abrir_arquivo_alterar();
 
@@ -1083,7 +1090,7 @@ void alteracao()
 			float num = valida_preco_recebimento(39,25);
 			
 			//CONFIRMAR PARA ESCREVER NO ARQUIVO
-			if(confirmarSN(20,27)){
+			if(confirmarSN(20,27,0)){
 				
 				abrir_arquivo_alterar();
 
@@ -1140,7 +1147,7 @@ int obtem_id_alteracao()
 		
 		textcolor(cor_destaque);
 		
-		gotoxy(74, 4); printf("Recebimento de ID"); 
+		gotoxy(73, 4); textbackground(15);  printf(" Recebimento de ID "); textbackground(cor_fundo);
 		gotoxy(20, 8); 	printf("Id do produto (0 para sair): ");	
 		
 		textcolor(cor_texto);
@@ -1854,7 +1861,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 {
 	cursor(1); // Liga o cursor
 	
-	int aux_codigo, F, k, tam; // Auxiliares
+	int aux_codigo, F, valido, tam; // Auxiliares
 	long fposicao;
 	char conf, id[50];
 
@@ -1866,15 +1873,14 @@ void excluir_dados() //exclusao lógica (continua no binário)
 		
 		if(abrir_arquivo_alterar() == 0) //abre o arquivo no modo de alteração de dados   
 		{
-			textcolor(cor_destaque);
 			gotoxy(72, 4); printf("Exclus%co de dados", 198);
 			gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ", 162);
 			
 			textcolor(cor_texto);
 			      			
-			k = 0;
+			valido = 0;
 			
-			gets(id);
+			gets(id);  //valida_id_recebimento
 			
 		    tam = strlen(id);
 		    
@@ -1889,13 +1895,12 @@ void excluir_dados() //exclusao lógica (continua no binário)
 				{
 					if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
 					{ // Confere se é numérico  
-						k = 1; // Se não for numérico 
+						valido = 1; // Se não for numérico 
 						break;	
 					}	
 				} 
 		    	
-		    	if(k == 1) // Se um caractere não numérico for digitado
-		    	{
+		    	if(valido == 1){ // Se um caractere não numérico for digitado		    	
 		    		erro_apagar( 77, 7, 0 , 34); //coluna, linha e tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar	
 				}
 		    	else // Se o ID for valido e numérico
@@ -1906,8 +1911,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 			    	
 					rewind(fp);  //volta ao inicio do arquivo (para segunda repetição)
 					
-				    do
-				    {
+				    do{			    
 						fread(&produto, sizeof(produto), 1, fp);
 						
 						if (produto.id == aux_codigo && !produto.excluido) //Se houver um produto com o id e que não foi excluído
@@ -1924,27 +1928,9 @@ void excluir_dados() //exclusao lógica (continua no binário)
 							
 							textcolor(cor_destaque);
 							gotoxy(20,30);printf("Pressione uma tecla para continuar...");
-					
-					   		textcolor(cor_destaque);
-						   	gotoxy(20,24); printf("Confirma exclus%co ? (S/N): ", 198);
-						   	
+
 						   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
-							do 
-						   	{
-						   		fflush(stdin);
-						   		
-						   		textcolor(cor_texto);
-						   		
-						    	gotoxy(47,24); conf = getche(); // Confirmação 
-						    	
-						    	if(conf != 's' && conf != 'S' && conf != 'n' && conf != 'N') 
-						    	{
-						    		gotoxy(47, 24); clreol(5);	
-								}
-								
-						   	}while( conf != 's' && conf != 'S' && conf != 'n' && conf != 'N' );
-						   
-						   	if( conf == 's' || conf == 'S' )
+						   	if(confirmarSN(17,24,1))
 						   	{
 						   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
 								if(fseek (fp, fposicao-(sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, 

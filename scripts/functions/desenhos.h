@@ -1,13 +1,8 @@
-/*Arquivo fonte para funções de desenhos do programa como a borda e os icones de:
-	-Disquete
-	-Logo
-	-Lupa
-	-CPU							11/04/2021 - Por quê refatorar esse programa antigo e mal feito?
-	-GPU							R: Saudades de mexer com macaco++ e começar algo do zero da trabalho
-	-RAM
-	-Mobo
-	-HDD
-*/
+//Arquivo fonte para funções de desenhos do programa como a borda e os icones de:
+//-Disquete, Logo, Lupa, CPU, GPU, RAM, Mobo, HDD	
+
+//			11/04/2021 - Por quê refatorar esse programa antigo e mal feito?
+//			R: Saudades de mexer com macaco++ e começar algo do zero da trabalho
 
 // Definição de cores 
 #define cor_fundo 3
@@ -16,6 +11,7 @@
 #define cor_destaque 0
 #define RED 12
 
+//Lembrar esse arquivo das funções conio
 void gotoxy(int x, int y);
 void textcolor(int newcolor);
 void textbackground(int newcolor);
