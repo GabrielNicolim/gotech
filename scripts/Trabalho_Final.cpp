@@ -11,7 +11,8 @@
 	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
 	
 	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 29) e vActual(2522 e 2532)
-	Versão 4.2 = Funções retrabalhadas mas ainda não 100% testadas - pode contem erros
+	Versão 4.3 = Funções retrabalhadas novamente, porém programa mais estável
+	still TO DO: Fix all search functions
 */
 
 #include <stdio.h>
@@ -24,7 +25,7 @@
 #include <strings.h>
 #include "functions\desenhos.h"
 
-#define versao 4.2
+#define versao 4.3
 
 //text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
@@ -47,8 +48,8 @@ void borda();
 
 // Funções de interação com o usuário 
 void consulta_geral();
-void consulta_tipo_recebimento();
-void consulta_tipo(char aux);
+char consulta_tipo_recebimento(int L, int C);
+void consulta_tipo();
 void consulta_nome();
 void excluir_dados();
 void gera_tabela(int li);  
@@ -323,10 +324,7 @@ void cadastro_recebimento()
 			
 			borda();
 			
-			srand(time(NULL));
-			int random = rand() % 2;
-	
-			switch(random){		
+			switch(random_menu){		
 				case 0:
 					ram(85, 8);
 					break;
@@ -339,11 +337,14 @@ void cadastro_recebimento()
 			}
 			cursor(0); 
 			
-			textcolor(cor_destaque);
-			gotoxy(20,11); printf("Dados salvos com sucesso!");			
+			textcolor(cor_texto);
+			gotoxy(20,11); printf("Dados salvos com sucesso!");	
+			textcolor(cor_destaque);		
 		}
 		
 		Sleep(1000);
+		while (kbhit())  //Isso continua se vê que há um input do teclado em espera e, em caso afirmativo, chama getch() para descartar o caractere
+    	getch();
 		
 		cursor(1);
 			
@@ -642,7 +643,7 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 				consulta_id();
 				break;
 			case 2:
-				consulta_tipo_recebimento();
+				consulta_tipo();
 				break;
 			case 3:
 				consulta_nome(); 
@@ -670,11 +671,12 @@ bool confirmarSN(int L, int C, int confirmaTipo){
 		L = L - 3;
 		break;
 		case 2:
-		printf("Deseja salvar os dados? (S/N): "); 
+		printf("Deseja salvar os dados? (S/N): ");
+		L++;
 		break;
 		case 3:
 		printf("Deseja realizar mais um cadastro? (S/N): ");
-		L = L + 10;
+		L = L += 10;
 		break;
 	}			
 	textcolor(cor_texto);
@@ -1382,14 +1384,9 @@ void consulta_id()   //consulta por id
 		textcolor(cor_texto);
 		
 		aux = valida_id_consulta(&id_busca);
-		
+				
 		if(aux == 0) continua=false;
-		else if(aux == 1) // Retorna ao sub menu por conta de um erro no id digitado pelo usuario
-		{
-			erro_apagar(47, 7, 0 , 60); //coluna, linha e tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar	
-
-		} 
-		else if(aux == 3)  //retorno de 3 significa que o id é válido
+		else  //retorno de 3 significa que o id é válido
 		{
 			rewind(fp);	
 			
@@ -1433,123 +1430,84 @@ void consulta_id()   //consulta por id
 
 int valida_id_consulta(int *id_final)
 {
-	char id[32];
-	int tam;
-	int valido;
+	char id[80];
+	int tam, aux;
+	bool valido, vazio;
 	
 	do{
-		valido = 1;
+		valido = false;
 		cursor(1);
 		gets(id);
+		
 		tam = strlen(id);
 		
 		if(tam == 0){  //se não for digitado nada (apenas enter) volta a posição inicial	
 			gotoxy(47,7);
-			valido = 0;
 		} 
 		else if(id[0] == '0'){   //se for digitado 0 como o primeiro número retorna ao submenu		
 			voltando_menu(72,35,1500,false); // Apresenta mensagem Voltando pro menu... abaixo da borda
 			return 0;	//retorno
 		}
-		else 
+		else{
 			for(int i = 0; i < tam; i++) 
 				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
-					return 1; // id inválido			
-	}while(valido != 1);
+				{
+					valido = false;	
+					break;		
+				}else valido = true;
+				
+				
+			erro_apagar(47, 7, 0 , 60); //coluna, linha e tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
+		} 
+					
+	}while(!valido);
 	
 	cursor(0);
 	
 	*id_final = atoi(id); //manda por referencia o id em forma de int
 	
-	return 3; //id valido
+	return 1; //id valido
 }	
 
-void consulta_tipo_recebimento()
-{
-	char aux;
-	
-	do{
-		
-		cursor(1); 
-		
-		borda();
-		
-		textcolor(cor_texto); 
-		
-		textcolor(cor_destaque);
-    
-    	tabela_tipos(56,18,2);
-
-		textcolor(cor_destaque);
-		gotoxy(72, 4); printf("Consulta por Tipo", 198);
-		
-		gotoxy(20,7); printf("Digite tipo a ser pesquisado (0 para sair): ");
-		
-		textcolor(cor_texto);
-		
-		do{	
-	 		
-	 		fflush(stdin);
-	 	
-	 		aux = getche();
-			
-			aux = toupper(aux);  //passa o auxiliar para maiusculo
-			
-			// Verifica se é um dos tipos listados
-		
-			if(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' )
-			{
-				erro_apagar( 64, 7, 3 , 35); //coluna, linha e tipo de erro: "[ERRO] Tipo inválido" e quantidade a se apagar	
-			}
-			
-		}while(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' );
-		
-		if(aux != '0')
-		{
-			Sleep(500);
-			consulta_tipo(aux);
-		}
-		
-	}while(aux != '0');
-			
-	voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
-	
-	return;
-}
-
-void consulta_tipo(char aux)
+void consulta_tipo()
 {	
+	
+	borda();
+		
+	textcolor(cor_destaque);textbackground(15);
+	gotoxy(71, 4); printf(" Consulta por Tipo ");
+	textbackground(cor_fundo);
+			
+	tabela_tipos(56,18,2);	
+	gotoxy(20,7); printf("Digite tipo a ser pesquisado (0 para sair): ");
+
+	int aux = consulta_tipo_recebimento(64,7);
+	if(aux == '0') return;
+	
 	int cont_tuplas = -1;
 	
 	abrir_arquivo();
 	
 	cursor(0); // Desliga o cursor
 	
-	gera_tabela(5);	// Gera borda e tabela inicial
+	bool vazio = true;
 	
-	bool vazio;
-	
-	vazio = true;
-	
-	while(fread(&produto, sizeof(produto), 1, fp) == 1){ // segue até o fim do arquivo	
-		if(produto.tipo == aux && !produto.excluido) 
-		{
+	while(fread(&produto, sizeof(produto), 1, fp) == 1){ // segue até o fim do arquivo contando quantos tipos escolhidos tem
+		if(produto.tipo == aux && !produto.excluido){ 		
 			vazio = false;
 			cont_tuplas++;
 		}
 	}
 	
-	if(!vazio)
-	{
-		int contl = 1, limite, limiteAnte, pag, linha, pag_limite; // Variaveis Auxiliares
-		
+	if(!vazio){	
+		int contl = 1, limite, limiteAnte, pag, linha, pag_limite; // Variaveis Auxiliares		
 		char retornar;
 		
 		pag = 1;
 		
 		pag_limite = ceil(cont_tuplas / 12);  
 		
-		gera_tabela(5);	// Gera borda e tabela inicial
+		gera_tabela(5);	
 		
 		do{
 			
@@ -1612,8 +1570,7 @@ void consulta_tipo(char aux)
 		// Se 0 for pressionado 
 		voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 	}		
-	else
-	{
+	else{
 		borda();
 		textcolor(cor_destaque); 
 		cursor(0); 
@@ -1625,6 +1582,38 @@ void consulta_tipo(char aux)
 	fclose(fp);	// fecha o arquivo
 		
 	return;
+}
+
+char consulta_tipo_recebimento(int L, int C)
+{
+	char aux;
+	
+	cursor(1); 
+		
+	textcolor(cor_texto);
+		
+	do{
+		gotoxy(L,C);
+		
+ 		fflush(stdin);
+ 	
+ 		aux = getche();
+		
+		aux = toupper(aux);  //passa o auxiliar para maiusculo
+		
+		if(aux == '\r') gotoxy(64,7);
+		else if(aux == '0'){
+			voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
+			return '0';
+		} 
+		else if(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' )
+		{
+			erro_apagar( L, C, 3 , 35); //coluna, linha e tipo de erro: "[ERRO] Tipo inválido" e quantidade a se apagar	
+		}
+		
+	}while(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' );
+					
+	return aux;
 }
 
 void consulta_nome()
@@ -1640,14 +1629,12 @@ void consulta_nome()
 		cursor(1);
 			
 		textcolor(cor_destaque); 
-		gotoxy(72, 4); printf("Consulta por Nome");
-		gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
-		textcolor(cor_texto);
+		gotoxy(71, 4); textbackground(15); printf(" Consulta por Nome "); textbackground(cor_fundo);
+		textcolor(cor_texto); gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
 		
 		strcpy(aux,valida_nome_recebimento(49,7));
 
-		if(aux[0] == '0')
-		{
+		if(aux[0] == '0'){
 			voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 			return;
 		}	
@@ -2156,4 +2143,4 @@ void voltando_menu(int linha,int coluna,int delay, bool menu){  //Apresenta a me
 		printf("Voltando...");
 	}		 	
 	Sleep(delay);
-}
+} //12/12/2020 = 4600 linhas ->  13/04/2021 = 2160 linhas
