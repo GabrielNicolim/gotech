@@ -5,9 +5,7 @@ Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020. 
 
 :computer: <b>Tema: </b>Loja de Informática<br>
 :rocket: <b>Integrantes: </b>Gabriel Nicolim e Felipe Lima<br>
-:dart: <b>Objetivo: </b>Gerenciamento de estoque<br><br><br>
-
-<img src="https://user-images.githubusercontent.com/69210720/111396661-555c5000-869e-11eb-84d8-cc96c92d3640.png"/>
+:dart: <b>Objetivo: </b>Gerenciamento de estoque<br>
 
 <hr>
 
@@ -21,3 +19,5 @@ Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020. 
 <li><a href = "https://pt.wikipedia.org/wiki/Time.h"><cite>Time.h</cite></a>
 <li><a href = "http://linguagemc.com.br/a-biblioteca-string-h/"><cite>String.h</cite></a>
 <br>
+
+<img src="https://user-images.githubusercontent.com/69210720/111396661-555c5000-869e-11eb-84d8-cc96c92d3640.png"/>
