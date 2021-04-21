@@ -10,9 +10,9 @@
 		
 	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
 	
-	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 29) e vActual(2522 e 2532)
-	Versão 4.3 = Funções retrabalhadas novamente, porém programa mais estável
-	still TO DO: Fix all search functions
+	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 30) e vActual(1968 e 1978)
+	Versão 4.4 = Funções de obtenção de ID generalizadas para diminuir código duplicado
+
 */
 
 #include <stdio.h>
@@ -25,7 +25,7 @@
 #include <strings.h>
 #include "functions\desenhos.h"
 
-#define versao 4.3
+#define versao 4.4
 
 //text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
@@ -77,7 +77,8 @@ int valida_id_consulta(int *id_final);
 
 // Funções de validação => Validações + Registro
 
-int valida_id_recebimento(int L, int C);
+bool isID_cadastrado(int aux);
+int valida_id(int L, int C, int qntapagar);
 long valida_quantidade_recebimento(int L, int C);
 char *valida_nome_recebimento(int L, int C);
 char valida_tipo_recebimento(int L, int C);
@@ -130,9 +131,9 @@ struct estrutura
 }produto;
 
 /*
-	 => 11/ 04 / 2021 <= 
+	 => 21 / 04 / 2021 <= 
 	
-	Revisão REMASTER | ???
+	Revisão REMASTER | 4.4
 	
 	- Funções melhoradas para devolver valores e no futuro serem recicladas
 	
@@ -298,15 +299,28 @@ void cadastro_recebimento()
 	textcolor(cor_texto);
 	
 	fflush( fp ); 
-
-	produto.id = valida_id_recebimento(39,8); if(produto.id== 0){ 
-		inicio();  return;													// Recebe id e já copia para a struct
-	}
-	strcpy(produto.nome,valida_nome_recebimento(39,10));					// Recebe nome e já copia para a struct
-	produto.quantidade = valida_quantidade_recebimento(39,12);				// Recebe quantidade e já copia para a struct					
-	produto.tipo = valida_tipo_recebimento(39,14);		 					// Recebe tipo e já copia para a struct
-	produto.preco_unitario = valida_preco_recebimento(39,16);	 			// Recebe preco e já copia para a struct
-	produto.excluido = false;						 						// Define como não excluido
+	cursor(1);
+	
+	int IDaux = 1;	
+	do{
+		IDaux = valida_id(39,8,100); 						
+		if(IDaux == 0){ 
+			inicio();  return;												
+		}
+		else{
+			if(isID_cadastrado(IDaux)){
+				erro_apagar( 39, 8, 1 , 70); //coluna, linha, tipo de erro: "[ERRO] ID já cadastrado" e quantidade a se apagar	
+				IDaux = -1; 	//continua no loop
+			}else break;
+		}
+	}while(IDaux == -1);
+		
+	produto.id = IDaux;												// Após validação toda copia para a struct
+	strcpy(produto.nome,valida_nome_recebimento(39,10));			// Recebe nome e já copia para a struct
+	produto.quantidade = valida_quantidade_recebimento(39,12);		// Recebe quantidade e já copia para a struct					
+	produto.tipo = valida_tipo_recebimento(39,14);		 			// Recebe tipo e já copia para a struct
+	produto.preco_unitario = valida_preco_recebimento(39,16);	 	// Recebe preco e já copia para a struct
+	produto.excluido = false;						 				// Define como não excluido
 	
 	textcolor(cor_destaque);
 
@@ -356,7 +370,7 @@ void cadastro_recebimento()
 // Parte do recebimento de dados 
 // 
 
-int valida_id_recebimento(int L, int C)  // Recebe e valida id
+int valida_id(int L, int C, int qntapagar)  // Recebe e valida id
 {
 	char id[80];
 	int tam, aux;		// Armazena tamanho da string | Auxiliar 1 e 2 | int auxiliar que armazenará a id digitada
@@ -365,6 +379,8 @@ int valida_id_recebimento(int L, int C)  // Recebe e valida id
 	do{		
 		vazio = true;  //loop principal
 		valido = false;
+		cursor(1);
+		
 		fflush(stdin);
 				
 		gotoxy(L, C); gets(id);
@@ -374,47 +390,45 @@ int valida_id_recebimento(int L, int C)  // Recebe e valida id
 		if(tam == 0) gotoxy(L, C); // Se nada foi digitado retorna a posição de inicio e pergunta novamente
 		else if(id[0] == '0'){	
 			// Se o primeiro digito de id for igual a 0 volta pro menu
-			voltando_menu(72,35,1500,true);
+			voltando_menu(72,35,1300,true);
 			return 0; //if(valida_id_recebimento(int L, int C) == 0) inicio(); 
 		} 
 		else{
 			if(tam > 6){  //se id > 999999
 				vazio = true; 			
-				erro_apagar( L, C, 0 , 100); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
+				erro_apagar( L, C, 0 , qntapagar); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
 			}
 			else{		
 				for(int i = 0; i < tam; i++){ // verifica caractere por caractere se é número			
 					if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
 					{
-						erro_apagar( L, C, 0 , 100); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
+						erro_apagar( L, C, 0 , qntapagar); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
 						break;
 					}else valido = true;
 				} 
-				if(valido){  // Erro se não for numerico ou for muito grande	
-							
-				//aux é int e id é char[10]
-				aux = atoi(id); // converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
-			
-				rewind(fp); //volta pro começo do arquivo
-				//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
-				while(fread(&produto, sizeof(produto), 1, fp) == 1){																
-					if(produto.id == aux and !produto.excluido){				
-						valido = false;
-						break;
-					}
-				}	
+				if(valido){  // Se não for numerico ou for muito grande	= passou no teste							
 				
-				if(!valido){			
-					erro_apagar( L, C, 1 , 70); //coluna, linha, tipo de erro: "[ERRO] ID já cadastrado" e quantidade a se apagar	
-					vazio = true; 	//continua no loop
-				}
-				else break;	
-				}	
-			}			
-		}			
+					aux = atoi(id); //aux é int e id é char[10] então converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
+					vazio = false;
+				}			
+			}
+		}
 	}while(vazio);
-						
+					
 	return aux;   // retorna o valor ID já verificado
+}
+
+bool isID_cadastrado(int aux){   //verifica se o ID mandado está presente no arquivo ou não
+	
+	rewind(fp); //volta pro começo do arquivo
+
+	//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
+	while(fread(&produto, sizeof(produto), 1, fp) == 1){																
+		if(produto.id == aux and !produto.excluido){				
+			return true;
+		}
+	}	
+	return false;	
 }
 
 char *valida_nome_recebimento(int L, int C) // Recebe e valida nome retirando espaços extra ( a     palavras -> a palavra)
@@ -616,7 +630,9 @@ void erro_apagar(int col, int lin, int tipo_erro, int apagar)
 
 void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu 
 {
-	while(true){	
+	int escolha;
+	
+	do{	
 		borda();
 		
 		lupa(63, 4);
@@ -630,9 +646,7 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 		gotoxy(70, 25);  printf("Busca por Nome"); 
 		gotoxy(70, 27);  printf("Excluir Dados");
 		gotoxy(70, 29);  printf("Retornar ao In%ccio", 161);
-		
-		int escolha;
-		
+			
 		escolha = navegar_menu(19, 29, 68);
 		
 		switch(escolha){		
@@ -654,7 +668,7 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 			case 5: 
 				return; // Retorna ao menu inicial 
 		} 
-	}
+	}while(escolha != 5);
 }
 
 bool confirmarSN(int L, int C, int confirmaTipo){
@@ -699,7 +713,7 @@ bool confirmarSN(int L, int C, int confirmaTipo){
 
 void alteracao()
 {
-	int id;
+	int id, escolha;
 
 	do{
 		borda(); 
@@ -714,13 +728,11 @@ void alteracao()
 		gotoxy(70, 27); printf("Alterar Pre%co", 135);
 		gotoxy(70, 29); printf("Retornar ao In%ccio", 161);
 		
-		int escolha;
 		
 		escolha = navegar_menu(19, 29, 68); 
 		
 		if(escolha == 0){ // Se alteraçõa geral for escolhida		
 			id = obtem_id_alteracao();
-			
 			if(id == 0) continue; // ignora o restante do if
 			
 			borda();
@@ -765,60 +777,42 @@ void alteracao()
 			
 			float num = valida_preco_recebimento(39,29);
 			
-			textcolor(cor_destaque);		
-			gotoxy(70, 31); printf("Confirmar Altera%c%ces? (S/N): ", 135, 228); 			
-			textcolor(cor_texto);
-			
 			cursor(1);
 			
-			char confirmar;
-			
-			do{
-			
-				confirmar = getche();
-				
-				if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N'){			
-					gotoxy(99, 31); clreol(10);
-				}
-				
-				if(confirmar == 's' || confirmar == 'S') // Confirmação 
-				{
-					abrir_arquivo_alterar();
+			if(confirmarSN(70,31,0)){
+				abrir_arquivo_alterar();
 
-					while(fread(&produto, sizeof(produto), 1, fp) == 1)	
+				while(fread(&produto, sizeof(produto), 1, fp) == 1)	
+				{
+					if(produto.id == id and !produto.excluido)
 					{
-						if(produto.id == id and !produto.excluido)
-						{
-							int fposicao = ftell(fp); // guarda a posição do registro atual do arquivo 
-							
-							// Alteração
-							
-							strcpy(produto.nome, aux_nome);
-							produto.quantidade = aux_quantidade; // Retorna quantidade em int
-							produto.tipo = aux_tipo;
-							produto.preco_unitario = num; 
-							
-							if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
-								{														// porém pode ser usado em verificações pois retorna algo
-									gotoxy(60, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
-									Sleep(1500);
-									return;
-								}
-								
-							if(fwrite(&produto, sizeof(produto), 1, fp) != 1)   //depois que colocou o "cursor" do leitor em cima da linha correta
-							{													//usa-se o fwrite para salvar as alterações
-								textcolor(RED);
-								gotoxy(79, 22); printf("Erro na escrita do arquivo!");
-								textcolor(cor_texto);
-							}
-							break;
-							
-							fflush(fp);
+						int fposicao = ftell(fp); // guarda a posição do registro atual do arquivo 
+						
+						//Escreve as alterações na struct
+						strcpy(produto.nome, aux_nome);
+						produto.quantidade = aux_quantidade; // Retorna quantidade em int
+						produto.tipo = aux_tipo;
+						produto.preco_unitario = num; 
+						
+						if(fseek (fp, fposicao - (sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, funciona igual o rewind(fp); 
+						{																// porém pode ser usado em verificações pois retorna algo
+							gotoxy(60, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+							Sleep(1500);
+							return;
 						}
+							
+						if(fwrite(&produto, sizeof(produto), 1, fp) != 1)   //depois que colocou o "cursor" do leitor em cima da linha correta
+						{													//usa-se o fwrite para salvar as alterações no arquivo
+							textcolor(RED);
+							gotoxy(79, 22); printf("Erro na escrita do arquivo!");
+							textcolor(cor_texto);
+						}
+						break;
+						
+						fflush(fp);
 					}
 				}
 			}
-			while(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N');
 			
 			fclose(fp);
 			
@@ -826,8 +820,7 @@ void alteracao()
 		}
 		else if(escolha == 1) // Alterar Nome
 		{
-			id = obtem_id_alteracao();
-			
+			id = obtem_id_alteracao();	
 			if(id == 0) continue; // ignora o restante do if
 			
 			borda();
@@ -897,7 +890,6 @@ void alteracao()
 		else if(escolha == 2) //Alterar Quantidade
 		{
 			id = obtem_id_alteracao();
-			
 			if(id == 0) continue; // ignora o restante do if
 			
 			borda();
@@ -964,7 +956,6 @@ void alteracao()
 		else if(escolha == 3) //Alterar Tipo
 		{
 			id = obtem_id_alteracao();
-			
 			if(id == 0) continue; // ignora o restante do if
 			
 			borda();
@@ -1031,7 +1022,6 @@ void alteracao()
 		else if(escolha == 4) //Alterar Preço
 		{
 			id = obtem_id_alteracao();
-			
 			if(id == 0) continue; // ignora o restante do if
 			
 			borda();
@@ -1102,9 +1092,8 @@ void alteracao()
 
 int obtem_id_alteracao()
 {		
-	char id[30];
-	int tam, aux;		// Armazena tamanho da string | auxiliar que armazenará a id digitada
-	bool valido;
+	int aux;		// auxiliar que armazenará a id digitada
+	bool encontrado;
 	
 	abrir_arquivo();
 	
@@ -1118,67 +1107,36 @@ int obtem_id_alteracao()
 		gotoxy(20, 8); 	printf("Id do produto (0 para sair): ");			
 		textcolor(cor_texto);
 			
-		valido = false;  //loop principal
+		encontrado = false;  //loop principal
 
 		rewind(fp);	
-		fflush(stdin);
 		
-		gets(id);
-		tam = strlen(id);
+		aux = valida_id( 49, 8, 100);
 			                                                                    
-		if(tam == 0){ // Se nada foi digitado retorna a posição de inicio e pergunta novamente
-			gotoxy(49,8);
+		if(aux == 0){ 
+			return 0; // Retorna 0 para que a func de alteracao saia do loop 
 		} 
 		else{
-			if(id[0] == '0')	// Se o primeiro digito de id for igual a 0 
-			{
-				cursor(0);
-				textbackground(12);
-				gotoxy(74, 35);	printf("Retornando...");					
-				Sleep(1500);
-				return 0; // Retorna 0 para que a func de alteracao saia do loop 
-			}		 	
-			else if(tam > 6) valido = false; // Define como invalido se id > 6 
-				else{		
-					for(int i = 0; i < tam; i++){ // verifica caractere por caractere se é número				
-						if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
-						{
-							valido = false; //marca id como invalido para cair no if mais embaixo
-							break;
-						}else valido=true;
-					} 	
-				}
 			
-			if(!valido)  // Erro se não for numerico ou for muito grande | continua no loop 	
-			{
-				erro_apagar( 49, 8 ,0 , 70); //coluna, linha e tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar				
+			if(isID_cadastrado(aux)){
+				textbackground(15); textcolor(cor_destaque); 
+				gotoxy(72, 16); printf("  Item encontrado!  ");
+				textbackground(cor_fundo);
+				Sleep(800);
+				encontrado = true;
+				break;
 			}
-			else{					
-				valido = false;
-				
-				//aux é int e id é char
-				aux = atoi(id); // converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
-			
-				//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
-				while(fread(&produto, sizeof(produto), 1, fp) == 1){										
-					if(produto.id == aux and !produto.excluido)
-					{
-						valido = true; // Se o id for encontrado ele passa a ser valido
-						break;
-					}
-				}	
-				
-				if(!valido){	// e continua no loop			
-					
-					textcolor(cor_destaque); textbackground(15);
-					gotoxy(60, 16); printf(" [ Nenhum item com este ID foi encontrado ] ", 198,160);
-					textbackground(cor_fundo);
-					getch();
-				}
-				else break;	
-			}
+			else{
+				textcolor(cor_destaque); 
+				gotoxy(20, 30); printf("Pressione uma tecla para continuar...");
+				textbackground(15);
+				gotoxy(60, 16); printf(" [ Nenhum item com este ID foi encontrado ] ");
+				textbackground(cor_fundo);
+				getch();
+				encontrado = false;
+			}	
 		}					
-	}while(!valido);
+	}while(!encontrado);
 	
 	fclose(fp);
 	
@@ -1363,111 +1321,67 @@ void consulta_geral()
 void consulta_id()   //consulta por id
 {	
 	
-	int aux, id_busca; // Armazena id digitado pelo usuário durante a busca 
-	bool existe, continua;
-		
-	abrir_arquivo();
+	int id_busca; // Armazena id digitado pelo usuário durante a busca 
+	bool continua;
 	
 	textcolor(cor_texto);
 	
-	do{	
+	do{
 		
 		borda();
 		
 		continua = true;
-		existe = false;
-		aux = 0; 
 			
 		textcolor(cor_destaque);
 		gotoxy(73, 4); textbackground(15); printf(" Consulta por ID "); textbackground(cor_fundo);
 		gotoxy(20, 7); printf("Digite o Id (0 para sair): ");
 		textcolor(cor_texto);
+
+		id_busca = valida_id(47, 7, 100); 
 		
-		aux = valida_id_consulta(&id_busca);
-				
-		if(aux == 0) continua=false;
-		else  //retorno de 3 significa que o id é válido
-		{
-			rewind(fp);	
+		if(id_busca == 0){
+			continua=false;
+		} 
+		else{
+			abrir_arquivo(); cursor(0);
 			
-			while( !feof(fp) ){  //enquanto no for o fim de um arquivo...		
-				if(fread(&produto, sizeof(produto), 1, fp) == 1 && !produto.excluido && produto.id == id_busca)
-				{					
-					//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
-			   		//=================================================================================
-			   		gera_tabela_vertical(11);
-					//=================================================================================
+			if(isID_cadastrado(id_busca)){			
+				do{
 					
-					tabela_tipos(58,37,1);
-					
-					textcolor(cor_destaque);
-					gotoxy(20,30);printf("Pressione uma tecla para continuar...");
-					
-					fflush(stdin);
-					getch();
-					
-					existe = true; //para não apresentar erro de código inexistente
-					
-					break;	//sai do loop pra n ter q fazer verificação extra (preguiça)
-				}				
+					fread(&produto, sizeof(produto), 1, fp);
+					if(produto.id == id_busca and !produto.excluido){
+									
+						//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+				   		//=================================================================================
+				   		gera_tabela_vertical(11);
+						//=================================================================================
+						
+						tabela_tipos(58,37,1);
+						
+						textcolor(cor_destaque);
+						gotoxy(20,30);printf("Pressione uma tecla para continuar...");					
+						
+						fflush(stdin);
+						getch();
+						
+						break;	//sai do loop pra n ter q fazer verificação extra (preguiça)
+					}				
+				}while(!feof(fp));
 			}
-			if(!existe)
-			{
+			else{
 				textcolor(cor_destaque); 
 				gotoxy(71, 18);printf("[ C%cdigo inexistente ]",162);
 				gotoxy(20, 30);printf("Pressione uma tecla para redigitar...");
 				
-				getch();			
+				getch();
 			}
+			fclose(fp); //fecha arquivo
 		}
 		
 	}while(continua);
-	
-	fclose(fp); //fecha arquivo
-	
+		
 	return;
 }
-
-int valida_id_consulta(int *id_final)
-{
-	char id[80];
-	int tam, aux;
-	bool valido, vazio;
-	
-	do{
-		valido = false;
-		cursor(1);
-		gets(id);
-		
-		tam = strlen(id);
-		
-		if(tam == 0){  //se não for digitado nada (apenas enter) volta a posição inicial	
-			gotoxy(47,7);
-		} 
-		else if(id[0] == '0'){   //se for digitado 0 como o primeiro número retorna ao submenu		
-			voltando_menu(72,35,1500,false); // Apresenta mensagem Voltando pro menu... abaixo da borda
-			return 0;	//retorno
-		}
-		else{
-			for(int i = 0; i < tam; i++) 
-				if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
-				{
-					valido = false;	
-					break;		
-				}else valido = true;
-				
-				
-			erro_apagar(47, 7, 0 , 60); //coluna, linha e tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
-		} 
-					
-	}while(!valido);
-	
-	cursor(0);
-	
-	*id_final = atoi(id); //manda por referencia o id em forma de int
-	
-	return 1; //id valido
-}	
 
 void consulta_tipo()
 {	
@@ -1788,130 +1702,93 @@ void excluir_dados() //exclusao lógica (continua no binário)
 {
 	cursor(1); // Liga o cursor
 	
-	int aux_codigo, valido, tam; // Auxiliares
-	long fposicao;
-	char id[50];
-	bool encontrado;
-	
+	long fposicao;  //"linha" do struct no arquivo
+	bool continuar = true;
+	int IDaux = 1;
+			
 	do{
-		
 		borda();
-		
+	
 		tabela_tipos(58,37,1); //apresenta a info doq as letras significam
 		
-		if(abrir_arquivo_alterar() == 0) //abre o arquivo no modo de alteração de dados   
-		{
-			textcolor(cor_destaque); textbackground(15);
-			gotoxy(71, 4); printf(" Exclus%co de dados ", 198);
-			textbackground(cor_fundo);
-			gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ", 162);
-			
-			textcolor(cor_texto);
-			      			
-			valido = 0;
-			
-			gets(id);  //valida_id_recebimento
-			
-		    tam = strlen(id);
-		    
-		    if(tam == 0) gotoxy(77, 7); // Se nada for digitado
-		    else if(id[0] == '0') // Se 0 for digitado
-			{
-				voltando_menu(75,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
-			} 
-		    else // Se algo diferente de 0 for digitado
-		    {
-		    	for(int i = 0; i < tam; i++)
-				{
-					if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
-					{ // Confere se é numérico  
-						valido = 1; // Se não for numérico 
-						break;	
-					}	
-				} 
-		    	
-		    	if(valido == 1){ // Se um caractere não numérico for digitado		    	
-		    		erro_apagar( 77, 7, 0 , 34); //coluna, linha e tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar	
-				}
-		    	else // Se o ID for valido e numérico
-		    	{ 
-		    		aux_codigo = atoi(id); // Converte string em int 
-		    		
-			    	encontrado = false;
-			    	
-					rewind(fp);  //volta ao inicio do arquivo (para segunda repetição)
-					
-				    do{			    
-						fread(&produto, sizeof(produto), 1, fp);
-						
-						if (produto.id == aux_codigo && !produto.excluido) //Se houver um produto com o id e que não foi excluído
-						{
-					   		encontrado = true;  //significa que o arquivo foi achado
-					   		
-					   		fposicao = ftell(fp); // guarda a posição do registro atual do arquivo
-
-					   		//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
-					   		//=================================================================================					   		
-					   		textcolor(cor_texto);
-					   		gera_tabela_vertical(11);
-							//=================================================================================
-							
-							textcolor(cor_destaque);
-							gotoxy(20,30);printf("Pressione uma tecla para continuar...");
-
-						   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
-						   	if(confirmarSN(17,24,1))
-						   	{
-						   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
-								if(fseek (fp, fposicao-(sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, 
-								{															//funciona igual o rewind(fp); porém pode ser usado em verificações pois retorna algo
-									gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
-									Sleep(1500);
-									return;
-								}
-																					
-								produto.excluido= true; //atribuição de true para o campo excluído para indicar que o registro foi excluído ou desativado (exclusão lógica) 
-								
-								if(fwrite(&produto, sizeof(produto), 1, fp) == 1)
-								{
-									cursor(0);
-									fflush (fp);
-									textcolor(cor_texto); textbackground(12);
-									gotoxy(20,27);printf("Cadastro exclu%cdo com sucesso!",161);
-									textbackground(cor_fundo);
-									getch();
-									
-									fflush(fp);			// limpeza de buffers 
-									fclose(fp);			// fechamento do arquivo
-									cursor(1);
-								}	
-						   	}
-						   	else break; 
-						}
-					} while ((!encontrado) && (!feof(fp)));  
-					
-					if (!encontrado && aux_codigo!=0)  //código não encontrado
-					{
-						cursor(0);
-						
-						textcolor(cor_destaque);
-						gotoxy(68, 18);printf("[ C%cdigo n%co encontrado ]",162,198);
-						
-						textcolor(cor_destaque);
-						gotoxy(20,30);printf("Pressione uma tecla para retornar...");
-					
-						getch();
-						
-						fflush(fp);			// limpeza de buffers 
-						fclose(fp);			// fechamento do arquivo
-						
-					}		
-				}
-			}
-		}
-		else break; // Sai do loop 
+		textcolor(cor_destaque); textbackground(15);
+		gotoxy(71, 4); printf(" Exclus%co de dados ", 198);
+		textbackground(cor_fundo);
+		gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ", 162);
 		
-	}while( id[0] != '0');
+		textcolor(cor_texto);
+		
+		//Vai receber a id digitada e já validar(se é numero) e devolver 0 se quiser voltar
+		IDaux = valida_id(77, 7, 74); 
+								
+		if(IDaux == 0) return;
+		else{
+			
+			abrir_arquivo_alterar();
+			
+			if(isID_cadastrado(IDaux)) // Se o ID for valido,numérico e encontrado
+			{	 
+				rewind(fp);  //volta ao inicio do arquivo (para segunda repetição)
+		
+			    do{			    
+					fread(&produto, sizeof(produto), 1, fp);
+					
+					if (produto.id == IDaux && !produto.excluido) //Se houver um produto com o id e que não foi excluído
+					{
+				   		//significa que o arquivo foi achado entao guarda a posição do registro atual do arquivo
+				   		fposicao = ftell(fp);
+
+				   		//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+				   		//=================================================================================					   		
+				   		textcolor(cor_texto);
+				   		gera_tabela_vertical(11);
+						//=================================================================================
+						
+					   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
+					   	if(confirmarSN(20,24,1))
+					   	{
+					   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
+							if(fseek (fp, fposicao-(sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, 
+							{															//funciona igual o rewind(fp); porém pode ser usado em verificações pois retorna algo
+								gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
+								Sleep(1500);
+								return;
+							}
+																				
+							produto.excluido= true; //exclusão lógica do registro
+							
+							if(fwrite(&produto, sizeof(produto), 1, fp) == 1)
+							{
+								cursor(0);
+
+								textcolor(cor_texto); textbackground(12);
+								gotoxy(20,27);printf("Cadastro exclu%cdo com sucesso!",161);
+								textbackground(cor_fundo);
+								
+								fflush(fp);			// limpeza de buffers 
+								fclose(fp);			// fechamento do arquivo
+								break;
+							}
+							textcolor(cor_destaque);
+					   	}
+					   	else break; 	
+					}
+				}while (!feof(fp));  			
+			}
+			else{
+				cursor(0);
+			
+				textcolor(cor_destaque);
+				gotoxy(68, 18);printf("[ C%cdigo n%co encontrado ]",162,198);
+				
+				textcolor(cor_destaque);
+				
+				fflush(fp);			// limpeza de buffers 
+				fclose(fp);			// fechamento do arquivo
+			}
+			gotoxy(20,30);printf("Pressione uma tecla para retornar...");	getch();
+		}
+	}while(continuar);
 	
 	return;
 }
@@ -2143,4 +2020,5 @@ void voltando_menu(int linha,int coluna,int delay, bool menu){  //Apresenta a me
 		printf("Voltando...");
 	}		 	
 	Sleep(delay);
-} //12/12/2020 = 4600 linhas ->  13/04/2021 = 2160 linhas
+} 
+//12/12/2020 = 4600 linhas ->  21/04/2021 = 2024 linhas
