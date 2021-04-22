@@ -21,3 +21,5 @@ Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020 c
 <li><a href = "http://linguagemc.com.br/a-biblioteca-string-h/"><cite>String.h</cite></a>
 <li><a href = "https://github.com/GabrielNicolim/Trabalho-de-FPD/blob/remaster/scripts/functions/desenhos.h"><cite>desenhos.h</cite></a>
 <br>
+  
+  O projeto <b>REMASTER</b> é focado em rodar na versão do <a href="https://github.com/Embarcadero/Dev-Cpp">DevC++ 6.3 da Embarcadero</a>, porém o projeto tambem tem uma retrocompatibilidade com a versão 5.8.3 e <a href="https://sourceforge.net/projects/orwelldevcpp/">DevC++ 5.11 versão Orwell</a>, para conseguir compilar o projeto nessa versão mais antiga basta remover os comentários( // ) nas 3 referencias a função *text_info vActual*, as instruções estão no arquivo para em quais linhas essa função está mencionada, e para rodar na versão da Embarcadero basta apenas comentar essas linhas
