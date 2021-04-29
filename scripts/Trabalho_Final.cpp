@@ -78,7 +78,7 @@ int valida_id_consulta(int *id_final);
 // Funções de validação => Validações + Registro
 
 bool isID_cadastrado(int aux);
-int valida_id(int L, int C, int qntapagar);
+long valida_id(int L, int C, int qntapagar);
 long valida_quantidade_recebimento(int L, int C);
 char *valida_nome_recebimento(int L, int C);
 char valida_tipo_recebimento(int L, int C);
@@ -370,10 +370,10 @@ void cadastro_recebimento()
 // Parte do recebimento de dados 
 // 
 
-int valida_id(int L, int C, int qntapagar)  // Recebe e valida id
+long valida_id(int L, int C, int qntapagar)  // Recebe e valida id
 {
 	char id[80];
-	int tam, aux;		// Armazena tamanho da string | Auxiliar 1 e 2 | int auxiliar que armazenará a id digitada
+	long tam, aux;		// Armazena tamanho da string | Auxiliar 1 e 2 | int auxiliar que armazenará a id digitada
 	bool valido, vazio;
 	
 	do{		
