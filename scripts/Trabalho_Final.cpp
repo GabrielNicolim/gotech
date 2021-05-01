@@ -23,6 +23,7 @@
 #include <conio.h>
 #include <time.h>
 #include <strings.h>
+#include <io.h> //para checagem se o arquivo existe
 #include "functions\desenhos.h"
 
 #define versao 4.4
@@ -1301,7 +1302,7 @@ void consulta_geral()
 					break;
 			}			
 		}while (retornar != '0'); 		
-				
+		fclose(fp);			
 		voltando_menu(72,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 		
 		return;    
@@ -1727,53 +1728,70 @@ void excluir_dados() //exclusao lógica (continua no binário)
 			abrir_arquivo_alterar();
 			
 			if(isID_cadastrado(IDaux)) // Se o ID for valido,numérico e encontrado
-			{	 
-				rewind(fp);  //volta ao inicio do arquivo (para segunda repetição)
-		
-			    do{			    
+			{		
+				rewind(fp);  //volta ao inicio do arquivo para mostrar o dado na tela
+				
+				while(!feof(fp)){
 					fread(&produto, sizeof(produto), 1, fp);
-					
-					if (produto.id == IDaux && !produto.excluido) //Se houver um produto com o id e que não foi excluído
-					{
-				   		//significa que o arquivo foi achado entao guarda a posição do registro atual do arquivo
-				   		fposicao = ftell(fp);
-
-				   		//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
-				   		//=================================================================================					   		
-				   		textcolor(cor_texto);
+					if(produto.id == IDaux and !produto.excluido){
+									
+						//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
+				   		//=================================================================================
 				   		gera_tabela_vertical(11);
 						//=================================================================================
 						
-					   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
-					   	if(confirmarSN(20,24,1))
-					   	{
-					   		//posiciona o ponteiro do arquivo no registro a ser excluido logicamente
-							if(fseek (fp, fposicao-(sizeof(produto)), SEEK_SET) != 0) 	//SEEK_SET indica o início do arquivo, 
-							{															//funciona igual o rewind(fp); porém pode ser usado em verificações pois retorna algo
-								gotoxy(20, 11);	printf("Houve um erro catastrofico voltando ao inicio do arquivo!");
-								Sleep(1500);
-								return;
-							}
-																				
-							produto.excluido= true; //exclusão lógica do registro
-							
-							if(fwrite(&produto, sizeof(produto), 1, fp) == 1)
-							{
-								cursor(0);
-
-								textcolor(cor_texto); textbackground(12);
-								gotoxy(20,27);printf("Cadastro exclu%cdo com sucesso!",161);
-								textbackground(cor_fundo);
-								
-								fflush(fp);			// limpeza de buffers 
-								fclose(fp);			// fechamento do arquivo
-								break;
-							}
-							textcolor(cor_destaque);
-					   	}
-					   	else break; 	
+						break;	//sai do loop pra n ter q fazer verificação extra (preguiça)
+					}				
+				};
+				
+			   	// exclusão é uma operação crítica, por isso, sempre será confirmada pelo usuário
+			   	if(confirmarSN(20,24,1))
+			   	{
+			   		rewind(fp);
+			   		fflush(fp);				   		
+			   						   		
+					//Cria o binário temporário para leitura e escrita
+					FILE *fp_tmp;
+					fp_tmp=fopen("tmp.bin", "wb+");
+					if (!fp_tmp) {
+						printf("Não foi possível abrir o arquivo temporário.");
+						fclose(fp_tmp); 
 					}
-				}while (!feof(fp));  			
+			   		
+					int encontrado = 0;
+			   		
+			   		//Vai copiar tudo pra o novo arquivo temporário EXCETO o ID marcado
+			   		while (fread(&produto,sizeof(struct estrutura),1,fp) != NULL) {
+						if (produto.id == IDaux ){ 
+							textcolor(cor_texto); textbackground(12);
+							gotoxy(20,27);printf(" Cadastro exclu%cdo com sucesso!",161);
+							gotoxy(20,28);printf(" %d registros encontrados e deletados!",++encontrado);
+							textbackground(cor_fundo);
+						}else {
+							fwrite(&produto, sizeof(struct estrutura), 1, fp_tmp);
+						}
+					};
+					
+					fclose(fp);
+					fclose(fp_tmp); 						 
+					
+					//checa se pode ter acesso e se o arquivo existe, retornando verificações de erro para debug( <io.h> )
+					//if (_access_s("estoque.bin", 0) == 0)
+						if (remove("estoque.bin") == 0)
+					      printf("Arquivo original deletado com sucesso!    ");
+					    else
+					      perror("Não foi possivel deletar o aquivo!      ");
+				    
+				    //if (_access_s("tmp.bin", 0) == 0)
+					    if ( rename( "tmp.bin", "estoque.bin" ) == 0 )
+					    	puts ( "Arquivo renomeado com sucesso!" );
+					    else
+					    	perror( "Erro renomeando arquivo!" );
+				    	
+					textcolor(cor_destaque);
+			   	}
+			   	else break; 	
+						
 			}
 			else{
 				cursor(0);
@@ -1781,11 +1799,12 @@ void excluir_dados() //exclusao lógica (continua no binário)
 				textcolor(cor_destaque);
 				gotoxy(68, 18);printf("[ C%cdigo n%co encontrado ]",162,198);
 				
-				textcolor(cor_destaque);
-				
-				fflush(fp);			// limpeza de buffers 
-				fclose(fp);			// fechamento do arquivo
+				textcolor(cor_destaque);	
 			}
+			
+			fflush(fp);			// limpeza de buffers 
+			fclose(fp);			// fechamento do arquivo
+			
 			gotoxy(20,30);printf("Pressione uma tecla para retornar...");	getch();
 		}
 	}while(continuar);

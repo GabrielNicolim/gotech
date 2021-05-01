@@ -23,3 +23,11 @@ Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020 c
 <br>
   
   O projeto <b>REMASTER</b> é focado em rodar na versão do <a href="https://github.com/Embarcadero/Dev-Cpp">DevC++ 6.3 da Embarcadero</a>, porém o projeto tambem tem uma retrocompatibilidade com a versão 5.8.3 e <a href="https://sourceforge.net/projects/orwelldevcpp/">DevC++ 5.11 versão Orwell</a>, para conseguir compilar o projeto nessa versão mais antiga basta remover os comentários( // ) nas 3 referencias a função *text_info vActual*, as instruções estão no arquivo para em quais linhas essa função está mencionada, e para rodar na versão da Embarcadero basta apenas comentar essas linhas
+
+Após a criação do trabalho e as coisas necessárias percebemos alguns erros e problemas não corrigdos, que posteriormente foram trabalhados, e reconstruindos, o que fez o trabalho
+terminar com cerca de 4600 linhas de código em seu arquivo fonte, o que realmente é muito, sendo assim em 2021 o indivíduo Felipe com saudades de C, decidiu dar uma refatorada no
+código de verade, cortando desperdicios de linhas, otimizando o programa e implementando features que queriamos implementar desde o começo mas que não tivemos sucesso devido a
+falta de conhecimento na época.
+
+Caso queira estudar mais sobre manupulação de arquivos em C:
+https://terminalroot.com.br/2014/12/linguagem-c-utilizando-as-funcoes-fopen.html
