@@ -10,25 +10,23 @@
 		
 	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
 	
-	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 30) e vActual(1968 e 1978)
-	Versão 4.4 = Funções de obtenção de ID generalizadas para diminuir código duplicado
+	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 30) e vActual(1947 e 1957)
+	Versão 4.5 = Exclusão física adicionada, fix na função busca por ID e melhoria da consulta tipo
 
 */
 
 #include <stdio.h>
 #include <math.h>
-#include <windows.h>
-#include <wincon.h>
-#include <winuser.h>
+#include <windows.h> //inclue a wincon.h e winuser.h
 #include <conio.h>
 #include <time.h>
-#include <strings.h>
+#include <string.h>
 #include <io.h> //para checagem se o arquivo existe
 #include "functions\desenhos.h"
 
-#define versao 4.4
+#define versao 4.5
 
-//text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (35) e coluna (80)
+//text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (38) e coluna (160)
 
 // Funções conio.c
 
@@ -49,7 +47,6 @@ void borda();
 
 // Funções de interação com o usuário 
 void consulta_geral();
-char consulta_tipo_recebimento(int L, int C);
 void consulta_tipo();
 void consulta_nome();
 void excluir_dados();
@@ -71,12 +68,9 @@ void sub_menu();
 void info_de_sistema();
 void sair();
 
-// Funções de checagem
-
-// Função para validar código consultado
-int valida_id_consulta(int *id_final);
-
+//==============================================
 // Funções de validação => Validações + Registro
+//================================================
 
 bool isID_cadastrado(int aux);
 long valida_id(int L, int C, int qntapagar);
@@ -85,18 +79,19 @@ char *valida_nome_recebimento(int L, int C);
 char valida_tipo_recebimento(int L, int C);
 float valida_preco_recebimento(int L, int C);
 
-// mensagem de erro alterável
+// mensagem alteraveis e de confirmação
 void erro_apagar (int col, int lin, int tipo_erro, int apagar);
 void voltando_menu(int linha,int coluna, int delay, bool menu);
-
-// Alteração
-
 bool confirmarSN(int L, int C,int confirmaTipo); 
+
+
+// variáveis globais
+
 int obtem_id_alteracao();
+int random_menu; // Var que armazena numero aleatório ente 0 e 3 para gerar um menu diferente 
 
 FILE *fp; //Ponteiro para arquivo
 
-int random_menu; // Var que armazena numero aleatório ente 0 e 3 para gerar um menu diferente 
 
 void abrir_arquivo()
 {
@@ -131,14 +126,9 @@ struct estrutura
 	
 }produto;
 
-/*
-	 => 21 / 04 / 2021 <= 
-	
-	Revisão REMASTER | 4.4
-	
-	- Funções melhoradas para devolver valores e no futuro serem recicladas
-	
-*/
+//======================================================================
+//							Começo do programa
+//======================================================================
 
 main()
 {
@@ -171,7 +161,7 @@ void loading()
 	
 	cursor(0);
 	
-	// Apresentação de versão 
+	// Tela de loading com apresentação da versãodo programa
 	
 	textcolor(cor_texto);
 	
@@ -189,6 +179,8 @@ void loading()
 	textcolor(cor_texto);
 	gotoxy(58, 10); printf("     Tudo pronto! Podemos iniciar...                            ");
 	Sleep(1500);
+	while (kbhit())  //Isso continua se vê que há um input do teclado em espera e, em caso afirmativo, chama getch() para descartar o caractere
+    getch();
 }
 
 //
@@ -421,7 +413,7 @@ long valida_id(int L, int C, int qntapagar)  // Recebe e valida id
 
 bool isID_cadastrado(int aux){   //verifica se o ID mandado está presente no arquivo ou não
 	
-	rewind(fp); //volta pro começo do arquivo
+	rewind(fp); 
 
 	//enquanto não chegar o final do arquivo E (produto.id for diferente de auxiliar OU (produto.id for igual auxiliar E for excluido) )
 	while(fread(&produto, sizeof(produto), 1, fp) == 1){																
@@ -434,7 +426,7 @@ bool isID_cadastrado(int aux){   //verifica se o ID mandado está presente no ar
 
 char *valida_nome_recebimento(int L, int C) // Recebe e valida nome retirando espaços extra ( a     palavras -> a palavra)
 {
-	char nome[150];
+	char nome[255];
 	
 	int tam; 		 // Armazena tamanho da string
 	char *output = nome;
@@ -448,8 +440,9 @@ char *valida_nome_recebimento(int L, int C) // Recebe e valida nome retirando es
 		tam = strlen(nome);
 		
 		if(tam == 0) gotoxy(L, C); // Se nada for digitado
-		//if(tam > 150) erro_apagar(39,10,4,70); ///valor inválido
-		else{		
+		if(tam > 150) erro_apagar(39,10,5,70); //[ERRO] Sem espaço no estoque!
+		else{
+			//magia negra para tirar espaços extras do nome
 		    to=from=output;    //variáveis de ponteiro ficam td igual ao input
 		    while(true){
 		        if(space && *from == ' ' && to[-1] == ' ') //Se tiver marcado com espaço & from & to[-1]
@@ -463,7 +456,6 @@ char *valida_nome_recebimento(int L, int C) // Recebe e valida nome retirando es
 		            if(!to[-1])break;
 		        }
 		    } 
-		    //strcpy(produto.nome,output);
 		    break;
 		}	
 	}
@@ -1322,16 +1314,14 @@ void consulta_geral()
 void consulta_id()   //consulta por id
 {	
 	
-	int id_busca; // Armazena id digitado pelo usuário durante a busca 
-	bool continua;
+	long id_busca; // Armazena id digitado pelo usuário durante a busca 
+	bool continua = true;
 	
 	textcolor(cor_texto);
 	
 	do{
 		
 		borda();
-		
-		continua = true;
 			
 		textcolor(cor_destaque);
 		gotoxy(73, 4); textbackground(15); printf(" Consulta por ID "); textbackground(cor_fundo);
@@ -1340,34 +1330,33 @@ void consulta_id()   //consulta por id
 
 		id_busca = valida_id(47, 7, 100); 
 		
-		if(id_busca == 0){
-			continua=false;
-		} 
+		if(id_busca == 0) return;
 		else{
 			abrir_arquivo(); cursor(0);
 			
 			if(isID_cadastrado(id_busca)){			
-				do{
 					
-					fread(&produto, sizeof(produto), 1, fp);
-					if(produto.id == id_busca and !produto.excluido){
-									
+				rewind(fp);
+				
+				while(!feof(fp) && fread(&produto, sizeof(produto), 1, fp) ){
+					
+					if(produto.id == id_busca and !produto.excluido){				
 						//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
 				   		//=================================================================================
 				   		gera_tabela_vertical(11);
 						//=================================================================================
 						
-						tabela_tipos(58,37,1);
+							tabela_tipos(58,37,1);
+					
+							textcolor(cor_destaque);
+							gotoxy(20,30);printf("Pressione uma tecla para continuar...");					
+							
+							fflush(stdin);
+							getch();
 						
-						textcolor(cor_destaque);
-						gotoxy(20,30);printf("Pressione uma tecla para continuar...");					
-						
-						fflush(stdin);
-						getch();
-						
-						break;	//sai do loop pra n ter q fazer verificação extra (preguiça)
+						break;	//sai do loop
 					}				
-				}while(!feof(fp));
+				};
 			}
 			else{
 				textcolor(cor_destaque); 
@@ -1396,7 +1385,7 @@ void consulta_tipo()
 	tabela_tipos(56,18,2);	
 	gotoxy(20,7); printf("Digite tipo a ser pesquisado (0 para sair): ");
 
-	int aux = consulta_tipo_recebimento(64,7);
+	int aux = valida_tipo_recebimento( 64, 7);
 	if(aux == '0') return;
 	
 	int cont_tuplas = -1;
@@ -1499,38 +1488,6 @@ void consulta_tipo()
 	return;
 }
 
-char consulta_tipo_recebimento(int L, int C)
-{
-	char aux;
-	
-	cursor(1); 
-		
-	textcolor(cor_texto);
-		
-	do{
-		gotoxy(L,C);
-		
- 		fflush(stdin);
- 	
- 		aux = getche();
-		
-		aux = toupper(aux);  //passa o auxiliar para maiusculo
-		
-		if(aux == '\r') gotoxy(64,7);
-		else if(aux == '0'){
-			voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
-			return '0';
-		} 
-		else if(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' )
-		{
-			erro_apagar( L, C, 3 , 35); //coluna, linha e tipo de erro: "[ERRO] Tipo inválido" e quantidade a se apagar	
-		}
-		
-	}while(aux != 'P' && aux != 'G' && aux != 'C' && aux != 'M' && aux != 'F' && aux != 'W' && aux != 'A' && aux != 'R' && aux != 'O' && aux != '0' );
-					
-	return aux;
-}
-
 void consulta_nome()
 {
 	
@@ -1548,7 +1505,7 @@ void consulta_nome()
 		textcolor(cor_texto); gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
 		
 		strcpy(aux,valida_nome_recebimento(49,7));
-
+		
 		if(aux[0] == '0'){
 			voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
 			return;
@@ -1775,6 +1732,9 @@ void excluir_dados() //exclusao lógica (continua no binário)
 					fclose(fp);
 					fclose(fp_tmp); 						 
 					
+					remove("estoque.bin");
+					rename( "tmp.bin", "estoque.bin" );
+					/*
 					//checa se pode ter acesso e se o arquivo existe, retornando verificações de erro para debug( <io.h> )
 					//if (_access_s("estoque.bin", 0) == 0)
 						if (remove("estoque.bin") == 0)
@@ -1787,7 +1747,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 					    	puts ( "Arquivo renomeado com sucesso!" );
 					    else
 					    	perror( "Erro renomeando arquivo!" );
-				    	
+				    */	
 					textcolor(cor_destaque);
 			   	}
 			   	else break; 	
@@ -2040,4 +2000,4 @@ void voltando_menu(int linha,int coluna,int delay, bool menu){  //Apresenta a me
 	}		 	
 	Sleep(delay);
 } 
-//12/12/2020 = 4600 linhas ->  21/04/2021 = 2024 linhas
+//12/12/2020 = 4600 linhas ->  02/05/2021 = 2003 linhas
