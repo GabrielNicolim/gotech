@@ -1,4 +1,6 @@
-S„o apenas trÍs arquivos:
+# Como Utilizar
+
+S√£o apenas tr√™s arquivos:
 
 conio.c     -> deve ser inserido na pasta C:\Dev-Cpp\include
 conio.h     -> deve ser inserido na pasta C:\Dev-Cpp\include
@@ -6,13 +8,13 @@ libconio.a  -> deve ser inserido na pasta C:\Dev-Cpp\lib
 
 Depois disso, para usar os comandos da biblioteca, como:
 textcolor(), textbackground(), clrscr(), gotoxy(), etc...
-basta inserir a nova biblioteca: #include<conio.c>
+basta inserir a nova biblioteca: #include <conio.c>
 
-obs.: È possÌvel que o caminho do local onde o Dev-C++ est· instalado no seu computador seja algo do tipo:
+obs.: √© poss√≠vel que o caminho do local onde o Dev-C++ est√° instalado no seu computador seja algo do tipo:
 
 C:\Program Files (x86)\Dev-Cpp\MinGW64\include
 
-e tambÈm:
+e tamb√©m:
 
 C:\Program Files (x86)\Dev-Cpp\MinGW64\lib
 

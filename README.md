@@ -1,10 +1,13 @@
 <h1 align = "center">Projeto de Fundamento de Processamento de Dados</h1>
 
 <h2>Sobre o projeto</h2>
-Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020 com o conceito de uma loja de computadores com banco de dados feita em C++<br><br>
+
+Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020. Buscamos fazer uma espécie de gerenciador de estoque de uma loja de computadores com um pseudo banco de dados feito em C/C++.<br><br>
+
+
 :computer: <b>Tema: </b>Loja de Informática<br>
 :rocket: <b>Integrantes: </b>Gabriel Nicolim e Felipe Lima<br>
-:dart: <b>Objetivo: </b>Gerenciamento de estoque<br><br><br>
+:dart: <b>Objetivo: </b>Gerenciamento de estoque<br>
 
 <img src="https://user-images.githubusercontent.com/69210720/111396661-555c5000-869e-11eb-84d8-cc96c92d3640.png"/>
 
@@ -39,4 +42,3 @@ https://terminalroot.com.br/2014/12/linguagem-c-utilizando-as-funcoes-fopen.html
 </p>
 
 Ultima versão estável: 4.5
-
