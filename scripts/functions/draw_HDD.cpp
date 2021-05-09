@@ -1,27 +1,23 @@
 /* 
-   	FunÁ„o para criar a placa m„e full chinesa ali express chinese democracy edition com drag„o chines
+   	Fun√ß√£o para criar a placa m√£e full chinesa ali express chinese democracy edition com drag√£o chines
 	
-	- passe como par‚metro (a coluna de inicio, a linha de inicio)
+	- passe como par√¢metro (a coluna de inicio, a linha de inicio)
 	
 */
 
 #include <stdio.h>
-#include<stdlib.h>
-#include <locale.h>
+#include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
-#include <time.h>
-#include <string.h>
 
-text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 80, 28, 1, 1}; // Define os limites para linha (35) e coluna (80)
+//text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 80, 28, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
-// FunÁıes conio.c
-
+// Fun√ß√µes conio.c
 void textcolor(int newcolor);
 void textbackground(int newcolor);
 void gotoxy(int x, int y);
 
-// FunÁ„o utilizada para a criar o disquete
+// Fun√ß√£o utilizada para a criar o disquete
 void HDD(int ic, int il);
 
 main()
@@ -29,42 +25,35 @@ main()
 	SetConsoleTitle("Func_HDD"); 		 // Define o nome do console
     system("mode con:cols=80 lines=28");  // Define o tamanho do console
 	
-	for(int i = 0; i < 28; i++)
-	for(int k = 0; k < 80; k++)
-	{
-		printf(" ");	
-	}
+	textbackground(3);
+	system("cls");
 	
 	HDD(20, 4);
+	
+	gotoxy(25,25);	// tirar o exit do programa de perto
 }
 
 void HDD(int ic, int il)
 {
-	textbackground(15);
-	system("cls");
-	
-	textcolor(0);
-	for(int i = 0; i < 21; i++) 
-	{	
-		for(int j = 0; j < 12; j++)
-		{
-		gotoxy((ic+i), (il+j));
-		putchar(219);
-		}
-	}
+	//formar a carca√ßa inicial e os parafuso:
 	textbackground(0);
-	textcolor(7);
+	for(int i = 0; i < 12; i++) 
+	{	
+		gotoxy(ic,il+i); printf("                     ");
+	}
+	//parafusos
+	textcolor(7);	
+	gotoxy(ic+1,il);		printf("%c                 %c",220,220);
+	gotoxy(ic+1,il+5);		printf("%c                 %c",220,220);
+	gotoxy(ic+1,il+11);		printf("%c                 %c",223,223);
+	
 	gotoxy(ic+6,il+1);		printf("%c%c%c%c%c%c%c%c%c",220,220,219,219,219,219,219,220,220);
 	gotoxy(ic+4,il+2);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",220,219,219,219,219,219,219,219,219,219,219,219,220);
-	gotoxy(ic+4,il+3);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//disco magnÈtico
+	gotoxy(ic+4,il+3);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//disco magn√©tico
 	gotoxy(ic+4,il+4);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//e parafusos
 	gotoxy(ic+5,il+5);		printf("%c%c%c%c%c%c%c%c%c%c%c",223,219,219,219,219,219,219,219,219,219,223);
 	gotoxy(ic+8,il+6);		printf("%c%c%c%c%c",223,223,223,223,223);
-	gotoxy(ic+1,il);		printf("%c",220);	gotoxy(ic+1,il+11);		printf("%c",223);
-	gotoxy(ic+1,il+5);		printf("%c",223);	gotoxy(ic+19,il+5);		printf("%c",223);
-	gotoxy(ic+19,il);		printf("%c",220);	gotoxy(ic+19,il+11);	printf("%c",223);
-	
-	
+		
 	
 	textcolor(2);
 	gotoxy(ic+10,il+7);		printf("%c%c%c%c%c%c%c%c",220,220,220,220,220,220,220,220);
@@ -84,7 +73,6 @@ void HDD(int ic, int il)
 	
 	textcolor(8);
 	textbackground(7);
-	//gotoxy(ic+9,il+4);		printf("%c",220);
 	gotoxy(ic+9,il+5);		printf("%c",219);
 	gotoxy(ic+8,il+6);		printf("%c%c",219,219);	
 	gotoxy(ic+7,il+7);		printf("%c%c%c",219,219,219);			//agulha
@@ -95,11 +83,9 @@ void HDD(int ic, int il)
 	textcolor(0);
 	gotoxy(ic+9,il+3);		printf("%c%c%c",220,219,220);		///motor para o disco
 	gotoxy(ic+10,il+4);		printf("%c",223);
-
 	
 	textcolor(0);
-	
-	gotoxy((ic+10), (il+20));	// tirar o exit do programa de perto
+		
 }
 
 
@@ -110,7 +96,7 @@ void textcolor(int newcolor)
    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 
       (csbi.wAttributes & 0xf0) | newcolor);
-   vActual.attribute = (csbi.wAttributes & 0xf0) | newcolor;
+   //vActual.attribute = (csbi.wAttributes & 0xf0) | newcolor;
 }
 
 void textbackground(int newcolor)
@@ -120,7 +106,7 @@ void textbackground(int newcolor)
    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 
       (csbi.wAttributes & 0x0f) | (newcolor << 4));
-   vActual.attribute = (csbi.wAttributes & 0x0f) | (newcolor << 4);
+   //vActual.attribute = (csbi.wAttributes & 0x0f) | (newcolor << 4);
 }
 
 void gotoxy(int x, int y)
