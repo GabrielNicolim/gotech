@@ -69,7 +69,7 @@ void disquete(int ic, int il)
 void logo(int ic, int il)
 {
 	textcolor(0);
-	
+	textbackground(cor_fundo);
 	gotoxy(ic - 2, il + 6); for(int i = 0; i <= 58; i++) printf("_");
 		
 	// Linha 1 do texto
