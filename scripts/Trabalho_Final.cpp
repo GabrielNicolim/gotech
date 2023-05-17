@@ -10,8 +10,8 @@
 		
 	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
 	
-	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 30) e vActual(1971 e 1981)
-	Versão 4.6 = Refatoração de código e correção de bugs
+	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 30) e vActual(1970 e 1980)
+	Versão 4.7 = Refatoração de código e correção de bugs
 	Bug conhecido - No Terminal do Windows 11 (Powershell) e outros terminas integrados a IDEs, o programa não funciona corretamente, utilizar o CMD classico
 */
 
@@ -25,7 +25,7 @@
 #include <io.h> //para checagem se o arquivo existe
 #include "functions\desenhos.h"
 
-#define versao 4.6
+#define versao 4.7
 
 //text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (38) e coluna (160)
 
@@ -54,7 +54,7 @@ void excluir_dados();
 void gera_tabela(int li);  
 void gera_tabela_vertical(int li); 
 void completa_tabela(int linha);
-void tabela_tipos(int c, int l, int L);
+void tabela_tipos(int col, int linha, int L);
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
 void cadastro_visual();
 void cadastro_recebimento();
@@ -291,34 +291,35 @@ void cadastro_recebimento()
 {
 	textcolor(cor_texto);
 	
-	fflush( fp ); 
+	fflush(fp); 
 	cursor(1);
 	
-	int IDaux = 1;	
-	do{
+	int IDaux;	
+	do {
 		IDaux = valida_id(39, 8, 100); 						
 		if(IDaux == 0){ 
-			inicio();  return;												
+			inicio();
+			return;												
 		}
-		else{
-			if(isID_cadastrado(IDaux)){
-				erro_apagar( 39, 8, 1 , 70); //coluna, linha, tipo de erro: "[ERRO] ID já cadastrado" e quantidade a se apagar	
-				IDaux = -1; 	//continua no loop
-			}else break;
-		}
-	}while(IDaux == -1);
+
+		if(!isID_cadastrado(IDaux)) break;
+
+		erro_apagar(39, 8, 1 , 70); //coluna, linha, tipo de erro: "[ERRO] ID já cadastrado" e quantidade a se apagar	
+		IDaux = -1; 	//continua no loop
+
+	} while(IDaux == -1);
 		
 	produto.id = IDaux;												// Após validação toda copia para a struct
-	strcpy(produto.nome,valida_nome_recebimento(39,10));			// Recebe nome e já copia para a struct
-	produto.quantidade = valida_quantidade_recebimento(39,12);		// Recebe quantidade e já copia para a struct					
-	produto.tipo = valida_tipo_recebimento(39,14);		 			// Recebe tipo e já copia para a struct
-	produto.preco_unitario = valida_preco_recebimento(39,16);	 	// Recebe preco e já copia para a struct
+	strcpy(produto.nome, valida_nome_recebimento(39, 10));			// Recebe nome e já copia para a struct
+	produto.quantidade = valida_quantidade_recebimento(39, 12);		// Recebe quantidade e já copia para a struct					
+	produto.tipo = valida_tipo_recebimento(39, 14);		 			// Recebe tipo e já copia para a struct
+	produto.preco_unitario = valida_preco_recebimento(39, 16);	 	// Recebe preco e já copia para a struct
 	produto.excluido = false;						 				// Define como não excluido
 	
 	textcolor(cor_destaque);
 
 	//Se quiser confirmar o cadastro:
-   	if( confirmarSN(65,22,2) ){
+   	if( confirmarSN(65, 22, 2) ){
    		
 		if(fwrite(&produto, sizeof(produto), 1, fp) != 1){		
 			textcolor(RED);
@@ -1252,87 +1253,84 @@ void consulta_geral()
 		}
 	}
 	
-	if(!vazio){	
-	
-		int contl = 1, limite, limiteAnte, pag, linha, pag_limite; // Variaveis Auxiliares
-		
-		pag = 1;
-		
-		pag_limite = ceil(cont_tuplas / 12);  
-		
-		gera_tabela(5);	// Gera borda e tabela inicial
-		
-		do{					
-			limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
-			
-			limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
-			
-			textcolor(cor_texto);
-			
-			gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
-			
-			gotoxy(146, 4);	printf("%d", pag); // Número da página 
-			
-			contl= 1;    //reseta o contador de linha
-			linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
-			
-			rewind(fp);
-			
-			while(fread(&produto, sizeof(produto), 1, fp) == 1){ // segue até o fim do arquivo
-					
-				if(contl > limiteAnte){ //se a linha atual for maior que o limite inferior:
-				
-					if(!produto.excluido){ // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 			
-						completa_tabela(linha);    //preenche a tabela
-						linha += 2; 
-					}
-				}
-				
-				if(contl == limite) break; //se a linha atual for igual ao limite quebra
-				else contl++; //adiciona mais uma linha ao contador
-			}
-			
-			gotoxy(20,34); 
-			
-			fflush(stdin);
-			
-			retornar = getch();
-			
-			switch(retornar){	
-				case char(77): // Se a seta direita for pressionada
-					if(pag <= pag_limite) 
-					{
-						pag++; // Avança a página | Limita pag a 10 
-						rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-						gera_tabela(5);
-					}	
-					break;
-					
-				case char(75): // Se a seta da esquerda
-					if(pag > 1) 				
-					{
-						pag--; // Volta a pagina
-						rewind(fp);	
-						gera_tabela(5);	
-					} 			
-					break;
-			}			
-		}while (retornar != '0'); 		
-		fclose(fp);			
-		voltando_menu(72,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
-		
-		return;    
-	}
-	else   //caso não há nenhuma tupla de dados
-	{
+	if(vazio){	
 		borda();
 		textcolor(cor_destaque); 
 		gotoxy(52, 16); printf("[ N%co h%c nenhum item registrado! Por favor registre algo ]", 198,160);
 		gotoxy(62, 30); printf("Pressione qualquer tecla para voltar");
 		getch();
 		fclose(fp);	
-		return;  // Retorna ao submenu
-	}			
+		return;
+	}
+
+	int contl = 1, limite, limiteAnte, pag, linha, pag_limite; // Variaveis Auxiliares
+	
+	pag = 1;
+	
+	pag_limite = ceil(cont_tuplas / 12);  
+	
+	gera_tabela(5);	// Gera borda e tabela inicial
+	
+	do{					
+		limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
+		
+		limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
+		
+		textcolor(cor_texto);
+		
+		gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
+		
+		gotoxy(146, 4);	printf("%d", pag); // Número da página 
+		
+		contl= 1;    //reseta o contador de linha
+		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
+		
+		rewind(fp);
+		
+		while(fread(&produto, sizeof(produto), 1, fp) == 1){ // segue até o fim do arquivo
+				
+			if(contl > limiteAnte){ //se a linha atual for maior que o limite inferior:
+			
+				if(!produto.excluido){ // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 			
+					completa_tabela(linha);    //preenche a tabela
+					linha += 2; 
+				}
+			}
+			
+			if(contl == limite) break; //se a linha atual for igual ao limite quebra
+			else contl++; //adiciona mais uma linha ao contador
+		}
+		
+		gotoxy(20,34); 
+		
+		fflush(stdin);
+		
+		retornar = getch();
+		
+		switch(retornar){	
+			case char(77): // Se a seta direita for pressionada
+				if(pag <= pag_limite) 
+				{
+					pag++; // Avança a página | Limita pag a 10 
+					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+					gera_tabela(5);
+				}	
+				break;
+				
+			case char(75): // Se a seta da esquerda
+				if(pag > 1) 				
+				{
+					pag--; // Volta a pagina
+					rewind(fp);	
+					gera_tabela(5);	
+				} 			
+				break;
+		}			
+	}while (retornar != '0'); 		
+	fclose(fp);			
+	voltando_menu(72,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
+	
+	return;
 }
 
 void consulta_id()   //consulta por id
@@ -1691,7 +1689,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 	do{
 		borda();
 	
-		tabela_tipos(58,37,1); //apresenta a info doq as letras significam
+		tabela_tipos(58, 37, 1); //apresenta a info doq as letras significam
 		
 		textcolor(cor_destaque); textbackground(15);
 		gotoxy(71, 4); printf(" Exclus%co de dados ", 198);
@@ -1742,7 +1740,7 @@ void excluir_dados() //exclusao lógica (continua no binário)
 					int encontrado = 0;
 			   		
 			   		//Vai copiar tudo pra o novo arquivo temporário EXCETO o ID marcado
-			   		while (fread(&produto, sizeof(struct estrutura), 1, fp) != NULL) {
+			   		while (fread(&produto, sizeof(struct estrutura), 1, fp) == 1) {
 						if (produto.id == IDaux ){ 
 							textcolor(cor_texto); textbackground(12);
 							gotoxy(20,27);printf(" Cadastro exclu%cdo com sucesso!",161);
@@ -1789,7 +1787,8 @@ void excluir_dados() //exclusao lógica (continua no binário)
 			fflush(fp);			// limpeza de buffers 
 			fclose(fp);			// fechamento do arquivo
 			
-			gotoxy(20,30);printf("Pressione uma tecla para retornar...");	getch();
+			gotoxy(20,30);printf("Pressione uma tecla para retornar...");
+			getch();
 		}
 	}while(continuar);
 	
@@ -1797,13 +1796,13 @@ void excluir_dados() //exclusao lógica (continua no binário)
 }
 
 
-void tabela_tipos(int c, int l, int L)
+void tabela_tipos(int col, int linha, int L)
 {
     textcolor(cor_texto);
     
-    gotoxy(c,l);    printf(" P - Perif%crico       G - Gpu      C - Cpu",130);
-    gotoxy(c,l+L);    printf(" M - Mobo             F - Fonte    W - Cabos");
-    gotoxy(c,l+L+L);    printf(" A - Armazenamento    R - Ram      O - Outros");
+    gotoxy(col,linha);    printf(" P - Perif%crico       G - Gpu      C - Cpu",130);
+    gotoxy(col,linha+L);    printf(" M - Mobo             F - Fonte    W - Cabos");
+    gotoxy(col,linha+L+L);    printf(" A - Armazenamento    R - Ram      O - Outros");
 }
 
 int navegar_menu(int ini, int fim, int p)
