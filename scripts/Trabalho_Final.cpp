@@ -21,10 +21,11 @@
 #include <conio.h>
 #include <time.h>
 #include <string.h>
+#include <stdlib.h>
 #include <io.h> //para checagem se o arquivo existe
 #include "functions\desenhos.h"
 
-#define versao 4.5
+#define versao 4.6
 
 //text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (38) e coluna (160)
 
@@ -43,7 +44,7 @@ void inicio();
 void borda(); 
 
 // Desenhos presentes no arquivo desenhos.h (Todos com int ic, int il para escolher posição)
-//	-Disquete, Logo, Lupa, CPU, GPU, RAM, Mobo, HDD	
+// - Disquete, Logo, Lupa, CPU, GPU, RAM, Mobo, HDD	
 
 // Funções de interação com o usuário 
 void consulta_geral();
@@ -53,7 +54,6 @@ void excluir_dados();
 void gera_tabela(int li);  
 void gera_tabela_vertical(int li); 
 void completa_tabela(int linha);
-void completa_tabela_vertical(int coluna, int linha); 
 void tabela_tipos(int c, int l, int L);
 int navegar_menu(int ini, int fim, int p); // Recebe inicio e fim do menu e a posição do cursor
 void cadastro_visual();
@@ -73,19 +73,19 @@ void sair();
 //================================================
 
 bool isID_cadastrado(int aux);
-long valida_id(int L, int C, int qntapagar);
-long valida_quantidade_recebimento(int L, int C);
-char *valida_nome_recebimento(int L, int C);
-char valida_tipo_recebimento(int L, int C);
-float valida_preco_recebimento(int L, int C);
+long valida_id(int linha, int C, int qntapagar);
+long valida_quantidade_recebimento(int linha, int coluna);
+char *valida_nome_recebimento(int linha, int coluna);
+char valida_tipo_recebimento(int linha, int coluna);
+double valida_preco_recebimento(int linha, int coluna);
 
-// mensagem alteraveis e de confirmação
+// Mensagem alteraveis e de confirmação
 void erro_apagar (int col, int lin, int tipo_erro, int apagar);
 void voltando_menu(int linha,int coluna, int delay, bool menu);
-bool confirmarSN(int L, int C,int confirmaTipo); 
+bool confirmarSN(int linha, int coluna,int confirmaTipo); 
 
 
-// variáveis globais
+// Variáveis globais
 
 int obtem_id_alteracao();
 int random_menu; // Var que armazena numero aleatório ente 0 e 3 para gerar um menu diferente 
@@ -124,7 +124,7 @@ struct estrutura
 	double preco_unitario;
 	bool excluido;
 	
-}produto;
+} produto;
 
 //======================================================================
 //							Começo do programa
@@ -142,7 +142,7 @@ main()
     DWORD dwWidth = GetSystemMetrics(SM_CXSCREEN);  // essas funções pegam o tamanho da tela em pixels (ex: 1920 x 1080)
 	DWORD dwHeight = GetSystemMetrics(SM_CYSCREEN);
     
-    HWND wh = GetConsoleWindow(); // precisa disso pro MoveWindow  (HWND é como é indentificada a janela do Windows "identificador de janelas" 
+    HWND wh = GetConsoleWindow(); // precisa disso pro MoveWindow  (HWND é como é indentificada a janela do Windows "identificador de janelas")
     MoveWindow(wh, dwWidth/8 , dwHeight/8 , 1300, 720, TRUE); // move a janela para uma cordenada determinada a setando num tamanho determinado de 20 em 20
     
     //======================================================================
@@ -220,7 +220,7 @@ void menu_ini()
 	
 	gotoxy(70, 19); printf("Cadastro");
 	gotoxy(70, 21); printf("Pesquisa");
-	gotoxy(70, 23); printf("Altera%c%co", 135,198); 
+	gotoxy(70, 23); printf("Altera%c%co", 135, 198); 
 	gotoxy(70, 25); printf("Info de Sistema");
 	gotoxy(70, 27); printf("Sair");
 	gotoxy(150, 41); printf("Vers%co %.1f",198, versao);
@@ -265,7 +265,7 @@ void cadastro_visual()
 		
 		borda();
 		
-		tabela_tipos(58,37,1);
+		tabela_tipos(58, 37, 1);
 		
 		textcolor(cor_destaque); textbackground(15);
 		gotoxy(69, 4);  printf(" Cadastro de Produtos "); // Mensagem em destaque no meio da tela
@@ -296,7 +296,7 @@ void cadastro_recebimento()
 	
 	int IDaux = 1;	
 	do{
-		IDaux = valida_id(39,8,100); 						
+		IDaux = valida_id(39, 8, 100); 						
 		if(IDaux == 0){ 
 			inicio();  return;												
 		}
@@ -363,52 +363,50 @@ void cadastro_recebimento()
 // Parte do recebimento de dados 
 // 
 
-long valida_id(int L, int C, int qntapagar)  // Recebe e valida id
+long valida_id(int linha, int coluna, int qntapagar)  // Recebe e valida id
 {
-	char id[80];
-	long tam, aux;		// Armazena tamanho da string | Auxiliar 1 e 2 | int auxiliar que armazenará a id digitada
-	bool valido, vazio;
+	char aux[80];
+	long tam, id;		// Armazena tamanho da string | Auxiliar 1 e 2 | int auxiliar que armazenará a id digitada
+	bool valido;
 	
 	do{		
-		vazio = true;  //loop principal
-		valido = false;
+		valido = true;
 		cursor(1);
 		
 		fflush(stdin);
 				
-		gotoxy(L, C); gets(id);
+		gotoxy(linha, coluna); fgets(aux, sizeof(aux), stdin);
 		
-		tam = strlen(id);
-		
-		if(tam == 0) gotoxy(L, C); // Se nada foi digitado retorna a posição de inicio e pergunta novamente
-		else if(id[0] == '0'){	
+		tam = strlen(aux);
+
+		if(tam <= 1) continue; // Se nada foi digitado retorna a posição de inicio e pergunta novamente
+
+		if(aux[0] == '0'){	
 			// Se o primeiro digito de id for igual a 0 volta pro menu
-			voltando_menu(72,35,1300,true);
-			return 0; //if(valida_id_recebimento(int L, int C) == 0) inicio(); 
-		} 
-		else{
-			if(tam > 6){  //se id > 999999
-				vazio = true; 			
-				erro_apagar( L, C, 0 , qntapagar); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
-			}
-			else{		
-				for(int i = 0; i < tam; i++){ // verifica caractere por caractere se é número			
-					if(id[i] != '0' && id[i] != '1' && id[i] != '2' && id[i] != '3' && id[i] != '4' && id[i] != '5' && id[i] != '6' && id[i] != '7' && id[i] != '8' && id[i] != '9') 
-					{
-						erro_apagar( L, C, 0 , qntapagar); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
-						break;
-					}else valido = true;
-				} 
-				if(valido){  // Se não for numerico ou for muito grande	= passou no teste							
-				
-					aux = atoi(id); //aux é int e id é char[10] então converte a string para int (tambem poderia ser aux = strtol (id,NULL,10); )
-					vazio = false;
-				}			
+			voltando_menu(72, 35, 1300, true);
+			return 0;
+		}
+		
+		if(tam > 7){  //se id > 999999
+			erro_apagar( linha, coluna, 0 , qntapagar); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
+			valido = false;
+			continue;
+		}
+
+		for(int i = 0; i < tam-1; i++){ // verifica caractere por caractere se é número	
+			if(!isdigit(aux[i])) 
+			{
+				erro_apagar( linha, coluna, 0 , qntapagar); //coluna, linha, tipo de erro: "[ERRO] ID inválido" e quantidade a se apagar
+				valido = false;
+				break;
 			}
 		}
-	}while(vazio);
+		if(valido) {				
+			id = strtol(aux, NULL, 10); //Converte a "string" para long int
+		}
+	} while(!valido);
 					
-	return aux;   // retorna o valor ID já verificado
+	return id;   // retorna o valor ID já verificado
 }
 
 bool isID_cadastrado(int aux){   //verifica se o ID mandado está presente no arquivo ou não
@@ -424,157 +422,179 @@ bool isID_cadastrado(int aux){   //verifica se o ID mandado está presente no ar
 	return false;	
 }
 
-char *valida_nome_recebimento(int L, int C) // Recebe e valida nome retirando espaços extra ( a     palavras -> a palavra)
+char *valida_nome_recebimento(int linha, int coluna) // Recebe e valida nome retirando espaços extra ( a     palavras -> a palavra)
 {
 	char nome[255];
-	
-	int tam; 		 // Armazena tamanho da string
 	char *output = nome;
-	char *from, *to;
-	bool space= false;
-	
+
 	while(true){
-				
-		gotoxy(L, C); gets(nome);
-			
-		tam = strlen(nome);
-		
-		if(tam == 0) gotoxy(L, C); // Se nada for digitado
-		if(tam > 150) erro_apagar(39,10,5,70); //[ERRO] Sem espaço no estoque!
-		else{
-			//magia negra para tirar espaços extras do nome
-		    to=from=output;    //variáveis de ponteiro ficam td igual ao input
-		    while(true){
-		        if(space && *from == ' ' && to[-1] == ' ') //Se tiver marcado com espaço & from & to[-1]
-		            ++from;
-		        else{
-		            if(*from==' ')space = true;		 //Se *from for espaço, space = true, else space = false
-		            else space=false;
-		
-		            *to++ = *from++;   //seta um igual ao outro e soma 1 depois
-					
-		            if(!to[-1])break;
-		        }
-		    } 
-		    break;
-		}	
+		gotoxy(linha, coluna); fgets(nome, sizeof(nome), stdin);
+		// Remove o caractere de nova linha (\n) no final da string
+        nome[strcspn(nome, "\n")] = '\0';
+
+		// Remove espaços antes de qualquer letra
+        int pos_leitura = 0;
+        int pos_escrita = 0;
+        int tamanho = strlen(nome);
+        int espacoDuplo = 0;
+
+		while(nome[pos_leitura]) {
+			if (isspace(nome[pos_leitura])) {
+				if (pos_escrita == 0 || isspace(nome[pos_escrita - 1])) {
+                    pos_leitura++;
+                    continue;
+                }
+
+                // Verifica se há espaços duplos
+                if (espacoDuplo == 0) {
+                    nome[pos_escrita] = ' ';
+                    pos_escrita++;
+                    espacoDuplo = 1;
+                }
+            } else {
+                nome[pos_escrita] = nome[pos_leitura];
+                pos_escrita++;
+                espacoDuplo = 0;
+            }
+            pos_leitura++;
+		}
+		nome[pos_escrita] = '\0'; // Adiciona o caractere nulo ao final do nome
+
+		// Verifica se nada foi digitado
+        if (pos_escrita == 0 || isspace(nome[0])) {
+            continue;
+        }
+
+		// Verifica o tamanho do nome
+		if(pos_escrita > 150) {
+			erro_apagar(39, 10, 5, 70); //[ERRO] Sem espaço no estoque!
+			continue;
+		}
+
+		break;
 	}
 	
 	return output;             
 }
 
-long valida_quantidade_recebimento(int L, int C) // Recebe e valida quantidade
+long valida_quantidade_recebimento(int linha, int coluna) // Recebe e valida quantidade
 {
 	char aux[50];
 	
 	int tam;
-	bool vazio, invalido; // Auxiliares
+	bool valido = false;
 	
-	do{
+	while(!valido) {
 		fflush(stdin);
 		
-		vazio = true;
-		invalido = false;
-		
-		gotoxy(L, C); gets(aux);
-		tam = strlen(aux); // Tamanho da string
+		gotoxy(linha, coluna); fgets(aux, sizeof(aux), stdin);
+		// Remove o caractere de nova linha (\n) no final da string
+        aux[strcspn(aux, "\n")] = '\0';
 
-		if(tam == 0){
-			gotoxy(L, C);	// Se nada for digitado volta pro começo e pergunta novamente	
-		} 				
-		else {
-			for(int i = 0; i < tam; i++){
-				if(aux[i] != '0' && aux[i] != '1' && aux[i] != '2' && aux[i] != '3' && aux[i] != '4' && aux[i] != '5' && aux[i] != '6' && aux[i] != '7' && aux[i] != '8' && aux[i] != '9'){			 
-					invalido = true;		// Se não é numérico 
-					break;				// Se não é numérico 
-				}
+		tam = strlen(aux);
+
+		// Se nada foi digitado
+		if(tam <= 0) continue;
+
+		// Verifica se todos os caracteres são dígitos
+		for(int i = 0; i < tam; i++){
+			if(!isdigit(aux[i])){
+				erro_apagar( linha, coluna, 2 , 70); //"[ERRO] Quantidade Inválida" quantidade a se apagar
+				valido = false;
+				break;
 			}
-			if(invalido == true){ // Erro	
-				erro_apagar( L, C, 2 , 70); //coluna, linha e tipo de erro: "[ERRO] Quantidade Inválida" quantidade a se apagar
-				continue;
-			}
-			if(strtol(aux, NULL, 10) > 9999999){	// Se é muito grande
-				erro_apagar( L, C, 5, 70); 	//coluna, linha, tipo de erro: "[ERRO] Sem espaço no estoque" e quantidade a se apagar
-				continue;
-			} 	
-			else{
-				vazio = false;
-				invalido = false;				
-			}
-		
+			valido = true;
 		}
-	}while(vazio);
+
+		// Verifica se o valor é muito grande
+		if(valido && strtol(aux, NULL, 10) > 9999999){
+			erro_apagar( linha, coluna, 5, 70); 	//"[ERRO] Sem espaço no estoque" e quantidade a se apagar
+			valido = false;
+		}
+		
+	};
 			
 	return strtol(aux, NULL, 10);  //retorna em long o valor
 }
 
-char valida_tipo_recebimento(int L, int C) // Recebe e valida tipo 
+char valida_tipo_recebimento(int linha, int coluna) // Recebe e valida tipo 
 {
  	char tipo;
- 	bool valido=false;
+ 	bool valido = false;
  	
- 	do{	
+ 	do {	
  		
  		fflush(stdin);
  	
- 		gotoxy(L, C); tipo = getche();
+ 		gotoxy(linha, coluna); 
+		tipo = toupper(getchar());
 		
-		tipo = toupper(tipo);
-		
-		// Verificações
-		if(tipo == '\r' ) gotoxy(L,C); //se nada for digitado
-		else if(tipo == 'P' || tipo == 'G' || tipo == 'C' || tipo == 'M' || tipo == 'F' || tipo == 'W' || tipo == 'A' || tipo == 'R' || tipo == 'O') valido=true;
-		else{
-			erro_apagar( L, C, 3 , 70); //coluna, linha, tipo de erro: "[ERRO] Tipo inválido" e quantidade a se apagar	
-		}
-		
-	}while(!valido);
+		if (tipo == '\n') continue; // Se nada foi digitado
+
+		// Verifica se o tipo é válido
+        switch (tipo) {
+            case 'P':
+            case 'G':
+            case 'C':
+            case 'M':
+            case 'F':
+            case 'W':
+            case 'A':
+            case 'R':
+            case 'O':
+                valido = true;
+                break;
+            default:
+                erro_apagar( linha, coluna, 3 , 70); //"[ERRO] Tipo inválido" e quantidade a se apagar	
+                break;
+        }
+	} while(!valido);
 		
 	return tipo; 
 }
 
-float valida_preco_recebimento(int L, int C) // Recebe preço e valida
+double valida_preco_recebimento(int linha, int coluna) // Recebe preço e valida
 {
 	char aux[32];
 	int tam;
-	char* ptr; // Ponteiro pra segurar o lixo da string
-	float num;
-	bool numerico=false;
+	double num;
+	bool numerico = false;
 	
-	do{	
+	while(!numerico) {	
 		fflush(stdin);
 		
-		gotoxy(L, C); gets(aux);
-		
-		tam = strlen(aux); // Recebe tamanho da string	
-		
-		if(tam == 0) gotoxy(L, C); // Se nada for digitado
-		else{
-					
-			for(int i = 0; i < tam; i++){
-				if(aux[i] == ',') aux[i]='.';	
-				if((aux[i] < '0' || aux[i] > '9') && aux[i] != '.') { // Verifica se é numérico	 
-					// Erro					
-					erro_apagar( L, C, 4 , 70 ); //coluna, linha , tipo de erro: "[ERRO] Valor inválido" equantidade a se apagar											
-					break;
-				}else numerico=true;
-			}						
-			if(numerico){ // Se valor for numérico
-				numerico=false;
-				num = strtod(aux, &ptr); // Converte para float
+		gotoxy(linha, coluna); fgets(aux, sizeof(aux), stdin);
+		// Remove o caractere de nova linha (\n) no final da string
+        aux[strcspn(aux, "\n")] = '\0';
 
-				if(num < 0)
-				{
-					erro_apagar( L, C, 4 ,70); //coluna, linha, tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
-				}
-				else if(num > 1000000)
-				{
-					erro_apagar( L, C, 6,70);  // coluna, linha, tipo de erro: "[ERRO] Não aceitamos objetos desse valor" e quantidade a se apagar
-				}
-				else numerico=true;
+		tam = strlen(aux);
+		
+		if(tam == 0) continue; // Se nada for digitado
+
+		for(int i = 0; i < tam; i++){
+			if(aux[i] == ',') aux[i]='.';
+			if(isdigit(aux[i]) && aux[i] != '.') { // Verifica se é numérico	 
+				erro_apagar( linha, coluna, 4 , 70 ); //coluna, linha , tipo de erro: "[ERRO] Valor inválido" equantidade a se apagar
+				numerico = false;							
+				break;
 			}
 		}
-	}while(!numerico);
+						
+		if(numerico){ // Se valor for numérico
+			num = strtod(aux, NULL); // Converte para float
+
+			if(num < 0)
+			{
+				numerico=false;
+				erro_apagar( linha, coluna, 4 ,70); //coluna, linha, tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
+			}
+			else if(num > 1000000)
+			{
+				numerico=false;
+				erro_apagar( linha, coluna, 6, 70);  // coluna, linha, tipo de erro: "[ERRO] Não aceitamos objetos desse valor" e quantidade a se apagar
+			}
+		}
+	};
 		
 	return num; 
 }
@@ -664,42 +684,41 @@ void sub_menu() // Gera a parte visual e realiza a escolha da opção do submenu
 	}while(escolha != 5);
 }
 
-bool confirmarSN(int L, int C, int confirmaTipo){
+bool confirmarSN(int linha, int coluna, int confirmaTipo){
 	
 	char confirmar;
 	
-	gotoxy(L, C); textcolor(cor_destaque);		
+	gotoxy(linha, coluna); textcolor(cor_destaque);		
 	switch(confirmaTipo){
 		case 0:
 		printf("Confirmar Altera%c%ces? (S/N): ", 135, 228);
 		break;
 		case 1:
 		printf("Confirmar Exclus%co? (S/N): ", 198);
-		L = L - 3;
+		linha -= 3;
 		break;
 		case 2:
 		printf("Deseja salvar os dados? (S/N): ");
-		L++;
+		linha++;
 		break;
 		case 3:
 		printf("Deseja realizar mais um cadastro? (S/N): ");
-		L = L += 10;
+		linha += 10;
 		break;
 	}			
 	textcolor(cor_texto);
 	
-	gotoxy(L+30, C);
+	gotoxy(linha + 30, coluna);
 	do{
-		confirmar = getche();
+		confirmar = toupper(getchar());
 				
-		if(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N'){			
-			erro_apagar(L+30,C,10,50);      //erro default do switch
+		if(confirmar != 'S' && confirmar != 'N'){			
+			erro_apagar(linha + 30, coluna, 10, 50);      //erro default do switch
 		}
 		else{
-			if(confirmar == 's' || confirmar == 'S') return true;	// Confirmação
-			else return false;
+			return (confirmar == 'S'); // Confirmação
 		}			
-	}while(confirmar != 's' && confirmar != 'S' && confirmar != 'n' && confirmar != 'N');
+	} while(confirmar != 'S' && confirmar != 'N');
 	
 	return 0;	
 }
@@ -756,19 +775,19 @@ void alteracao()
 			/// Alteração do nome /// Recebimento do novo nome ///
 			
 			char aux_nome[150]; // Armazena nome a ser alterado(97)		
-			strcpy(aux_nome,valida_nome_recebimento(39,23));
+			strcpy(aux_nome,valida_nome_recebimento(39, 23));
 			
 			/// Alreração de Quantidade /// Recebimento de nova quantidade ///
 					
-			float aux_quantidade = valida_quantidade_recebimento(39,25);
+			long aux_quantidade = valida_quantidade_recebimento(39, 25);
 						
 			/// Alteração de tipo /// Recebimento de novo tipo ///
 			
-			char aux_tipo = valida_tipo_recebimento(39,27);
+			char aux_tipo = valida_tipo_recebimento(39, 27);
 
 			/// Alteração de Preço /// Recebimento do novo preço ///
 			
-			float num = valida_preco_recebimento(39,29);
+			double num = valida_preco_recebimento(39, 29);
 			
 			cursor(1);
 			
@@ -1038,7 +1057,7 @@ void alteracao()
 			
 			textcolor(cor_texto);		
 			
-			float num = valida_preco_recebimento(39,25);
+			double num = valida_preco_recebimento(39,25);
 			
 			//CONFIRMAR PARA ESCREVER NO ARQUIVO
 			if(confirmarSN(20,27,0)){
@@ -1492,7 +1511,7 @@ void consulta_nome()
 {
 	
 	char aux[150], comp[80]; // Armazena nome  
-	int tam, resultados, j;
+	int tam, resultados;
 	
 	do{
 	
@@ -1709,16 +1728,16 @@ void excluir_dados() //exclusao lógica (continua no binário)
 			   						   		
 					//Cria o binário temporário para leitura e escrita
 					FILE *fp_tmp;
-					fp_tmp=fopen("tmp.bin", "wb+");
+					fp_tmp = fopen("tmp.bin", "wb+");
 					if (!fp_tmp) {
 						printf("Não foi possível abrir o arquivo temporário.");
-						fclose(fp_tmp); 
+						fclose(fp_tmp);
 					}
 			   		
 					int encontrado = 0;
 			   		
 			   		//Vai copiar tudo pra o novo arquivo temporário EXCETO o ID marcado
-			   		while (fread(&produto,sizeof(struct estrutura),1,fp) != NULL) {
+			   		while (fread(&produto, sizeof(struct estrutura), 1, fp) != NULL) {
 						if (produto.id == IDaux ){ 
 							textcolor(cor_texto); textbackground(12);
 							gotoxy(20,27);printf(" Cadastro exclu%cdo com sucesso!",161);
@@ -1796,7 +1815,7 @@ int navegar_menu(int ini, int fim, int p)
 		
 		input = getch();
 		
-		gotoxy(p,aux); printf(" ");
+		gotoxy(p, aux); printf(" ");
 		
 		switch(input){		
 			case 72: // Seta para cima
@@ -1869,10 +1888,10 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 		
 		if(tam > 66) tam = 66; // define o tamanho máximo a ser apresentado (66 espaços na tabela)
 		
-		gotoxy(22, linha); printf("%d", produto.id);
+		gotoxy(22, linha); printf("%ld", produto.id);
 		gotoxy(33, linha); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
 		gotoxy(102, linha); printf("%.2f", produto.preco_unitario);
-		gotoxy(123, linha); printf("%d", produto.quantidade);
+		gotoxy(123, linha); printf("%ld", produto.quantidade);
 		gotoxy(136, linha); printf("%c", produto.tipo);	
 	}
 }
@@ -1900,7 +1919,7 @@ void gera_tabela_vertical(int li)
 			gotoxy(20,li+10);	printf ("|  Tipo              |                                                                                                   |");
 			gotoxy(20,li+11);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
 		
-			gotoxy(43, li+1); printf("%d", produto.id);
+			gotoxy(43, li+1); printf("%ld", produto.id);
 			gotoxy(43, li+3); for(int i = 0; i < tam; i++){
 				if(i > 97 && x == 0){
 					gotoxy(43, li+4);
@@ -1909,7 +1928,7 @@ void gera_tabela_vertical(int li)
 				printf("%c", produto.nome[i]);
 			} 		
 			gotoxy(43, li+6); printf("%.2f", produto.preco_unitario);
-			gotoxy(43, li+8); printf("%d", produto.quantidade);
+			gotoxy(43, li+8); printf("%ld", produto.quantidade);
 			gotoxy(43, li+10); printf("%c", produto.tipo);
 		}
 		else{
@@ -1926,10 +1945,10 @@ void gera_tabela_vertical(int li)
 			gotoxy(20,li+9);	printf ("|  Tipo              |                                                                                                   |");
 			gotoxy(20,li+10);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
 		
-			gotoxy(43, li+1); printf("%d", produto.id);
+			gotoxy(43, li+1); printf("%ld", produto.id);
 			gotoxy(43, li+3); for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
 			gotoxy(43, li+5); printf("%.2f", produto.preco_unitario);
-			gotoxy(43, li+7); printf("%d", produto.quantidade);
+			gotoxy(43, li+7); printf("%ld", produto.quantidade);
 			gotoxy(43, li+9); printf("%c", produto.tipo);	
 			
 		}

@@ -1,9 +1,6 @@
 //Arquivo fonte para funções de desenhos do programa como a borda e os icones de:
 //-Disquete, Logo, Lupa, CPU, GPU, RAM, Mobo, HDD	
 
-//			11/04/2021 - Por quê refatorar esse programa antigo e mal feito?
-//			R: Saudades de mexer com macaco++ e começar algo do zero da trabalho
-
 // Definição de cores 
 #define cor_fundo 3
 #define cor_borda 1
@@ -52,7 +49,6 @@ void borda()
 
 void disquete(int ic, int il)
 {
-	
 	// Linha 1 => Borda de cima
 	textcolor(0);
 	gotoxy(ic, il); 
@@ -286,9 +282,9 @@ void lupa(int ic, int il)
 	gotoxy(ic+16, il+7); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 220);
 	gotoxy(ic+15, il+8); printf("%c%c%c%c%c%c%c%c%c", 223, 223, 219, 219, 219, 219, 219, 219,220);
 	gotoxy(ic+18, il+9); printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);			//cabo
-	gotoxy(ic+20, il+10); printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);
+	gotoxy(ic+20, il+10);printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);
 	gotoxy(ic+22, il+11);printf("%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+24, il+12);printf("%c%c%c%c%c", 223, 219, 219, 219, 219,223);
+	gotoxy(ic+24, il+12);printf("%c%c%c%c%c%c", 223, 219, 219, 219, 219,223);
 	
 	// Acabou :D
 }

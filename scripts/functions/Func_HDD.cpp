@@ -1,12 +1,12 @@
 /* 
-   	Função para criar a placa mãe full chinesa ali express chinese democracy edition com dragão chines
+   	Funï¿½ï¿½o para criar a placa mï¿½e full chinesa ali express chinese democracy edition com dragï¿½o chines
 	
-	- passe como parâmetro (a coluna de inicio, a linha de inicio)
+	- passe como parï¿½metro (a coluna de inicio, a linha de inicio)
 	
 */
 
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include <locale.h>
 #include <windows.h>
 #include <conio.h>
@@ -15,13 +15,13 @@
 
 text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 80, 28, 1, 1}; // Define os limites para linha (35) e coluna (80)
 
-// Funções conio.c
+// Funï¿½ï¿½es conio.c
 
 void textcolor(int newcolor);
 void textbackground(int newcolor);
 void gotoxy(int x, int y);
 
-// Função utilizada para a criar o disquete
+// Funï¿½ï¿½o utilizada para a criar o disquete
 void HDD(int ic, int il);
 
 main()
@@ -56,7 +56,7 @@ void HDD(int ic, int il)
 	textcolor(7);
 	gotoxy(ic+6,il+1);		printf("%c%c%c%c%c%c%c%c%c",220,220,219,219,219,219,219,220,220);
 	gotoxy(ic+4,il+2);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",220,219,219,219,219,219,219,219,219,219,219,219,220);
-	gotoxy(ic+4,il+3);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//disco magnético
+	gotoxy(ic+4,il+3);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//disco magnï¿½tico
 	gotoxy(ic+4,il+4);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//e parafusos
 	gotoxy(ic+5,il+5);		printf("%c%c%c%c%c%c%c%c%c%c%c",223,219,219,219,219,219,219,219,219,219,223);
 	gotoxy(ic+8,il+6);		printf("%c%c%c%c%c",223,223,223,223,223);
