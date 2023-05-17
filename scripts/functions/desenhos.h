@@ -1,5 +1,5 @@
 //Arquivo fonte para funções de desenhos do programa como a borda e os icones de:
-//-Disquete, Logo, Lupa, CPU, GPU, RAM, Mobo, HDD	
+// - Disquete, Logo, Lupa, CPU, GPU, RAM, Mobo, HDD	
 
 // Definição de cores 
 #define cor_fundo 3

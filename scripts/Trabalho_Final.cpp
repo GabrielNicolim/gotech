@@ -10,14 +10,14 @@
 		
 	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
 	
-	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 30) e vActual(1947 e 1957)
-	Versão 4.5 = Exclusão física adicionada, fix na função busca por ID e melhoria da consulta tipo
-
+	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 30) e vActual(1971 e 1981)
+	Versão 4.6 = Refatoração de código e correção de bugs
+	Bug conhecido - No Terminal do Windows 11 (Powershell) e outros terminas integrados a IDEs, o programa não funciona corretamente, utilizar o CMD classico
 */
 
 #include <stdio.h>
 #include <math.h>
-#include <windows.h> //inclue a wincon.h e winuser.h
+#include <windows.h>
 #include <conio.h>
 #include <time.h>
 #include <string.h>
@@ -422,7 +422,8 @@ bool isID_cadastrado(int aux){   //verifica se o ID mandado está presente no ar
 	return false;	
 }
 
-char *valida_nome_recebimento(int linha, int coluna) // Recebe e valida nome retirando espaços extra ( a     palavras -> a palavra)
+// Recebe e valida nome tirando espaços e verificando se é vazio
+char *valida_nome_recebimento(int linha, int coluna) 
 {
 	char nome[255];
 	char *output = nome;
@@ -477,7 +478,8 @@ char *valida_nome_recebimento(int linha, int coluna) // Recebe e valida nome ret
 	return output;             
 }
 
-long valida_quantidade_recebimento(int linha, int coluna) // Recebe e valida quantidade
+// Recebe e valida quantidade
+long valida_quantidade_recebimento(int linha, int coluna) 
 {
 	char aux[50];
 	
@@ -558,9 +560,9 @@ double valida_preco_recebimento(int linha, int coluna) // Recebe preço e valida
 	char aux[32];
 	int tam;
 	double num;
-	bool numerico = false;
+	bool invalido = false;
 	
-	while(!numerico) {	
+	do {	
 		fflush(stdin);
 		
 		gotoxy(linha, coluna); fgets(aux, sizeof(aux), stdin);
@@ -573,28 +575,29 @@ double valida_preco_recebimento(int linha, int coluna) // Recebe preço e valida
 
 		for(int i = 0; i < tam; i++){
 			if(aux[i] == ',') aux[i]='.';
-			if(isdigit(aux[i]) && aux[i] != '.') { // Verifica se é numérico	 
+
+			if(!isdigit(aux[i]) && aux[i] != '.') { // Verifica se é numérico	 
 				erro_apagar( linha, coluna, 4 , 70 ); //coluna, linha , tipo de erro: "[ERRO] Valor inválido" equantidade a se apagar
-				numerico = false;							
+				invalido = true;							
 				break;
 			}
 		}
 						
-		if(numerico){ // Se valor for numérico
+		if(!invalido){ // Se valor for numérico
 			num = strtod(aux, NULL); // Converte para float
 
 			if(num < 0)
 			{
-				numerico=false;
+				invalido=true;
 				erro_apagar( linha, coluna, 4 ,70); //coluna, linha, tipo de erro: "[ERRO] Valor inválido" e quantidade a se apagar	
 			}
 			else if(num > 1000000)
 			{
-				numerico=false;
+				invalido=true;
 				erro_apagar( linha, coluna, 6, 70);  // coluna, linha, tipo de erro: "[ERRO] Não aceitamos objetos desse valor" e quantidade a se apagar
 			}
 		}
-	};
+	} while(invalido);
 		
 	return num; 
 }
@@ -691,33 +694,35 @@ bool confirmarSN(int linha, int coluna, int confirmaTipo){
 	gotoxy(linha, coluna); textcolor(cor_destaque);		
 	switch(confirmaTipo){
 		case 0:
-		printf("Confirmar Altera%c%ces? (S/N): ", 135, 228);
-		break;
+			printf("Confirmar Altera%c%ces? (S/N): ", 135, 228);
+			break;
 		case 1:
-		printf("Confirmar Exclus%co? (S/N): ", 198);
-		linha -= 3;
+			printf("Confirmar Exclus%co? (S/N): ", 198);
+			linha -= 3;
 		break;
-		case 2:
-		printf("Deseja salvar os dados? (S/N): ");
-		linha++;
+			case 2:
+			printf("Deseja salvar os dados? (S/N): ");
+			linha++;
 		break;
-		case 3:
-		printf("Deseja realizar mais um cadastro? (S/N): ");
-		linha += 10;
+			case 3:
+			printf("Deseja realizar mais um cadastro? (S/N): ");
+			linha += 10;
 		break;
 	}			
 	textcolor(cor_texto);
 	
-	gotoxy(linha + 30, coluna);
 	do{
+		fflush(stdin);
+		gotoxy(linha + 30, coluna);
 		confirmar = toupper(getchar());
 				
 		if(confirmar != 'S' && confirmar != 'N'){			
 			erro_apagar(linha + 30, coluna, 10, 50);      //erro default do switch
+			continue;
 		}
-		else{
-			return (confirmar == 'S'); // Confirmação
-		}			
+
+		return (confirmar == 'S'); // Confirmação
+
 	} while(confirmar != 'S' && confirmar != 'N');
 	
 	return 0;	
@@ -2019,4 +2024,3 @@ void voltando_menu(int linha,int coluna,int delay, bool menu){  //Apresenta a me
 	}		 	
 	Sleep(delay);
 } 
-//12/12/2020 = 4600 linhas ->  02/05/2021 = 2003 linhas
