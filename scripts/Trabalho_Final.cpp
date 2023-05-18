@@ -15,10 +15,14 @@
 	Bug conhecido - No Terminal do Windows 11 (Powershell) e outros terminas integrados a IDEs, o programa não funciona corretamente, utilizar o CMD classico
 */
 
+
+#ifdef _WIN32
+#include <conio.h>
+#endif
+
 #include <stdio.h>
 #include <math.h>
 #include <windows.h>
-#include <conio.h>
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
@@ -1982,10 +1986,10 @@ void textbackground(int newcolor) // Define a cor do fundo (vActual está aqui)
 
 void gotoxy(int x, int y)	// Move o cursor para a coluna e linha desejada
 {
-  COORD c;
-  c.X = x - 1;
-  c.Y = y - 1;
-  SetConsoleCursorPosition (GetStdHandle(STD_OUTPUT_HANDLE), c);
+  COORD xy;
+  xy.X = x - 1;
+  xy.Y = y - 1;
+  SetConsoleCursorPosition (GetStdHandle(STD_OUTPUT_HANDLE), xy);
 }
 
 void cursor (int x) { 	// Define se o cursor ira aparecer sim(1) ou não(0)
