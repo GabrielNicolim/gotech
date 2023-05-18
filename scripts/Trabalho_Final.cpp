@@ -12,7 +12,8 @@
 	
 	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 30) e vActual(1970 e 1980)
 	Versão 4.7 = Refatoração de código e correção de bugs
-	Bug conhecido - No Terminal do Windows 11 (Powershell) e outros terminas integrados a IDEs, o programa não funciona corretamente, utilizar o CMD classico
+	Bug conhecido - Graças a conio.h, o Terminal do Windows 11 (Powershell) e outros modernos quebram a posições da tela, porém o problema
+	é apenas visual e pode ser corrigido ao maximizar a janela do terminal com ALT + ENTER ou F11 mexendo no prompt de comando.
 */
 
 
@@ -77,7 +78,7 @@ void sair();
 //================================================
 
 bool isID_cadastrado(int aux);
-long valida_id(int linha, int C, int qntapagar);
+long valida_id(int linha, int coluna, int qntapagar);
 long valida_quantidade_recebimento(int linha, int coluna);
 char *valida_nome_recebimento(int linha, int coluna);
 char valida_tipo_recebimento(int linha, int coluna);
