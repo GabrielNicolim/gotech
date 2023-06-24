@@ -138,13 +138,12 @@ struct estrutura
 main()
 {
 	SetConsoleTitle("GoTech"); 		   // Define o nome do console
-    //system("mode con:cols=160 lines=37");  // Define o tamanho do console
+    system("mode con:cols=160 lines=37");  // Define o tamanho do console
     
     //======================================================================
 	//Pega o tamanho do monitor e joga o programa pro meio do monitor
 	//======================================================================
-	
-    DWORD dwWidth = GetSystemMetrics(SM_CXSCREEN);  // essas funções pegam o tamanho da tela em pixels (ex: 1920 x 1080)
+    DWORD dwWidth = GetSystemMetrics(SM_CXSCREEN);  // pegam o tamanho da tela em pixels (ex: 1920 x 1080)
 	DWORD dwHeight = GetSystemMetrics(SM_CYSCREEN);
     
     HWND wh = GetConsoleWindow(); // precisa disso pro MoveWindow  (HWND é como é indentificada a janela do Windows "identificador de janelas")
@@ -166,7 +165,7 @@ void loading()
 	
 	cursor(0);
 	
-	// Tela de loading com apresentação da versãodo programa
+	// Tela de loading com apresentação da versão do programa
 	
 	textcolor(cor_texto);
 	
@@ -234,7 +233,7 @@ void menu_ini()
 	
 	int escolha = navegar_menu(19, 27, 68);
 	
-	switch(escolha){	
+	switch(escolha){
 		case 0:
 			cadastro_visual();
 			break;
