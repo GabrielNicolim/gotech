@@ -10,10 +10,12 @@
 		
 	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
 	
-	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 30) e vActual(1970 e 1980)
-	Versão 4.7 = Refatoração de código e correção de bugs
-	Bug conhecido - Graças a conio.h, o Terminal do Windows 11 (Powershell) e outros modernos quebram a posições da tela, porém o problema
-	é apenas visual e pode ser corrigido ao maximizar a janela do terminal com ALT + ENTER ou F11 mexendo no prompt de comando.
+	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 35) e vActual(1959 e 1969)
+	Versão 4.8 = Refatoração de código e correção de bugs
+	Bug conhecidos: 
+	- Graças a conio.h, terminais modernos quebram a posições da tela, quebrando toda a interface, porém o problema
+	é apenas visual e pode ser corrigido ao maximizar a janela do terminal com ALT + ENTER ou F11 e mexendo no prompt de comando.
+	- A pesquisa por nome não está funcionando corretamente
 */
 
 
@@ -30,7 +32,7 @@
 #include <io.h> //para checagem se o arquivo existe
 #include "functions\desenhos.h"
 
-#define versao 4.7
+#define versao 4.8
 
 //text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (38) e coluna (160)
 
@@ -768,11 +770,11 @@ void alteracao()
 						
 			//GERA TABELA COM OS DADOS JÀ INCLUÍDOS
 			//=================================================================================
-			gotoxy(20,5);	printf("-Dados originais:");		
+			gotoxy(20, 5);	printf("-Dados originais:");		
 			gera_tabela_vertical(7);  //faz a tabela e já completa ela automaticamente
 			//=================================================================================
 
-			gotoxy(20,21);	printf("-Novos dados:");	
+			gotoxy(20, 21);	printf("-Novos dados:");	
 			textcolor(cor_destaque);
 			
 			gotoxy(20, 23); printf("Nome do Produto..: ");		
@@ -802,7 +804,7 @@ void alteracao()
 			
 			cursor(1);
 			
-			if(confirmarSN(70,31,0)){
+			if(confirmarSN(70, 31, 0)){
 				abrir_arquivo_alterar();
 
 				while(fread(&produto, sizeof(produto), 1, fp) == 1)	
@@ -1134,7 +1136,7 @@ int obtem_id_alteracao()
 
 		rewind(fp);	
 		
-		aux = valida_id( 49, 8, 100);
+		aux = valida_id(49, 8, 100);
 			                                                                    
 		if(aux == 0) return 0; // Retorna 0 para que a func de alteracao saia do loop 
 
@@ -1212,7 +1214,7 @@ void info_de_sistema() // Apresenta as informações do sistema
 			
 	}while(input != '0');
 		
-	voltando_menu(72,35,1500,true); // Apresenta mensagem Voltando pro menu... a baixo da borda
+	voltando_menu(72, 35, 1500, true); // Apresenta mensagem Voltando pro menu... abaixo da borda
 	
 	return;
 }
@@ -1284,8 +1286,8 @@ void consulta_geral()
 		
 		gotoxy(146, 4);	printf("%d", pag); // Número da página 
 		
-		contl= 1;    //reseta o contador de linha
-		linha= 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
+		contl = 1;    //reseta o contador de linha
+		linha = 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
 		
 		rewind(fp);
 		
@@ -1303,14 +1305,14 @@ void consulta_geral()
 			else contl++; //adiciona mais uma linha ao contador
 		}
 		
-		gotoxy(20,34); 
+		gotoxy(20, 34); 
 		
 		fflush(stdin);
 		
 		retornar = getch();
 		
 		switch(retornar){	
-			case char(77): // Se a seta direita for pressionada
+			case char(77): // Seta da direita <-
 				if(pag <= pag_limite) 
 				{
 					pag++; // Avança a página | Limita pag a 10 
@@ -1319,7 +1321,7 @@ void consulta_geral()
 				}	
 				break;
 				
-			case char(75): // Se a seta da esquerda
+			case char(75): // Seta da esquerda ->
 				if(pag > 1) 				
 				{
 					pag--; // Volta a pagina
@@ -1330,7 +1332,7 @@ void consulta_geral()
 		}			
 	}while (retornar != '0'); 		
 	fclose(fp);			
-	voltando_menu(72,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
+	voltando_menu(72, 35, 1500, false); // Apresenta mensagem Voltando... abaixo da borda
 	
 	return;
 }
@@ -1370,7 +1372,7 @@ void consulta_id()   //consulta por id
 				   		gera_tabela_vertical(11);
 						//=================================================================================
 						
-						tabela_tipos(58,37,1);
+						tabela_tipos(58, 37, 1);
 				
 						textcolor(cor_destaque);
 						gotoxy(20,30);printf("Pressione uma tecla para continuar...");					
@@ -1406,18 +1408,17 @@ void consulta_tipo()
 	gotoxy(71, 4); printf(" Consulta por Tipo ");
 	textbackground(cor_fundo);
 			
-	tabela_tipos(56,18,2);	
-	gotoxy(20,7); printf("Digite tipo a ser pesquisado (0 para sair): ");
+	tabela_tipos(56, 18, 2);	
+	gotoxy(20, 7); printf("Digite tipo a ser pesquisado (0 para sair): ");
 
-	int aux = valida_tipo_recebimento( 64, 7);
+	int aux = valida_tipo_recebimento(64, 7);
 	if(aux == '0') return;
-	
-	int cont_tuplas = -1;
-	
-	abrir_arquivo();
 	
 	cursor(0); // Desliga o cursor
 	
+	abrir_arquivo();
+	
+	int cont_tuplas = -1;
 	bool vazio = true;
 	
 	while(fread(&produto, sizeof(produto), 1, fp) == 1){ // segue até o fim do arquivo contando quantos tipos escolhidos tem
@@ -1496,13 +1497,13 @@ void consulta_tipo()
 		}while (retornar != '0');  
 			
 		// Se 0 for pressionado 
-		voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
+		voltando_menu(74, 35, 1500, false); // Apresenta mensagem Voltando... abaixo da borda
 	}		
 	else{
 		borda();
 		textcolor(cor_destaque); 
 		cursor(0); 
-		gotoxy(50, 16); printf("[ N%co h%c nenhum item desse tipo registrado! Por favor registre algo ]", 198,160);
+		gotoxy(50, 16); printf("[ N%co h%c nenhum item desse tipo registrado! Por favor registre algo ]", 198, 160);
 		gotoxy(62, 30); printf("Pressione qualquer tecla para voltar");
 		getch(); 
 	}
@@ -1514,8 +1515,8 @@ void consulta_tipo()
 
 void consulta_nome()
 {
-	
-	char aux[150], comp[80]; // Armazena nome  
+
+	char aux[150], comp[150]; // Armazena nome  
 	int tam, resultados;
 	
 	do{
@@ -1524,14 +1525,18 @@ void consulta_nome()
 			
 		cursor(1);
 			
-		textcolor(cor_destaque); 
-		gotoxy(71, 4); textbackground(15); printf(" Consulta por Nome "); textbackground(cor_fundo);
-		textcolor(cor_texto); gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
+		textcolor(cor_destaque);
+		textbackground(15);
+		gotoxy(71, 4);  printf(" Consulta por Nome ");
 		
-		strcpy(aux,valida_nome_recebimento(49,7));
+		textbackground(cor_fundo);
+		textcolor(cor_texto); 
+		gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
+		
+		strcpy(aux, valida_nome_recebimento(49, 7));
 		
 		if(aux[0] == '0'){
-			voltando_menu(74,35,1500,false); // Apresenta mensagem Voltando... abaixo da borda
+			voltando_menu(74, 35, 1500, false); // Apresenta mensagem Voltando... abaixo da borda
 			return;
 		}	
 		
@@ -1545,7 +1550,7 @@ void consulta_nome()
 		{			
 			strcpy(comp, produto.nome);
 				
-			if(strstr(strlwr(comp),strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
+			if(strstr(strlwr(comp), strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
 			{	
 				resultados += 1;
 			} 	
@@ -1628,7 +1633,7 @@ void consulta_nome()
 						else if(strstr(strlwr(comp), strlwr(aux)) != NULL) contl++; //adiciona mais uma linha ao contador
 					}
 					
-					gotoxy(20,34); 
+					gotoxy(20, 34); 
 					
 					fflush(stdin);
 					
@@ -1658,7 +1663,7 @@ void consulta_nome()
 				}while (retornar != '0');  
 				
 				// Se 0 for pressionado 
-				voltando_menu(75,35,1500,false);
+				voltando_menu(75, 35, 1500,false);
 				
 				fclose(fp);
 				
@@ -1697,7 +1702,7 @@ void excluir_dados()
 		textcolor(cor_destaque); textbackground(15);
 		gotoxy(71, 4); printf(" Exclus%co de dados ", 198);
 		textbackground(cor_fundo);
-		gotoxy(20,7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ", 162);
+		gotoxy(20, 7); printf("Digite o c%cdigo do produto a ser excluido (0 para sair): ", 162);
 		
 		textcolor(cor_texto);
 		
@@ -1764,17 +1769,19 @@ void excluir_dados()
 				
 			//checa se pode ter acesso ( <io.h> )
 			if (_access_s("estoque.bin", 0) == 0)
-				if (remove("estoque.bin") == 0)
-					printf("Arquivo original deletado com sucesso!");
+				if (remove("estoque.bin") == 0) {
+					//puts("Arquivo original deletado com sucesso!");
+				}
 				else
 					perror("Não foi possivel deletar o aquivo original!");
 			else 
 				perror("Erro ao acessar o arquivo!");
 			if (_access_s("tmp.bin", 0) == 0)
-				if ( rename( "tmp.bin", "estoque.bin" ) == 0 )
-					puts ( "Arquivo renomeado com sucesso!" );
+				if ( rename( "tmp.bin", "estoque.bin" ) == 0 ) {
+					//puts("Arquivo renomeado com sucesso!");
+				}
 				else
-					perror( "Erro renomeando arquivo!" );
+					perror( "Erro renomeando arquivo!");
 			else 
 				perror("Erro ao acessar o arquivo temporario!");
 			textcolor(cor_destaque);	
@@ -1889,64 +1896,36 @@ void completa_tabela(int linha)  //função para colocar os dados na tabela
 	}
 }
 
-void gera_tabela_vertical(int li)
+void gera_tabela_vertical(int linha)
 {
 	if(!produto.excluido){
 	
 		int tam = strlen(produto.nome); 
 	
-		if(tam > 97){	
-			
-			int x = 0;
-			
-			gotoxy(20,li);		printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+1);	printf ("|  ID                |                                                                                                   |");
-			gotoxy(20,li+2);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+3);	printf ("|  Nome              |                                                                                                   |");
-			gotoxy(20,li+4);	printf ("|                    |                                                                                                   |");
-			gotoxy(20,li+5);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+6);	printf ("|  Pre%co Unit%crio    |                                                                                                   |", 135, 160);
-			gotoxy(20,li+7);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+8);	printf ("|  Quantidade        |                                                                                                   |");
-			gotoxy(20,li+9);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+10);	printf ("|  Tipo              |                                                                                                   |");
-			gotoxy(20,li+11);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-		
-			gotoxy(43, li+1); printf("%ld", produto.id);
-			// Printar em 2 linhas se o nome for muito grande
-			gotoxy(43, li+3); for(int i = 0; i < tam; i++){
-				if(i > 97 && x == 0){
-					gotoxy(43, li+4);
-					x = 1; 
-				} 
-				printf("%c", produto.nome[i]);
-			} 		
-			gotoxy(43, li+6); printf("%.2f", produto.preco_unitario);
-			gotoxy(43, li+8); printf("%ld", produto.quantidade);
-			gotoxy(43, li+10); printf("%c", produto.tipo);
-		}
-		else{
-			gotoxy(20,li);		printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+1);	printf ("|  ID                |                                                                                                   |");
-			gotoxy(20,li+2);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+3);	printf ("|  Nome              |                                                                                                   |");
-			gotoxy(20,li+4);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+5);	printf ("|  Pre%co Unit%crio    |                                                                                                   |", 135, 160);
-			gotoxy(20,li+6);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+7);	printf ("|  Quantidade        |                                                                                                   |");
-			gotoxy(20,li+8);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-			gotoxy(20,li+9);	printf ("|  Tipo              |                                                                                                   |");
-			gotoxy(20,li+10);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-		
-			gotoxy(43, li+1); printf("%ld", produto.id);
-			gotoxy(43, li+3); printf("%*s", 54, produto.nome); // for(int i = 0; i < tam; i++) printf("%c", produto.nome[i]); 		
-			gotoxy(43, li+5); printf("%.2f", produto.preco_unitario);
-			gotoxy(43, li+7); printf("%ld", produto.quantidade);
-			gotoxy(43, li+9); printf("%c", produto.tipo);	
-			
-		}
-	}	
+		int x = 0;
+		if(tam > 97) x++;
+		gotoxy(20,linha);		printf ("+------------------------------------------------------------------------------------------------------------------------+");
+		gotoxy(20,linha+1);		printf ("|  ID                |                                                                                                   |");
+		gotoxy(20,linha+2);		printf ("+------------------------------------------------------------------------------------------------------------------------+");
+		gotoxy(20,linha+3);		printf ("|  Nome              |                                                                                                   |");
+		gotoxy(20,linha+3+x);	printf ("|");gotoxy(41, linha+3+x);printf("|                                                                                                   |");
+		gotoxy(20,linha+4+x);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
+		gotoxy(20,linha+5+x);	printf ("|  Pre%co Unit%crio    |                                                                                                   |", 135, 160);
+		gotoxy(20,linha+6+x);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
+		gotoxy(20,linha+7+x);	printf ("|  Quantidade        |                                                                                                   |");
+		gotoxy(20,linha+8+x);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
+		gotoxy(20,linha+9+x);	printf ("|  Tipo              |                                                                                                   |");
+		gotoxy(20,linha+10+x);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
 	
+		gotoxy(43, linha+1); printf("%ld", produto.id);
+		gotoxy(43, linha+3); printf("%.*s", 97, produto.nome);
+		if(tam > 97){
+			gotoxy(43, linha+3+x); printf("%.*s", 97, produto.nome + tam-97);
+		}	
+		gotoxy(43, linha+5+x); printf("%.2f", produto.preco_unitario);
+		gotoxy(43, linha+7+x); printf("%ld", produto.quantidade);
+		gotoxy(43, linha+9+x); printf("%c", produto.tipo);
+	}	
 }
 
 void textcolor(int newcolor) // Define a cor do texto (vActual está aqui)

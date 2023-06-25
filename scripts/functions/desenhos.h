@@ -47,15 +47,15 @@ void borda()
 	
 }
 
-void disquete(int ic, int il)
+void disquete(int coluna, int linha)
 {
 	// Linha 1 => Borda de cima
 	textcolor(0);
-	gotoxy(ic, il); 
+	gotoxy(coluna, linha); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	
 	// Linha 2  - tracinho
-	gotoxy(ic, (il+1));
+	gotoxy(coluna, (linha+1));
 	printf("%c", 219);
 	
 	for(int i = 0; i < 18; i++) 
@@ -74,7 +74,7 @@ void disquete(int ic, int il)
 	printf("%c", 219);
 	
 	// Linha 3  - tracinho
-	gotoxy(ic, (il+2));
+	gotoxy(coluna, (linha+2));
 	printf("%c", 219);
 	
 	for(int i = 0; i < 18; i++) 
@@ -94,7 +94,7 @@ void disquete(int ic, int il)
 	
 	// Linha 4
 	
-	gotoxy(ic, (il+3));
+	gotoxy(coluna, (linha+3));
 	
 	printf("%c", 219);
 	textcolor(9);
@@ -104,7 +104,7 @@ void disquete(int ic, int il)
 	
 	// Linha 5
 	
-	gotoxy(ic, (il+4));
+	gotoxy(coluna, (linha+4));
 	printf("%c", 219);
 	textcolor(9);
 
@@ -114,7 +114,7 @@ void disquete(int ic, int il)
 	
 	//Linha 6 - rodelinha com tracin
 	
-	gotoxy(ic, (il+5));
+	gotoxy(coluna, (linha+5));
 	
 	printf("%c", 219);
 	for(int i = 0; i < 18; i++) 
@@ -133,7 +133,7 @@ void disquete(int ic, int il)
 	
 	//Linha 7 - rodelinha 
 	
-	gotoxy(ic, (il+6));
+	gotoxy(coluna, (linha+6));
 	
 	printf("%c", 219);
 	for(int i = 0; i < 18; i++) 
@@ -148,7 +148,7 @@ void disquete(int ic, int il)
 	
 	// Linha 8
 	
-	gotoxy(ic, (il+7));
+	gotoxy(coluna, (linha+7));
 	
 	printf("%c", 219);
 	textcolor(9);
@@ -158,7 +158,7 @@ void disquete(int ic, int il)
 	
 	// Linha 9
 	
-	gotoxy(ic, (il+8));
+	gotoxy(coluna, (linha+8));
 	
 	printf("%c", 219);
 	textcolor(9);
@@ -168,136 +168,136 @@ void disquete(int ic, int il)
 	
 	// Linha 10 => Borda de baixo
 	textcolor(0);
-	gotoxy(ic, (il+9)); 
+	gotoxy(coluna, (linha+9)); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	
 }
 
-void logo(int ic, int il)
+void logo(int coluna, int linha)
 {
 	textcolor(0);
 	
-	gotoxy(ic - 2, il + 6); for(int i = 0; i <= 58; i++) printf("_");
+	gotoxy(coluna - 2, linha + 6); for(int i = 0; i <= 58; i++) printf("_");
 		
 	// Linha 1 do texto
-	gotoxy(ic+1,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+7,il);	printf("%c",187);
-	gotoxy(ic+10,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+16,il);	printf("%c",187);	
-	gotoxy(ic+18,il);	printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);	gotoxy(ic+25,il);	printf("%c",187);
-	gotoxy(ic+27,il);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);		gotoxy(ic+34,il);	printf("%c",187);
-	gotoxy(ic+38,il);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(ic+44,il);	printf("%c",187);
-	gotoxy(ic+46,il);	printf("%c%c",219,219);										gotoxy(ic+48,il);	printf("%c",187);
-	gotoxy(ic+51,il);	printf("%c%c",219,219);										gotoxy(ic+53,il);	printf("%c",187);
+	gotoxy(coluna+1,linha);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(coluna+7,linha);	printf("%c",187);
+	gotoxy(coluna+10,linha);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(coluna+16,linha);	printf("%c",187);	
+	gotoxy(coluna+18,linha);	printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);	gotoxy(coluna+25,linha);	printf("%c",187);
+	gotoxy(coluna+27,linha);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);		gotoxy(coluna+34,linha);	printf("%c",187);
+	gotoxy(coluna+38,linha);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);				gotoxy(coluna+44,linha);	printf("%c",187);
+	gotoxy(coluna+46,linha);	printf("%c%c",219,219);										gotoxy(coluna+48,linha);	printf("%c",187);
+	gotoxy(coluna+51,linha);	printf("%c%c",219,219);										gotoxy(coluna+53,linha);	printf("%c",187);
 	
 	//linha 2
-	gotoxy(ic,il+1);	printf("%c%c",219,219);		gotoxy(ic+2,il+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
-	gotoxy(ic+9,il+1);	printf("%c%c",219,219);		gotoxy(ic+11,il+1);	printf("%c%c%c%c",201,205,205,205);
-	gotoxy(ic+15,il+1);	printf("%c%c",219,219);		gotoxy(ic+17,il+1);	printf("%c",187);
-	gotoxy(ic+21,il+1);	printf("%c%c",219,219);		gotoxy(ic+18,il+1);	printf("%c%c%c",200,205,205);
-	gotoxy(ic+27,il+1);	printf("%c%c",219,219);		gotoxy(ic+23,il+1);	printf("%c%c%c",201,205,188);
-	gotoxy(ic+37,il+1);	printf("%c%c",219,219);		gotoxy(ic+29,il+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
-	gotoxy(ic+46,il+1);	printf("%c%c",219,219);		gotoxy(ic+39,il+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
-	gotoxy(ic+51,il+1);	printf("%c%c",219,219);		gotoxy(ic+48,il+1);	printf("%c",186);		gotoxy(ic+53,il+1);	printf("%c",186);
+	gotoxy(coluna,linha+1);	printf("%c%c",219,219);		gotoxy(coluna+2,linha+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
+	gotoxy(coluna+9,linha+1);	printf("%c%c",219,219);		gotoxy(coluna+11,linha+1);	printf("%c%c%c%c",201,205,205,205);
+	gotoxy(coluna+15,linha+1);	printf("%c%c",219,219);		gotoxy(coluna+17,linha+1);	printf("%c",187);
+	gotoxy(coluna+21,linha+1);	printf("%c%c",219,219);		gotoxy(coluna+18,linha+1);	printf("%c%c%c",200,205,205);
+	gotoxy(coluna+27,linha+1);	printf("%c%c",219,219);		gotoxy(coluna+23,linha+1);	printf("%c%c%c",201,205,188);
+	gotoxy(coluna+37,linha+1);	printf("%c%c",219,219);		gotoxy(coluna+29,linha+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
+	gotoxy(coluna+46,linha+1);	printf("%c%c",219,219);		gotoxy(coluna+39,linha+1);	printf("%c%c%c%c%c%c",201,205,205,205,205,188);
+	gotoxy(coluna+51,linha+1);	printf("%c%c",219,219);		gotoxy(coluna+48,linha+1);	printf("%c",186);		gotoxy(coluna+53,linha+1);	printf("%c",186);
 		
 	//linha 3
-	gotoxy(ic,il+2);	printf("%c%c",219,219);									gotoxy(ic+2,il+2);	printf("%c",186);
-	gotoxy(ic+5,il+2);	printf("%c%c%c",219,219,219);							gotoxy(ic+8,il+2);	printf("%c",187);
-	gotoxy(ic+9,il+2);	printf("%c%c",219,219);									gotoxy(ic+11,il+2);	printf("%c",186);
-	gotoxy(ic+15,il+2);	printf("%c%c",219,219);									gotoxy(ic+17,il+2);	printf("%c",186);
-	gotoxy(ic+21,il+2);	printf("%c%c",219,219);									gotoxy(ic+23,il+2);	printf("%c",186);
-	gotoxy(ic+27,il+2);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic+33,il+2);	printf("%c",187);
-	gotoxy(ic+37,il+2);	printf("%c%c",219,219);									gotoxy(ic+39,il+2);	printf("%c",186);
-	gotoxy(ic+46,il+2);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);	gotoxy(ic+53,il+2);	printf("%c",186);
+	gotoxy(coluna,linha+2);	printf("%c%c",219,219);									gotoxy(coluna+2,linha+2);	printf("%c",186);
+	gotoxy(coluna+5,linha+2);	printf("%c%c%c",219,219,219);							gotoxy(coluna+8,linha+2);	printf("%c",187);
+	gotoxy(coluna+9,linha+2);	printf("%c%c",219,219);									gotoxy(coluna+11,linha+2);	printf("%c",186);
+	gotoxy(coluna+15,linha+2);	printf("%c%c",219,219);									gotoxy(coluna+17,linha+2);	printf("%c",186);
+	gotoxy(coluna+21,linha+2);	printf("%c%c",219,219);									gotoxy(coluna+23,linha+2);	printf("%c",186);
+	gotoxy(coluna+27,linha+2);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(coluna+33,linha+2);	printf("%c",187);
+	gotoxy(coluna+37,linha+2);	printf("%c%c",219,219);									gotoxy(coluna+39,linha+2);	printf("%c",186);
+	gotoxy(coluna+46,linha+2);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);	gotoxy(coluna+53,linha+2);	printf("%c",186);
 	
 	//linha 4
-	gotoxy(ic,il+3);	printf("%c%c",219,219);		gotoxy(ic+2,il+3);	printf("%c",186);
-	gotoxy(ic+6,il+3);	printf("%c%c",219,219);		gotoxy(ic+8,il+3);	printf("%c",186);
-	gotoxy(ic+9,il+3);	printf("%c%c",219,219);		gotoxy(ic+11,il+3);	printf("%c",186);
-	gotoxy(ic+15,il+3);	printf("%c%c",219,219);		gotoxy(ic+17,il+3);	printf("%c",186);
-	gotoxy(ic+21,il+3);	printf("%c%c",219,219);		gotoxy(ic+23,il+3);	printf("%c",186);
-	gotoxy(ic+27,il+3);	printf("%c%c",219,219);		gotoxy(ic+29,il+3);	printf("%c%c%c%c%c",201,205,205,205,188);
-	gotoxy(ic+37,il+3);	printf("%c%c",219,219);		gotoxy(ic+39,il+3);	printf("%c",186);
-	gotoxy(ic+46,il+3);	printf("%c%c",219,219);		gotoxy(ic+48,il+3);	printf("%c%c%c",201,205,205);
-	gotoxy(ic+51,il+3);	printf("%c%c",219,219);		gotoxy(ic+53,il+3);	printf("%c",186);
+	gotoxy(coluna,linha+3);	printf("%c%c",219,219);		gotoxy(coluna+2,linha+3);	printf("%c",186);
+	gotoxy(coluna+6,linha+3);	printf("%c%c",219,219);		gotoxy(coluna+8,linha+3);	printf("%c",186);
+	gotoxy(coluna+9,linha+3);	printf("%c%c",219,219);		gotoxy(coluna+11,linha+3);	printf("%c",186);
+	gotoxy(coluna+15,linha+3);	printf("%c%c",219,219);		gotoxy(coluna+17,linha+3);	printf("%c",186);
+	gotoxy(coluna+21,linha+3);	printf("%c%c",219,219);		gotoxy(coluna+23,linha+3);	printf("%c",186);
+	gotoxy(coluna+27,linha+3);	printf("%c%c",219,219);		gotoxy(coluna+29,linha+3);	printf("%c%c%c%c%c",201,205,205,205,188);
+	gotoxy(coluna+37,linha+3);	printf("%c%c",219,219);		gotoxy(coluna+39,linha+3);	printf("%c",186);
+	gotoxy(coluna+46,linha+3);	printf("%c%c",219,219);		gotoxy(coluna+48,linha+3);	printf("%c%c%c",201,205,205);
+	gotoxy(coluna+51,linha+3);	printf("%c%c",219,219);		gotoxy(coluna+53,linha+3);	printf("%c",186);
 		
 	//linha 5
-	gotoxy(ic+1,il+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic,il+4);	printf("%c",200);
-	gotoxy(ic+10,il+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic+7,il+4);	printf("%c%c%c",201,188,200);
-	gotoxy(ic+21,il+4);	printf("%c%c",219,219);									gotoxy(ic+16,il+4);	printf("%c%c",201,188);
-	gotoxy(ic+27,il+4);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);	gotoxy(ic+23,il+4);	printf("%c",186);
-	gotoxy(ic+38,il+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(ic+34,il+4);	printf("%c",187);
-	gotoxy(ic+46,il+4);	printf("%c%c",219,219);									gotoxy(ic+37,il+4);	printf("%c",200);
-	gotoxy(ic+51,il+4);	printf("%c%c",219,219);									gotoxy(ic+44,il+4);	printf("%c",187);
-	gotoxy(ic+48,il+4);	printf("%c",186);										gotoxy(ic+53,il+4);	printf("%c",186);
+	gotoxy(coluna+1,linha+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(coluna,linha+4);	printf("%c",200);
+	gotoxy(coluna+10,linha+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(coluna+7,linha+4);	printf("%c%c%c",201,188,200);
+	gotoxy(coluna+21,linha+4);	printf("%c%c",219,219);									gotoxy(coluna+16,linha+4);	printf("%c%c",201,188);
+	gotoxy(coluna+27,linha+4);	printf("%c%c%c%c%c%c%c",219,219,219,219,219,219,219);	gotoxy(coluna+23,linha+4);	printf("%c",186);
+	gotoxy(coluna+38,linha+4);	printf("%c%c%c%c%c%c",219,219,219,219,219,219);			gotoxy(coluna+34,linha+4);	printf("%c",187);
+	gotoxy(coluna+46,linha+4);	printf("%c%c",219,219);									gotoxy(coluna+37,linha+4);	printf("%c",200);
+	gotoxy(coluna+51,linha+4);	printf("%c%c",219,219);									gotoxy(coluna+44,linha+4);	printf("%c",187);
+	gotoxy(coluna+48,linha+4);	printf("%c",186);										gotoxy(coluna+53,linha+4);	printf("%c",186);
 	
 	//linha 6
 		
-	gotoxy(ic+1,il+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
-	gotoxy(ic+10,il+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
-	gotoxy(ic+21,il+5);	printf("%c%c%c",200,205,188);
-	gotoxy(ic+27,il+5);	printf("%c%c%c%c%c%c%c%c",200,205,205,205,205,205,205,188);
-	gotoxy(ic+38,il+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
-	gotoxy(ic+46,il+5);	printf("%c%c%c",200,205,188);
-	gotoxy(ic+51,il+5);	printf("%c%c%c",200,205,188);
+	gotoxy(coluna+1,linha+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
+	gotoxy(coluna+10,linha+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
+	gotoxy(coluna+21,linha+5);	printf("%c%c%c",200,205,188);
+	gotoxy(coluna+27,linha+5);	printf("%c%c%c%c%c%c%c%c",200,205,205,205,205,205,205,188);
+	gotoxy(coluna+38,linha+5);	printf("%c%c%c%c%c%c%c",200,205,205,205,205,205,188);
+	gotoxy(coluna+46,linha+5);	printf("%c%c%c",200,205,188);
+	gotoxy(coluna+51,linha+5);	printf("%c%c%c",200,205,188);
 }
 
-void lupa(int ic, int il)
+void lupa(int coluna, int linha)
 {	
 	// Linha 1 - Borda Preta
 	textcolor(0);
 	// Linha 1 - Borda Preta
-	gotoxy(ic+4, il); 		printf("%c%c%c%c%c%c%c%c%c%c%c",220 ,220, 219, 219, 219, 219, 219, 219, 219, 220, 220);	
+	gotoxy(coluna+4, linha); 		printf("%c%c%c%c%c%c%c%c%c%c%c",220 ,220, 219, 219, 219, 219, 219, 219, 219, 220, 220);	
 	// Linha 2  
-	gotoxy(ic+2, il+1); 	printf("%c%c%c%c", 220, 219, 219, 223);
-	gotoxy(ic+13, il+1); 	printf("%c%c%c%c", 223, 219, 219, 220);
+	gotoxy(coluna+2, linha+1); 	printf("%c%c%c%c", 220, 219, 219, 223);
+	gotoxy(coluna+13, linha+1); 	printf("%c%c%c%c", 223, 219, 219, 220);
 	//linha 3
-	gotoxy(ic+1, il+2); 	printf("%c%c", 219, 223);
-	gotoxy(ic+16, il+2); 	printf("%c%c", 223, 219);	
+	gotoxy(coluna+1, linha+2); 	printf("%c%c", 219, 223);
+	gotoxy(coluna+16, linha+2); 	printf("%c%c", 223, 219);	
 	//linha 4
-	gotoxy(ic, il+3);  		printf("%c%c", 219, 223);
-	gotoxy(ic+17, il+3); 	printf("%c%c", 223, 219);	
+	gotoxy(coluna, linha+3);  		printf("%c%c", 219, 223);
+	gotoxy(coluna+17, linha+3); 	printf("%c%c", 223, 219);	
 	//linha 5
-	gotoxy(ic, il+4);	 	printf("%c", 219);
-	gotoxy(ic+18, il+4);	printf("%c", 219);	
+	gotoxy(coluna, linha+4);	 	printf("%c", 219);
+	gotoxy(coluna+18, linha+4);	printf("%c", 219);	
 	//linha 6
-	gotoxy(ic, il+5);  		printf("%c%c", 219, 220);
-	gotoxy(ic+17, il+5);	printf("%c%c", 220, 219);	
+	gotoxy(coluna, linha+5);  		printf("%c%c", 219, 220);
+	gotoxy(coluna+17, linha+5);	printf("%c%c", 220, 219);	
 	//linha 7
-	gotoxy(ic+1, il+6);		printf("%c%c", 219, 220);
-	gotoxy(ic+16, il+6);	printf("%c%c", 220, 219);	
+	gotoxy(coluna+1, linha+6);		printf("%c%c", 219, 220);
+	gotoxy(coluna+16, linha+6);	printf("%c%c", 220, 219);	
 	// Linha 8  
-	gotoxy(ic+2, il+7); 	printf("%c%c%c%c", 223, 219, 219, 220);
-	gotoxy(ic+13, il+7); 	printf("%c%c%c%c", 220, 219, 219, 223);
+	gotoxy(coluna+2, linha+7); 	printf("%c%c%c%c", 223, 219, 219, 220);
+	gotoxy(coluna+13, linha+7); 	printf("%c%c%c%c", 220, 219, 219, 223);
 	// Linha 9 
-	gotoxy(ic+4, il+8); 	printf("%c%c%c%c%c%c%c%c%c%c%c",223 ,223, 219, 219, 219, 219, 219, 219, 219, 223, 223);		
+	gotoxy(coluna+4, linha+8); 	printf("%c%c%c%c%c%c%c%c%c%c%c",223 ,223, 219, 219, 219, 219, 219, 219, 219, 223, 223);		
 	
 	//brilhinho
 	textcolor(15);
-	gotoxy(ic+3, il+4); printf("%c", 219);
-	gotoxy(ic+4, il+5); printf("%c%c%c", 219, 219, 220);
-	gotoxy(ic+7, il+6); printf("%c%c", 219, 220);
+	gotoxy(coluna+3, linha+4); printf("%c", 219);
+	gotoxy(coluna+4, linha+5); printf("%c%c%c", 219, 219, 220);
+	gotoxy(coluna+7, linha+6); printf("%c%c", 219, 220);
 	
 	//cabo
 	textcolor(15);
-	gotoxy(ic+18, il+6); printf("%c%c", 219,220);
-	gotoxy(ic+16, il+7); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 220);
-	gotoxy(ic+15, il+8); printf("%c%c%c%c%c%c%c%c%c", 223, 223, 219, 219, 219, 219, 219, 219,220);
-	gotoxy(ic+18, il+9); printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);			//cabo
-	gotoxy(ic+20, il+10);printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);
-	gotoxy(ic+22, il+11);printf("%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219);
-	gotoxy(ic+24, il+12);printf("%c%c%c%c%c%c", 223, 219, 219, 219, 219,223);
+	gotoxy(coluna+18, linha+6); printf("%c%c", 219,220);
+	gotoxy(coluna+16, linha+7); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 220);
+	gotoxy(coluna+15, linha+8); printf("%c%c%c%c%c%c%c%c%c", 223, 223, 219, 219, 219, 219, 219, 219,220);
+	gotoxy(coluna+18, linha+9); printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);			//cabo
+	gotoxy(coluna+20, linha+10);printf("%c%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219, 220);
+	gotoxy(coluna+22, linha+11);printf("%c%c%c%c%c%c%c", 223, 219, 219, 219, 219, 219, 219);
+	gotoxy(coluna+24, linha+12);printf("%c%c%c%c%c%c", 223, 219, 219, 219, 219,223);
 	
 	// Acabou :D
 }
 
-void cpu(int ic, int il)
+void cpu(int coluna, int linha)
 {	
 	// Linha 1 => Borda de cima
 	textcolor(0);
-	gotoxy(ic, il); 
+	gotoxy(coluna, linha); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	
 	// Linha 2  - tracinho
-	gotoxy(ic, (il+1));
+	gotoxy(coluna, (linha+1));
 
 	printf("%c", 219);
 	textcolor(7);
@@ -309,7 +309,7 @@ void cpu(int ic, int il)
 	textcolor(0);
 	
 	// Linha 3  - tracinho
-	gotoxy(ic, (il+2));
+	gotoxy(coluna, (linha+2));
 	
 	printf("%c", 219);
 	textcolor(7);
@@ -322,7 +322,7 @@ void cpu(int ic, int il)
 	
 	// Linha 4
 	
-	gotoxy(ic, (il+3));
+	gotoxy(coluna, (linha+3));
 	
 	printf("%c", 219);
 	textcolor(7);
@@ -335,7 +335,7 @@ void cpu(int ic, int il)
 	
 	// Linha 5
 	
-	gotoxy(ic, (il+4));
+	gotoxy(coluna, (linha+4));
 	
 	printf("%c", 219);
 	textcolor(7);
@@ -348,7 +348,7 @@ void cpu(int ic, int il)
 	
 	//Linha 6 - rodelinha com tracin
 	
-	gotoxy(ic, (il+5));
+	gotoxy(coluna, (linha+5));
 	
 	printf("%c", 219);
 	textcolor(7);
@@ -361,7 +361,7 @@ void cpu(int ic, int il)
 	
 	//Linha 7 - rodelinha 
 	
-	gotoxy(ic, (il+6));
+	gotoxy(coluna, (linha+6));
 	
 	printf("%c", 219);
 	textcolor(7);
@@ -374,7 +374,7 @@ void cpu(int ic, int il)
 	
 	// Linha 8
 	
-	gotoxy(ic, (il+7));
+	gotoxy(coluna, (linha+7));
 	
 	printf("%c", 219);
 	textcolor(7);
@@ -387,7 +387,7 @@ void cpu(int ic, int il)
 		
 	// Linha 9 
 	textcolor(0);
-	gotoxy(ic, (il+8)); 
+	gotoxy(coluna, (linha+8)); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	textcolor(6);
 	printf("%c", 219);
@@ -395,49 +395,49 @@ void cpu(int ic, int il)
 	
 	// Linha 10 => Borda de baixo
 	textcolor(6);
-	gotoxy((ic+1), (il+9)); 
+	gotoxy((coluna+1), (linha+9)); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	textcolor(0);
 	
 	//escrever cpu
-	gotoxy((ic+3), (il+2)); printf("%c%c%c%c",219,219,219,219);
-	gotoxy((ic+3), (il+3)); printf("%c",219);
-	gotoxy((ic+3), (il+4)); printf("%c",219);      //etra C
-	gotoxy((ic+3), (il+5)); printf("%c",219);
-	gotoxy((ic+3), (il+6)); printf("%c%c%c%c",219,219,219,219);
+	gotoxy((coluna+3), (linha+2)); printf("%c%c%c%c",219,219,219,219);
+	gotoxy((coluna+3), (linha+3)); printf("%c",219);
+	gotoxy((coluna+3), (linha+4)); printf("%c",219);      //etra C
+	gotoxy((coluna+3), (linha+5)); printf("%c",219);
+	gotoxy((coluna+3), (linha+6)); printf("%c%c%c%c",219,219,219,219);
 	
-	gotoxy((ic+8), (il+2)); printf("%c%c%c%c",219,219,219,219);
-	gotoxy((ic+8), (il+3)); printf("%c",219);		//Letra P
-	gotoxy((ic+11), (il+3)); printf("%c",219);
-	gotoxy((ic+8), (il+4)); printf("%c%c%c%c",219,219,219,219);
-	gotoxy((ic+8), (il+5)); printf("%c",219);
-	gotoxy((ic+8), (il+6)); printf("%c",219);
+	gotoxy((coluna+8), (linha+2)); printf("%c%c%c%c",219,219,219,219);
+	gotoxy((coluna+8), (linha+3)); printf("%c",219);		//Letra P
+	gotoxy((coluna+11), (linha+3)); printf("%c",219);
+	gotoxy((coluna+8), (linha+4)); printf("%c%c%c%c",219,219,219,219);
+	gotoxy((coluna+8), (linha+5)); printf("%c",219);
+	gotoxy((coluna+8), (linha+6)); printf("%c",219);
 	
-	gotoxy((ic+13), (il+2)); printf("%c",219);
-	gotoxy((ic+16), (il+2)); printf("%c",219);
-	gotoxy((ic+13), (il+3)); printf("%c",219);
-	gotoxy((ic+16), (il+3)); printf("%c",219);		//Letra U
-	gotoxy((ic+13), (il+4)); printf("%c",219);
-	gotoxy((ic+16), (il+4)); printf("%c",219);
-	gotoxy((ic+13), (il+5)); printf("%c",219);
-	gotoxy((ic+16), (il+5)); printf("%c",219);
-	gotoxy((ic+13), (il+6)); printf("%c%c%c%c",219,219,219,219);
+	gotoxy((coluna+13), (linha+2)); printf("%c",219);
+	gotoxy((coluna+16), (linha+2)); printf("%c",219);
+	gotoxy((coluna+13), (linha+3)); printf("%c",219);
+	gotoxy((coluna+16), (linha+3)); printf("%c",219);		//Letra U
+	gotoxy((coluna+13), (linha+4)); printf("%c",219);
+	gotoxy((coluna+16), (linha+4)); printf("%c",219);
+	gotoxy((coluna+13), (linha+5)); printf("%c",219);
+	gotoxy((coluna+16), (linha+5)); printf("%c",219);
+	gotoxy((coluna+13), (linha+6)); printf("%c%c%c%c",219,219,219,219);
 	
-	gotoxy((ic), (il+9)); //só pro end do programa não quebrar as coisas
+	gotoxy((coluna), (linha+9)); //só pro end do programa não quebrar as coisas
 
 }
 
-void gpu(int ic, int il)
+void gpu(int coluna, int linha)
 {	
 	// Linha 1 => Borda de cima
-	gotoxy(ic, il);
+	gotoxy(coluna, linha);
 	textcolor(8);
 	printf("%c%c%c", 219, 219, 219);
 	textcolor(7);	
 	for(int i = 0; i < 35; i++) putchar(219);
 	
 	// Linha 2  - começo do cooler
-	gotoxy(ic, (il+1));
+	gotoxy(coluna, (linha+1));
 	textcolor(8);
 	printf("  %c", 219);
 	for(int i = 0; i < 35; i++)
@@ -449,7 +449,7 @@ void gpu(int ic, int il)
 	}
 	
 	// Linha 3  
-	gotoxy(ic, (il+2));
+	gotoxy(coluna, (linha+2));
 	
 	textcolor(8);
 	printf("  %c", 219);
@@ -463,7 +463,7 @@ void gpu(int ic, int il)
 	
 	// Linha 4
 	
-	gotoxy(ic, (il+3));
+	gotoxy(coluna, (linha+3));
 	
 	textcolor(8);
 	printf("  %c", 219);
@@ -476,7 +476,7 @@ void gpu(int ic, int il)
 	}
 	
 	// Linha 5	- meio do cooler
-	gotoxy(ic, (il+4));
+	gotoxy(coluna, (linha+4));
 	
 	textcolor(8);
 	printf("  %c", 219);	
@@ -490,7 +490,7 @@ void gpu(int ic, int il)
 	
 	//Linha 6 - 
 	
-	gotoxy(ic, (il+5));
+	gotoxy(coluna, (linha+5));
 	
 	textcolor(8);
 	printf("  %c", 219);
@@ -504,7 +504,7 @@ void gpu(int ic, int il)
 	
 	//Linha 7
 	
-	gotoxy(ic, (il+6));
+	gotoxy(coluna, (linha+6));
 	
 	textcolor(8);
 	printf("  %c", 219);
@@ -518,7 +518,7 @@ void gpu(int ic, int il)
 	
 	// Linha 8 - final do cooler 
 	
-	gotoxy(ic, (il+7));
+	gotoxy(coluna, (linha+7));
 	
 	textcolor(8);
 	printf("  %c", 219);
@@ -532,7 +532,7 @@ void gpu(int ic, int il)
 	
 	// Linha 9
 	
-	gotoxy(ic, (il+8));
+	gotoxy(coluna, (linha+8));
 	
 	textcolor(8);
 	printf("  %c", 219);
@@ -540,7 +540,7 @@ void gpu(int ic, int il)
 	for(int i = 0; i < 35; i++) putchar(219);
 	
 	// Linha 10 => Borda de baixo
-	gotoxy(ic, (il+9)); 
+	gotoxy(coluna, (linha+9)); 
 	
 	textcolor(8);
 	printf("  %c", 219);
@@ -562,10 +562,10 @@ void gpu(int ic, int il)
 	// Acabou :D
 }
 
-void ram(int ic, int il)
+void ram(int coluna, int linha)
 {	
 	// Linha 1 => Borda de cima
-	gotoxy(ic, il); 
+	gotoxy(coluna, linha); 
 	
 	textcolor(0); printf("%c", 219);
 	
@@ -575,7 +575,7 @@ void ram(int ic, int il)
 	textcolor(0); printf("%c", 219);
 	
 	// Linha 2  - tracinho
-	gotoxy(ic, (il+1));
+	gotoxy(coluna, (linha+1));
 	
 	textcolor(0); printf(" %c", 219);
 		
@@ -593,7 +593,7 @@ void ram(int ic, int il)
 	textcolor(0); printf("%c ", 219);
 	
 	// Linha 3  - tracinho
-	gotoxy(ic, (il+2));
+	gotoxy(coluna, (linha+2));
 	
 	textcolor(0); printf("%c", 219);
 	
@@ -614,7 +614,7 @@ void ram(int ic, int il)
 	
 	// Linha 4
 	
-	gotoxy(ic, (il+3));
+	gotoxy(coluna, (linha+3));
 	
 	textcolor(0); printf(" %c", 219);
 	
@@ -625,7 +625,7 @@ void ram(int ic, int il)
 	
 	// Linha 5
 	
-	gotoxy(ic, (il+4));
+	gotoxy(coluna, (linha+4));
 	textcolor(0); printf("%c", 219);
 	
 	for(int i = 0; i < 41; i++) 
@@ -640,118 +640,118 @@ void ram(int ic, int il)
 	
 }
 
-void mobo(int ic, int il)
+void mobo(int coluna, int linha)
 {
 	// Construir o PCB bruto
-	gotoxy(ic, il); 
+	gotoxy(coluna, linha); 
 	textcolor(0);	
 	for(int i = 0; i < 20; i++) 
 	{	
 		for(int j = 0; j < 10; j++)
 		{
-		gotoxy((ic+i), (il+j));
+		gotoxy((coluna+i), (linha+j));
 		putchar(219);
 		}
 	}
 	
 	//Construir os detalhes
 	textcolor(7);
-	gotoxy(ic, (il+1)); printf("%c%c",219,219);
-	gotoxy(ic, (il+2)); printf("%c%c",219,219);
-	gotoxy(ic, (il+3)); printf("%c%c",219,219);		//IO traseiro
-	gotoxy(ic, (il+4)); printf("%c%c",219,219);
-	gotoxy(ic, (il+5)); printf("%c%c",219,219);
+	gotoxy(coluna, (linha+1)); printf("%c%c",219,219);
+	gotoxy(coluna, (linha+2)); printf("%c%c",219,219);
+	gotoxy(coluna, (linha+3)); printf("%c%c",219,219);		//IO traseiro
+	gotoxy(coluna, (linha+4)); printf("%c%c",219,219);
+	gotoxy(coluna, (linha+5)); printf("%c%c",219,219);
 	
 	textcolor(7);
-	gotoxy((ic+6), (il+2)); printf("%c",219);
-	gotoxy((ic+6), (il+3)); printf("%c",219);
-	gotoxy((ic+9), (il+2)); printf("%c",219);		//socket do cpu
-	gotoxy((ic+9), (il+3)); printf("%c",219);
+	gotoxy((coluna+6), (linha+2)); printf("%c",219);
+	gotoxy((coluna+6), (linha+3)); printf("%c",219);
+	gotoxy((coluna+9), (linha+2)); printf("%c",219);		//socket do cpu
+	gotoxy((coluna+9), (linha+3)); printf("%c",219);
 	textcolor(14);
-	gotoxy((ic+7), (il+2)); printf("%c%c",219,219);
-	gotoxy((ic+7), (il+3)); printf("%c%c",219,219);
+	gotoxy((coluna+7), (linha+2)); printf("%c%c",219,219);
+	gotoxy((coluna+7), (linha+3)); printf("%c%c",219,219);
 	
 	textcolor(2);
-	gotoxy((ic+13), (il+1)); printf("%c",219);
-	gotoxy((ic+13), (il+2)); printf("%c",219);
-	gotoxy((ic+13), (il+3)); printf("%c",219);    //slots de ram e etc
-	gotoxy((ic+13), (il+4)); printf("%c",219);
-	gotoxy((ic+15), (il+1)); printf("%c",219);
-	gotoxy((ic+15), (il+2)); printf("%c",219);
-	gotoxy((ic+15), (il+3)); printf("%c",219);
-	gotoxy((ic+15), (il+4)); printf("%c",219);	
-	gotoxy((ic+18), (il+1)); printf("%c%c",219,219);
+	gotoxy((coluna+13), (linha+1)); printf("%c",219);
+	gotoxy((coluna+13), (linha+2)); printf("%c",219);
+	gotoxy((coluna+13), (linha+3)); printf("%c",219);    //slots de ram e etc
+	gotoxy((coluna+13), (linha+4)); printf("%c",219);
+	gotoxy((coluna+15), (linha+1)); printf("%c",219);
+	gotoxy((coluna+15), (linha+2)); printf("%c",219);
+	gotoxy((coluna+15), (linha+3)); printf("%c",219);
+	gotoxy((coluna+15), (linha+4)); printf("%c",219);	
+	gotoxy((coluna+18), (linha+1)); printf("%c%c",219,219);
 	
 	textcolor(8);
-	gotoxy((ic+18), (il+3)); printf("%c%c",219,219);    //conectores 24 pinos e etc
-	gotoxy((ic+18), (il+4)); printf("%c%c",219,219);
+	gotoxy((coluna+18), (linha+3)); printf("%c%c",219,219);    //conectores 24 pinos e etc
+	gotoxy((coluna+18), (linha+4)); printf("%c%c",219,219);
 	
-	gotoxy((ic+4), (il+6)); printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);  //slots pci-e
-	gotoxy((ic+4), (il+8)); printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);
+	gotoxy((coluna+4), (linha+6)); printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);  //slots pci-e
+	gotoxy((coluna+4), (linha+8)); printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219);
 	
 	textcolor(RED);
-	gotoxy((ic+15), (il+6)); printf("%c%c",219,219); //dissipador do chipset
-	gotoxy((ic+15), (il+7)); printf("%c%c",219,219);
+	gotoxy((coluna+15), (linha+6)); printf("%c%c",219,219); //dissipador do chipset
+	gotoxy((coluna+15), (linha+7)); printf("%c%c",219,219);
 	
 	textcolor(15);
-	gotoxy((ic+14), (il+9)); printf("%c%c%c%c",219,219,219,219);
+	gotoxy((coluna+14), (linha+9)); printf("%c%c%c%c",219,219,219,219);
 	textcolor(0);
 	
-	gotoxy((ic+10), (il+10));	// tirar o exit do programa de perto
+	gotoxy((coluna+10), (linha+10));	// tirar o exit do programa de perto
 }
 
-void HDD(int ic, int il)
+void HDD(int coluna, int linha)
 {
 	textcolor(0);
 	for(int i = 0; i < 21; i++) 
 	{	
 		for(int j = 0; j < 12; j++)
 		{
-		gotoxy((ic+i), (il+j));
+		gotoxy((coluna+i), (linha+j));
 		putchar(219);
 		}
 	}
 	textbackground(0);
 	textcolor(7);
-	gotoxy(ic+6,il+1);		printf("%c%c%c%c%c%c%c%c%c",220,220,219,219,219,219,219,220,220);
-	gotoxy(ic+4,il+2);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",220,219,219,219,219,219,219,219,219,219,219,219,220);
-	gotoxy(ic+4,il+3);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//disco magnético
-	gotoxy(ic+4,il+4);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//e parafusos
-	gotoxy(ic+5,il+5);		printf("%c%c%c%c%c%c%c%c%c%c%c",223,219,219,219,219,219,219,219,219,219,223);
-	gotoxy(ic+8,il+6);		printf("%c%c%c%c%c",223,223,223,223,223);
-	gotoxy(ic+1,il);		printf("%c",220);	gotoxy(ic+1,il+11);		printf("%c",223);
-	gotoxy(ic+1,il+5);		printf("%c",223);	gotoxy(ic+19,il+5);		printf("%c",223);
-	gotoxy(ic+19,il);		printf("%c",220);	gotoxy(ic+19,il+11);	printf("%c",223);
+	gotoxy(coluna+6,linha+1);		printf("%c%c%c%c%c%c%c%c%c",220,220,219,219,219,219,219,220,220);
+	gotoxy(coluna+4,linha+2);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",220,219,219,219,219,219,219,219,219,219,219,219,220);
+	gotoxy(coluna+4,linha+3);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//disco magnético
+	gotoxy(coluna+4,linha+4);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,219,219,219);		//e parafusos
+	gotoxy(coluna+5,linha+5);		printf("%c%c%c%c%c%c%c%c%c%c%c",223,219,219,219,219,219,219,219,219,219,223);
+	gotoxy(coluna+8,linha+6);		printf("%c%c%c%c%c",223,223,223,223,223);
+	gotoxy(coluna+1,linha);		printf("%c",220);	gotoxy(coluna+1,linha+11);		printf("%c",223);
+	gotoxy(coluna+1,linha+5);		printf("%c",223);	gotoxy(coluna+19,linha+5);		printf("%c",223);
+	gotoxy(coluna+19,linha);		printf("%c",220);	gotoxy(coluna+19,linha+11);	printf("%c",223);
 		
 	textcolor(2);
-	gotoxy(ic+10,il+7);		printf("%c%c%c%c%c%c%c%c",220,220,220,220,220,220,220,220);
-	gotoxy(ic+10,il+8);		printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219); // pcb
-	gotoxy(ic+12,il+9);		printf("%c%c%c%c%c%c",219,219,219,219,219,219);
-	gotoxy(ic+13,il+10);	printf("%c%c%c%c%c",219,219,219,219,219);
+	gotoxy(coluna+10,linha+7);		printf("%c%c%c%c%c%c%c%c",220,220,220,220,220,220,220,220);
+	gotoxy(coluna+10,linha+8);		printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219); // pcb
+	gotoxy(coluna+12,linha+9);		printf("%c%c%c%c%c%c",219,219,219,219,219,219);
+	gotoxy(coluna+13,linha+10);	printf("%c%c%c%c%c",219,219,219,219,219);
 	textcolor(8);
-	gotoxy(ic+14,il+8);		printf("%c%c%c",219,219,219);
-	gotoxy(ic+15,il+9);		printf("%c%c",219,219);
+	gotoxy(coluna+14,linha+8);		printf("%c%c%c",219,219,219);
+	gotoxy(coluna+15,linha+9);		printf("%c%c",219,219);
 	
 	textcolor(7);
-	gotoxy(ic+3,il+6);		printf("%c",220);
-	gotoxy(ic+3,il+7);		printf("%c%c%c",219,219,220);										//baia para a agulha
-	gotoxy(ic+3,il+8);		printf("%c%c%c%c%c",219,219,219,219,220);
-	gotoxy(ic+3,il+9);		printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,220,220);
-	gotoxy(ic+3,il+10);		printf("%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,220,220);
+	gotoxy(coluna+3,linha+6);		printf("%c",220);
+	gotoxy(coluna+3,linha+7);		printf("%c%c%c",219,219,220);										//baia para a agulha
+	gotoxy(coluna+3,linha+8);		printf("%c%c%c%c%c",219,219,219,219,220);
+	gotoxy(coluna+3,linha+9);		printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,220,220);
+	gotoxy(coluna+3,linha+10);		printf("%c%c%c%c%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219,219,219,220,220);
 	
 	textcolor(8);
 	textbackground(7);
-	//gotoxy(ic+9,il+4);		printf("%c",220);
-	gotoxy(ic+9,il+5);		printf("%c",219);
-	gotoxy(ic+8,il+6);		printf("%c%c",219,219);	
-	gotoxy(ic+7,il+7);		printf("%c%c%c",219,219,219);			//agulha
-	gotoxy(ic+6,il+8);		printf("%c%c%c",219,219,219);	
-	gotoxy(ic+5,il+9);		printf("%c%c%c%c",219,219,219,219);
-	gotoxy(ic+6,il+10);		printf("%c%c",223,223);	
+	//gotoxy(coluna+9,linha+4);		printf("%c",220);
+	gotoxy(coluna+9,linha+5);		printf("%c",219);
+	gotoxy(coluna+8,linha+6);		printf("%c%c",219,219);	
+	gotoxy(coluna+7,linha+7);		printf("%c%c%c",219,219,219);			//agulha
+	gotoxy(coluna+6,linha+8);		printf("%c%c%c",219,219,219);	
+	gotoxy(coluna+5,linha+9);		printf("%c%c%c%c",219,219,219,219);
+	gotoxy(coluna+6,linha+10);		printf("%c%c",223,223);	
 	
 	textcolor(0);
-	gotoxy(ic+9,il+3);		printf("%c%c%c",220,219,220);		///motor para o disco
-	gotoxy(ic+10,il+4);		printf("%c",223);
+	gotoxy(coluna+9,linha+3);		printf("%c%c%c",220,219,220);		///motor para o disco
+	gotoxy(coluna+10,linha+4);		printf("%c",223);
 	
 	textbackground(cor_fundo);
 }
