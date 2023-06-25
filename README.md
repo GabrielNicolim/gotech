@@ -41,4 +41,4 @@ Caso queira estudar mais sobre manupulação de arquivos em C:
 https://terminalroot.com.br/2014/12/linguagem-c-utilizando-as-funcoes-fopen.html
 </p>
 
-Ultima versão estável: **4.8**
+Ultima versão estável: **4.9**
