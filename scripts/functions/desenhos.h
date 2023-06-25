@@ -14,36 +14,27 @@ void textcolor(int newcolor);
 void textbackground(int newcolor);
 
 //Desenhos vão ficar todos aqui
-
 void borda() 
 {
-	int cf = cor_fundo, cb = cor_borda, lc = 160; // (cor de fundo, cor da borda, limite de coluna)
-	
-	textbackground(cf); // Define cor do fundo
+	textbackground(cor_fundo); // Define cor do fundo
 	system("cls"); 		//limpa sempre a tela quando é chamada
 	
-	for (int i = 9; i <= (lc - 8); i++) // Parte de cima da borda
+	textcolor(cor_borda);
+	for (int i=2; i <= 33; i++) // Borda esquerda e direita
 	{
-		textcolor(cb);
+		gotoxy(9,i);printf("%c%c                                                                                                                                            %c%c",219,219,219,219);
+	}
+	
+	for (int i = 9; i <= (160 - 8); i++) // Parte de cima da borda
+	{
 		gotoxy(i,2);printf("%c",219);
 	}
-	for (int i = 9; i <= (lc - 8); i++) // Parte de baixo da borda 
+	for (int i = 9; i <= (160 - 8); i++) // Parte de baixo da borda 
 	{
-		textcolor(cb);
 		gotoxy(i,33);printf("%c",219);
 	}
-	for (int i=2; i <= 33; i++) // Borda esquerda 
-	{
-		textcolor(cb);
-		gotoxy(10,i);printf("%c",219);
-		gotoxy(9,i);printf("%c",219);
-	}
-	for (int i=2; i <= 33; i++) // Borda direita
-	{
-		textcolor(cb);
-		gotoxy(152,i);printf("%c",219);
-		gotoxy(151,i);printf("%c",219);
-	}
+			
+	textcolor(cor_texto); // Define cor do texto
 	
 }
 
@@ -89,8 +80,11 @@ void disquete(int coluna, int linha)
 		putchar(219);
 	}
 	
+	//detalhes internos
+	textbackground(7);
 	textcolor(0);
-	printf("%c", 219);
+	gotoxy(ic+3, il+1); printf("  %c%c          ",219,219);
+	gotoxy(ic+3, il+2); printf("  %c%c          ",219,219);
 	
 	// Linha 4
 	
@@ -242,8 +236,8 @@ void logo(int coluna, int linha)
 
 void lupa(int coluna, int linha)
 {	
-	// Linha 1 - Borda Preta
 	textcolor(0);
+	textbackground(3);
 	// Linha 1 - Borda Preta
 	gotoxy(coluna+4, linha); 		printf("%c%c%c%c%c%c%c%c%c%c%c",220 ,220, 219, 219, 219, 219, 219, 219, 219, 220, 220);	
 	// Linha 2  
@@ -291,7 +285,23 @@ void lupa(int coluna, int linha)
 
 void cpu(int coluna, int linha)
 {	
-	// Linha 1 => Borda de cima
+	//Quadrados básicos:
+	textbackground(6);
+	for(int i = 1; i < 10; i++){
+		gotoxy(ic+1, il+i); printf("                    ");
+	}
+	
+	textbackground(0);
+	for(int i = 0; i < 9; i++){
+		gotoxy(ic, il+i); printf("                    ");
+	}
+	
+	textbackground(7);
+	for(int i = 1; i < 8; i++){
+		gotoxy(ic+1, il+i); printf("                  ");
+	}
+	
+	//escrita C P U
 	textcolor(0);
 	gotoxy(coluna, linha); 
 	for(int i = 0; i < 20; i++) putchar(219);
@@ -448,6 +458,25 @@ void gpu(int coluna, int linha)
 		putchar(219);
 	}
 	
+	//fundo principal	
+	textbackground(7);
+	for(int i = 0; i < 9; i++){
+		gotoxy(ic+3,il+i); printf("                                   ");
+	} 
+	
+	//adesivo generico
+	textbackground(2);
+	gotoxy(ic+3,il+2);	printf("                                   ");
+	gotoxy(ic+3,il+6);	printf("                                   ");
+	textbackground(10);
+	gotoxy(ic+3,il+3);	printf("                                   ");
+	gotoxy(ic+3,il+4);	printf("                                   ");
+	gotoxy(ic+3,il+5);	printf("                                   ");
+	
+	textbackground(8); 
+	textcolor(0);
+	// Linha 2  - começo do cooler	
+	gotoxy(ic+18, il+1); printf("   %c      ",219);
 	// Linha 3  
 	gotoxy(coluna, (linha+2));
 	
@@ -638,6 +667,14 @@ void ram(int coluna, int linha)
 	
 	textcolor(0); printf("%c", 219);
 	
+	//modulos de memória
+	textcolor(7);
+	gotoxy(ic+6,il+1); printf("%c%c    %c%c    %c%c    %c%c    %c%c    %c%c",219,219,219,219,219,219,219,219,219,219,219,219);
+	gotoxy(ic+6,il+2); printf("%c%c    %c%c    %c%c    %c%c    %c%c    %c%c",219,219,219,219,219,219,219,219,219,219,219,219);
+
+	//e contatos
+	textcolor(14);
+	gotoxy(ic+2,il+4); printf("%c %c %c %c %c %c %c %c   %c %c %c %c %c %c %c %c %c %c %c %c",219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
 }
 
 void mobo(int coluna, int linha)
@@ -723,6 +760,7 @@ void HDD(int coluna, int linha)
 	gotoxy(coluna+1,linha+5);		printf("%c",223);	gotoxy(coluna+19,linha+5);		printf("%c",223);
 	gotoxy(coluna+19,linha);		printf("%c",220);	gotoxy(coluna+19,linha+11);	printf("%c",223);
 		
+	
 	textcolor(2);
 	gotoxy(coluna+10,linha+7);		printf("%c%c%c%c%c%c%c%c",220,220,220,220,220,220,220,220);
 	gotoxy(coluna+10,linha+8);		printf("%c%c%c%c%c%c%c%c",219,219,219,219,219,219,219,219); // pcb
