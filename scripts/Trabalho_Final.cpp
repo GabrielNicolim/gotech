@@ -1768,7 +1768,7 @@ void excluir_dados()
 			fclose(fp_tmp); 						 
 				
 			//checa se pode ter acesso ( <io.h> )
-			if (_access_s("estoque.bin", 0) == 0)
+			if (_access("estoque.bin", 0) == 0)
 				if (remove("estoque.bin") == 0) {
 					//puts("Arquivo original deletado com sucesso!");
 				}
@@ -1776,7 +1776,7 @@ void excluir_dados()
 					perror("Não foi possivel deletar o aquivo original!");
 			else 
 				perror("Erro ao acessar o arquivo!");
-			if (_access_s("tmp.bin", 0) == 0)
+			if (_access("tmp.bin", 0) == 0)
 				if ( rename( "tmp.bin", "estoque.bin" ) == 0 ) {
 					//puts("Arquivo renomeado com sucesso!");
 				}
