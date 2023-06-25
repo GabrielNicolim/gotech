@@ -154,7 +154,7 @@ main()
     //======================================================================
     
 	srand(time(NULL));
-	random_menu = rand() % 3; // Escolhe o menu que será exibido ao usuário de maneira randomizada
+	random_menu = rand() % 4; // Escolhe o menu que será exibido ao usuário de maneira randomizada
 	
     loading();
     
@@ -210,7 +210,7 @@ void inicio() // Apresenta tela de inicio
 			case 2:				// logo
 				logo(52, 8); 	
 				break;
-			case 3:				// Ram + logo
+			case 3:				// mobo + logo
 				mobo(103, 6); 		
 				logo(40, 8);
 				break;		

@@ -41,50 +41,33 @@ void borda()
 void disquete(int coluna, int linha)
 {
 	// Linha 1 => Borda de cima
-	textcolor(0);
+	textcolor(cor_destaque);
 	gotoxy(coluna, linha); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	
 	// Linha 2  - tracinho
 	gotoxy(coluna, (linha+1));
+	textcolor(cor_destaque);
 	printf("%c", 219);
-	
-	for(int i = 0; i < 18; i++) 
-	{
-		if(i == 2 or i == 15) textcolor(8);
-		if(i > 2  and i < 15) 
-		{
-			textcolor(7);
-			if(i > 4 && i < 8) textcolor(0);
-		}
-		else textcolor(9);
-		putchar(219);
-	}
-	
-	textcolor(0);
+	textcolor(9);
+	for(int i = 0; i < 18; i++) putchar(219);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	
 	// Linha 3  - tracinho
 	gotoxy(coluna, (linha+2));
+	textcolor(cor_destaque);
 	printf("%c", 219);
-	
-	for(int i = 0; i < 18; i++) 
-	{
-		if(i == 2 or i == 15) textcolor(8);
-		if(i > 2  and i < 15) 
-		{
-			textcolor(7);
-			if(i > 4 && i < 8) textcolor(0);
-		}
-		else textcolor(9);
-		putchar(219);
-	}
-	
+	textcolor(9);
+	for(int i = 0; i < 18; i++) putchar(219);
+	textcolor(cor_destaque);
+	printf("%c", 219);
+
 	//detalhes internos
 	textbackground(7);
-	textcolor(0);
-	gotoxy(ic+3, il+1); printf("  %c%c          ",219,219);
-	gotoxy(ic+3, il+2); printf("  %c%c          ",219,219);
+	textcolor(cor_destaque);
+	gotoxy(coluna+3, linha+1); printf("  %c%c          ",219,219);
+	gotoxy(coluna+3, linha+2); printf("  %c%c          ",219,219);
 	
 	// Linha 4
 	
@@ -93,7 +76,7 @@ void disquete(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(9);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	
 	// Linha 5
@@ -103,7 +86,7 @@ void disquete(int coluna, int linha)
 	textcolor(9);
 
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	
 	//Linha 6 - rodelinha com tracin
@@ -122,7 +105,7 @@ void disquete(int coluna, int linha)
 		putchar(219);
 		
 	}
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	
 	//Linha 7 - rodelinha 
@@ -137,7 +120,7 @@ void disquete(int coluna, int linha)
 		putchar(219);
 		
 	}
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	
 	// Linha 8
@@ -147,7 +130,7 @@ void disquete(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(9);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	
 	// Linha 9
@@ -157,19 +140,19 @@ void disquete(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(9);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	
 	// Linha 10 => Borda de baixo
-	textcolor(0);
+	textcolor(cor_destaque);
 	gotoxy(coluna, (linha+9)); 
 	for(int i = 0; i < 20; i++) putchar(219);
-	
+	textbackground(cor_fundo);
 }
 
 void logo(int coluna, int linha)
 {
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	gotoxy(coluna - 2, linha + 6); for(int i = 0; i <= 58; i++) printf("_");
 		
@@ -236,8 +219,8 @@ void logo(int coluna, int linha)
 
 void lupa(int coluna, int linha)
 {	
-	textcolor(0);
-	textbackground(3);
+	textcolor(cor_destaque);
+	textbackground(cor_fundo);
 	// Linha 1 - Borda Preta
 	gotoxy(coluna+4, linha); 		printf("%c%c%c%c%c%c%c%c%c%c%c",220 ,220, 219, 219, 219, 219, 219, 219, 219, 220, 220);	
 	// Linha 2  
@@ -265,13 +248,13 @@ void lupa(int coluna, int linha)
 	gotoxy(coluna+4, linha+8); 	printf("%c%c%c%c%c%c%c%c%c%c%c",223 ,223, 219, 219, 219, 219, 219, 219, 219, 223, 223);		
 	
 	//brilhinho
-	textcolor(15);
+	textcolor(cor_texto);
 	gotoxy(coluna+3, linha+4); printf("%c", 219);
 	gotoxy(coluna+4, linha+5); printf("%c%c%c", 219, 219, 220);
 	gotoxy(coluna+7, linha+6); printf("%c%c", 219, 220);
 	
 	//cabo
-	textcolor(15);
+	textcolor(cor_texto);
 	gotoxy(coluna+18, linha+6); printf("%c%c", 219,220);
 	gotoxy(coluna+16, linha+7); printf("%c%c%c%c%c%c", 219, 219, 219, 219, 219, 220);
 	gotoxy(coluna+15, linha+8); printf("%c%c%c%c%c%c%c%c%c", 223, 223, 219, 219, 219, 219, 219, 219,220);
@@ -288,21 +271,21 @@ void cpu(int coluna, int linha)
 	//Quadrados básicos:
 	textbackground(6);
 	for(int i = 1; i < 10; i++){
-		gotoxy(ic+1, il+i); printf("                    ");
+		gotoxy(coluna+1, linha+i); printf("                    ");
 	}
 	
-	textbackground(0);
+	textbackground(cor_destaque);
 	for(int i = 0; i < 9; i++){
-		gotoxy(ic, il+i); printf("                    ");
+		gotoxy(coluna, linha+i); printf("                    ");
 	}
 	
 	textbackground(7);
 	for(int i = 1; i < 8; i++){
-		gotoxy(ic+1, il+i); printf("                  ");
+		gotoxy(coluna+1, linha+i); printf("                  ");
 	}
 	
 	//escrita C P U
-	textcolor(0);
+	textcolor(cor_destaque);
 	gotoxy(coluna, linha); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	
@@ -312,11 +295,11 @@ void cpu(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(7);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	textcolor(6);
 	printf("%c", 219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	// Linha 3  - tracinho
 	gotoxy(coluna, (linha+2));
@@ -324,11 +307,11 @@ void cpu(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(7);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	textcolor(6);
 	printf("%c", 219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	// Linha 4
 	
@@ -337,11 +320,11 @@ void cpu(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(7);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	textcolor(6);
 	printf("%c", 219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	// Linha 5
 	
@@ -350,11 +333,11 @@ void cpu(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(7);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	textcolor(6);
 	printf("%c", 219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	//Linha 6 - rodelinha com tracin
 	
@@ -363,11 +346,11 @@ void cpu(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(7);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	textcolor(6);
 	printf("%c", 219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	//Linha 7 - rodelinha 
 	
@@ -376,11 +359,11 @@ void cpu(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(7);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	textcolor(6);
 	printf("%c", 219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	// Linha 8
 	
@@ -389,25 +372,25 @@ void cpu(int coluna, int linha)
 	printf("%c", 219);
 	textcolor(7);
 	for(int i = 0; i < 18; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	printf("%c", 219);
 	textcolor(6);
 	printf("%c", 219);
-	textcolor(0);
+	textcolor(cor_destaque);
 		
 	// Linha 9 
-	textcolor(0);
+	textcolor(cor_destaque);
 	gotoxy(coluna, (linha+8)); 
 	for(int i = 0; i < 20; i++) putchar(219);
 	textcolor(6);
 	printf("%c", 219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	// Linha 10 => Borda de baixo
 	textcolor(6);
 	gotoxy((coluna+1), (linha+9)); 
 	for(int i = 0; i < 20; i++) putchar(219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	//escrever cpu
 	gotoxy((coluna+3), (linha+2)); printf("%c%c%c%c",219,219,219,219);
@@ -434,7 +417,7 @@ void cpu(int coluna, int linha)
 	gotoxy((coluna+13), (linha+6)); printf("%c%c%c%c",219,219,219,219);
 	
 	gotoxy((coluna), (linha+9)); //só pro end do programa não quebrar as coisas
-
+	textbackground(cor_fundo);
 }
 
 void gpu(int coluna, int linha)
@@ -461,22 +444,22 @@ void gpu(int coluna, int linha)
 	//fundo principal	
 	textbackground(7);
 	for(int i = 0; i < 9; i++){
-		gotoxy(ic+3,il+i); printf("                                   ");
+		gotoxy(coluna+3,linha+i); printf("                                   ");
 	} 
 	
 	//adesivo generico
 	textbackground(2);
-	gotoxy(ic+3,il+2);	printf("                                   ");
-	gotoxy(ic+3,il+6);	printf("                                   ");
+	gotoxy(coluna+3,linha+2);	printf("                                   ");
+	gotoxy(coluna+3,linha+6);	printf("                                   ");
 	textbackground(10);
-	gotoxy(ic+3,il+3);	printf("                                   ");
-	gotoxy(ic+3,il+4);	printf("                                   ");
-	gotoxy(ic+3,il+5);	printf("                                   ");
+	gotoxy(coluna+3,linha+3);	printf("                                   ");
+	gotoxy(coluna+3,linha+4);	printf("                                   ");
+	gotoxy(coluna+3,linha+5);	printf("                                   ");
 	
 	textbackground(8); 
-	textcolor(0);
+	textcolor(cor_destaque);
 	// Linha 2  - começo do cooler	
-	gotoxy(ic+18, il+1); printf("   %c      ",219);
+	gotoxy(coluna+18, linha+1); printf("   %c      ",219);
 	// Linha 3  
 	gotoxy(coluna, (linha+2));
 	
@@ -578,7 +561,7 @@ void gpu(int coluna, int linha)
 		{
 			if(i==4 || i == 18)
 			{
-				textcolor(0);
+				textcolor(cor_destaque);
 				putchar(219);
 				textcolor(14);
 			}
@@ -587,7 +570,7 @@ void gpu(int coluna, int linha)
 			else
 			printf(" ");
 		}
-	textcolor(0);
+	textcolor(cor_destaque);
 	// Acabou :D
 }
 
@@ -596,17 +579,17 @@ void ram(int coluna, int linha)
 	// Linha 1 => Borda de cima
 	gotoxy(coluna, linha); 
 	
-	textcolor(0); printf("%c", 219);
+	textcolor(cor_destaque); printf("%c", 219);
 	
 	textcolor(2);
 	for(int i = 0; i < 41; i++) putchar(219);
 	
-	textcolor(0); printf("%c", 219);
+	textcolor(cor_destaque); printf("%c", 219);
 	
 	// Linha 2  - tracinho
 	gotoxy(coluna, (linha+1));
 	
-	textcolor(0); printf(" %c", 219);
+	textcolor(cor_destaque); printf(" %c", 219);
 		
 	for(int i = 0; i < 33; i++) 
 	{
@@ -619,12 +602,12 @@ void ram(int coluna, int linha)
 		putchar(219);
 	}
 	
-	textcolor(0); printf("%c ", 219);
+	textcolor(cor_destaque); printf("%c ", 219);
 	
 	// Linha 3  - tracinho
 	gotoxy(coluna, (linha+2));
 	
-	textcolor(0); printf("%c", 219);
+	textcolor(cor_destaque); printf("%c", 219);
 	
 	textcolor(2);
 	putchar(219);
@@ -639,23 +622,23 @@ void ram(int coluna, int linha)
 		putchar(219);
 	}
 	putchar(219);
-	textcolor(0); printf("%c", 219);
+	textcolor(cor_destaque); printf("%c", 219);
 	
 	// Linha 4
 	
 	gotoxy(coluna, (linha+3));
 	
-	textcolor(0); printf(" %c", 219);
+	textcolor(cor_destaque); printf(" %c", 219);
 	
 	textcolor(2);
 	for(int i = 0; i < 39; i++) putchar(219);
 	
-	textcolor(0); printf("%c ", 219);
+	textcolor(cor_destaque); printf("%c ", 219);
 	
 	// Linha 5
 	
 	gotoxy(coluna, (linha+4));
-	textcolor(0); printf("%c", 219);
+	textcolor(cor_destaque); printf("%c", 219);
 	
 	for(int i = 0; i < 41; i++) 
 	{
@@ -665,23 +648,23 @@ void ram(int coluna, int linha)
 		putchar(219);
 	}
 	
-	textcolor(0); printf("%c", 219);
+	textcolor(cor_destaque); printf("%c", 219);
 	
 	//modulos de memória
 	textcolor(7);
-	gotoxy(ic+6,il+1); printf("%c%c    %c%c    %c%c    %c%c    %c%c    %c%c",219,219,219,219,219,219,219,219,219,219,219,219);
-	gotoxy(ic+6,il+2); printf("%c%c    %c%c    %c%c    %c%c    %c%c    %c%c",219,219,219,219,219,219,219,219,219,219,219,219);
+	gotoxy(coluna+6,linha+1); printf("%c%c    %c%c    %c%c    %c%c    %c%c    %c%c",219,219,219,219,219,219,219,219,219,219,219,219);
+	gotoxy(coluna+6,linha+2); printf("%c%c    %c%c    %c%c    %c%c    %c%c    %c%c",219,219,219,219,219,219,219,219,219,219,219,219);
 
 	//e contatos
 	textcolor(14);
-	gotoxy(ic+2,il+4); printf("%c %c %c %c %c %c %c %c   %c %c %c %c %c %c %c %c %c %c %c %c",219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
+	gotoxy(coluna+2,linha+4); printf("%c %c %c %c %c %c %c %c   %c %c %c %c %c %c %c %c %c %c %c %c",219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219,219);
 }
 
 void mobo(int coluna, int linha)
 {
 	// Construir o PCB bruto
 	gotoxy(coluna, linha); 
-	textcolor(0);	
+	textcolor(cor_destaque);	
 	for(int i = 0; i < 20; i++) 
 	{	
 		for(int j = 0; j < 10; j++)
@@ -730,16 +713,16 @@ void mobo(int coluna, int linha)
 	gotoxy((coluna+15), (linha+6)); printf("%c%c",219,219); //dissipador do chipset
 	gotoxy((coluna+15), (linha+7)); printf("%c%c",219,219);
 	
-	textcolor(15);
+	textcolor(cor_texto);
 	gotoxy((coluna+14), (linha+9)); printf("%c%c%c%c",219,219,219,219);
-	textcolor(0);
+	textcolor(cor_destaque);
 	
 	gotoxy((coluna+10), (linha+10));	// tirar o exit do programa de perto
 }
 
 void HDD(int coluna, int linha)
 {
-	textcolor(0);
+	textcolor(cor_destaque);
 	for(int i = 0; i < 21; i++) 
 	{	
 		for(int j = 0; j < 12; j++)
@@ -748,7 +731,7 @@ void HDD(int coluna, int linha)
 		putchar(219);
 		}
 	}
-	textbackground(0);
+	textbackground(cor_destaque);
 	textcolor(7);
 	gotoxy(coluna+6,linha+1);		printf("%c%c%c%c%c%c%c%c%c",220,220,219,219,219,219,219,220,220);
 	gotoxy(coluna+4,linha+2);		printf("%c%c%c%c%c%c%c%c%c%c%c%c%c",220,219,219,219,219,219,219,219,219,219,219,219,220);
@@ -787,7 +770,7 @@ void HDD(int coluna, int linha)
 	gotoxy(coluna+5,linha+9);		printf("%c%c%c%c",219,219,219,219);
 	gotoxy(coluna+6,linha+10);		printf("%c%c",223,223);	
 	
-	textcolor(0);
+	textcolor(cor_destaque);
 	gotoxy(coluna+9,linha+3);		printf("%c%c%c",220,219,220);		///motor para o disco
 	gotoxy(coluna+10,linha+4);		printf("%c",223);
 	
