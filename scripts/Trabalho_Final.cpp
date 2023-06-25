@@ -11,11 +11,10 @@
 	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
 	
 	-Para rodar nas versões antigas do DEVC++ Orwell basta descomentar todas as linhas com uso do text_info(linha 35) e vActual(1959 e 1969)
-	Versão 4.8 = Refatoração de código e correção de bugs
+	Versão 4.9 = Refatoração de código e correção de bugs
 	Bug conhecidos: 
 	- Graças a conio.h, terminais modernos quebram a posições da tela, quebrando toda a interface, porém o problema
 	é apenas visual e pode ser corrigido ao maximizar a janela do terminal com ALT + ENTER ou F11 e mexendo no prompt de comando.
-	- A pesquisa por nome não está funcionando corretamente
 */
 
 
@@ -31,8 +30,10 @@
 #include <stdlib.h>
 #include <io.h> //para checagem se o arquivo existe
 #include "functions\desenhos.h"
+#include "functions\utils.h"
 
-#define versao 4.8
+
+#define versao 4.9
 
 //text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define os limites para linha (38) e coluna (160)
 
@@ -58,7 +59,7 @@ void consulta_geral();
 void consulta_tipo();
 void consulta_nome();
 void excluir_dados();
-void gera_tabela(int li);  
+void gera_tabela(int coluna);  
 void gera_tabela_vertical(int li); 
 void completa_tabela(int linha);
 void tabela_tipos(int col, int linha, int L);
@@ -1273,7 +1274,7 @@ void consulta_geral()
 	
 	pag_limite = ceil(cont_tuplas / 12);  
 	
-	gera_tabela(5);	// Gera borda e tabela inicial
+	gera_tabela(20);	// Gera borda e tabela inicial
 	
 	do{					
 		limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
@@ -1317,7 +1318,7 @@ void consulta_geral()
 				{
 					pag++; // Avança a página | Limita pag a 10 
 					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-					gera_tabela(5);
+					gera_tabela(20);
 				}	
 				break;
 				
@@ -1326,7 +1327,7 @@ void consulta_geral()
 				{
 					pag--; // Volta a pagina
 					rewind(fp);	
-					gera_tabela(5);	
+					gera_tabela(20);	
 				} 			
 				break;
 		}			
@@ -1436,7 +1437,7 @@ void consulta_tipo()
 		
 		pag_limite = ceil(cont_tuplas / 12);  
 		
-		gera_tabela(5);	
+		gera_tabela(20);	
 		
 		do{
 			
@@ -1480,7 +1481,7 @@ void consulta_tipo()
 					
 						pag++; // Avança a página | Limita pag a 10 
 						rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-						gera_tabela(5);
+						gera_tabela(20);
 					}	
 					break;
 					
@@ -1489,7 +1490,7 @@ void consulta_tipo()
 					
 						pag--; // Volta a pagina
 						rewind(fp);	
-						gera_tabela(5);	
+						gera_tabela(20);	
 					} 			
 					break;
 			}
@@ -1548,15 +1549,14 @@ void consulta_nome()
 		
 		while(fread(&produto, sizeof(produto), 1, fp) == 1) // segue até o fim do arquivo
 		{			
-			strcpy(comp, produto.nome);
-				
-			if(strstr(strlwr(comp), strlwr(aux)) != NULL && !produto.excluido)	// Só apresenta e vai para a próxima posição se o item não tiver sido excluido
-			{	
+			//  && !produto.excluido deprecado
+			if(stristr(produto.nome, aux) != NULL)
+			{
 				resultados += 1;
-			} 	
+			}
 		}
 		
-		if(resultados == 0) 
+		if(resultados == 0)
 		{
 			textcolor(cor_destaque);
 			gotoxy(69, 18); printf("[ Nome n%co encontrado ]", 198);			
@@ -1597,7 +1597,7 @@ void consulta_nome()
 				
 				pag_limite = ceil(cont_tuplas / 12);  
 				
-				gera_tabela(5);	// Gera borda e tabela inicial
+				gera_tabela(20);	// Gera borda e tabela inicial
 				
 				do{
 							
@@ -1646,7 +1646,7 @@ void consulta_nome()
 							{
 								pag++; // Avança a página | Limita pag a 10 
 								rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
-								gera_tabela(5);
+								gera_tabela(20);
 							}	
 							break;
 							
@@ -1655,7 +1655,7 @@ void consulta_nome()
 							{
 								pag--; // Volta a pagina
 								rewind(fp);	
-								gera_tabela(5);	
+								gera_tabela(20);	
 							} 			
 							break;
 					}
@@ -1847,41 +1847,39 @@ int navegar_menu(int ini, int fim, int p)
 
 }
 
-void gera_tabela(int li)
+void gera_tabela(int coluna)
 {
-	int ci = 20;
-
 	borda();
 	tabela_tipos(58,37,1); //apresenta a info doq as letras significam
 	
 	textcolor(cor_texto);
-	gotoxy(ci,4);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
-	gotoxy(ci,5);	printf ("|    ID    |                                Nome                                |  Pre%co Unit%crio  | Quantidade |  Tipo  |",135, 160);
-	gotoxy(ci,6);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,7);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,8);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,9);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,10);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,11);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,12);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,13);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,14);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,15);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,16);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,17);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,18);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,19);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,20);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,21);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,22);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,23);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,24);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,25);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,26);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,27);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,28);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
-	gotoxy(ci,29);	printf ("|          |                                                                    |                  |            |        |");
-	gotoxy(ci,30);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
+	gotoxy(coluna, 4);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
+	gotoxy(coluna, 5);	printf ("|    ID    |                                Nome                                |  Pre%co Unit%crio  | Quantidade |  Tipo  |",135, 160);
+	gotoxy(coluna, 6);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 7);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 8);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 9);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 10);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 11);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 12);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 13);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 14);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 15);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 16);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 17);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 18);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 19);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 20);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 21);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 22);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 23);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 24);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 25);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 26);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 27);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 28);	printf ("|------------------------------------------------------------------------------------------------------------------------|");
+	gotoxy(coluna, 29);	printf ("|          |                                                                    |                  |            |        |");
+	gotoxy(coluna, 30);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
 	
 }
 
@@ -1946,38 +1944,6 @@ void textbackground(int newcolor) // Define a cor do fundo (vActual está aqui)
    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 
       (csbi.wAttributes & 0x0f) | (newcolor << 4));
    //vActual.attribute = (csbi.wAttributes & 0x0f) | (newcolor << 4);
-}
-
-// Move o cursor para a coluna e linha desejada
-void gotoxy(int x, int y)
-{
-	COORD coord;
-	coord.X = x - 1;
-	coord.Y = y - 1;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-}
-
-void cursor (int x) { 	// Define se o cursor ira aparecer sim(1) ou não(0)
-	switch (x) {
-		case 0: {
-			CONSOLE_CURSOR_INFO cursor = {1, FALSE};
-			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor);
-			break;
-		}
-		case 1: {
-			CONSOLE_CURSOR_INFO cursor = {1, TRUE};
-			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor);
-			break;
-		}
-	}
-}
-
-void clreol(int x)  //função customizada e mais versátil para o programa do clreol da conio.h
-{
-	for(int i=0; i < x; i++)
-        printf(" ");         //preenche com "vazio/em branco" X espaços escolhidos
-	for(int i=0; i < x; i++)
-        printf("\b");		//volta X vezes o cursor para trás para a posição original após limpar a linha
 }
 
 void voltando_menu(int linha,int coluna,int delay, bool menu){  //Apresenta a mensagem de voltar ao menu, espera e vai pro menu
