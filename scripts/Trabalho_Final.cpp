@@ -949,42 +949,39 @@ void queryAll()
 		return;
 	}
 
-	int contl = 1, limite, limiteAnte, pag, linha, pag_limite; // Variaveis Auxiliares
+	int lineCounter = 1, limit, previousLimit, page=1, line, pageLimit;
+	const int MAX_PRODUCTS_PER_PAGE = 12;
 	
-	pag = 1;
+	pageLimit = ceil(cont_tuplas / MAX_PRODUCTS_PER_PAGE);  
 	
-	pag_limite = ceil(cont_tuplas / 12);  
+	generateTable(20);
 	
-	generateTable(20);	// Gera drawnBorder e tabela inicial
-	
-	do{					
-		limite = (12 * pag); // 12 linhas de dados por página (oq cabe na tabela)
+
+	do {					
+		limit = (MAX_PRODUCTS_PER_PAGE * page);
 		
-		limiteAnte = (12 * (pag - 1));  // Limite da página anterior 
+		previousLimit = (MAX_PRODUCTS_PER_PAGE * (page - 1));
 		
 		textcolor(TEXT_COLOR);
 		
 		gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
 		
-		gotoxy(146, 4);	printf("%d", pag); // Número da página 
+		gotoxy(146, 4);	printf("%d", page);
 		
-		contl = 1;    //reseta o contador de linha
-		linha = 7;	//reseta a linha inicial(pmr da tabela) em q os dados começarão a ser colocados
+		lineCounter = 1;
+		line = 7;
 		
 		rewind(fp);
 		
-		while(fread(&product, sizeof(product), 1, fp) == 1){ // segue até o fim do arquivo
+		while(fread(&product, sizeof(product), 1, fp) == 1){
 				
-			if(contl > limiteAnte){ //se a linha atual for maior que o limite inferior:
-			
-				if(!product.excluido){ // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 			
-					fillTable(linha);    //preenche a tabela
-					linha += 2; 
-				}
+			if(lineCounter > previousLimit){
+				fillTable(line);
+				line += 2;
 			}
 			
-			if(contl == limite) break; //se a linha atual for igual ao limite quebra
-			else contl++; //adiciona mais uma linha ao contador
+			if(lineCounter == limit) break;
+			else lineCounter++;
 		}
 		
 		gotoxy(20, 34); 
@@ -994,26 +991,26 @@ void queryAll()
 		retornar = getch();
 		
 		switch(retornar){	
-			case char(77): // Seta da direita <-
-				if(pag <= pag_limite) 
+			case char(77): // Right arrow ->
+				if(page <= pageLimit) 
 				{
-					pag++; // Avança a página | Limita pag a 10 
-					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+					page++;
+					rewind(fp);
+					generateTable(20);
+				}
+				break;
+				
+			case char(75): // Left arrow <-
+				if(page > 1) 				
+				{
+					page--;
+					rewind(fp);
 					generateTable(20);
 				}	
 				break;
-				
-			case char(75): // Seta da esquerda ->
-				if(pag > 1) 				
-				{
-					pag--; // Volta a pagina
-					rewind(fp);	
-					generateTable(20);	
-				} 			
-				break;
-		}			
-	} while (retornar != '0'); 		
-	fclose(fp);			
+		}
+	} while (retornar != '0');
+	fclose(fp);
 	returningMenu(72, 35, 1500, false);
 	
 	return;
@@ -1094,7 +1091,7 @@ void queryType()
 	int cont_tuplas = -1;
 	bool empty = true;
 	
-	while(fread(&product, sizeof(product), 1, fp) == 1){ // segue até o fim do arquivo contando quantos tipos escolhidos tem
+	while(fread(&product, sizeof(product), 1, fp) == 1){
 		if(product.type == aux){ 		
 			empty = false;
 			cont_tuplas++;
