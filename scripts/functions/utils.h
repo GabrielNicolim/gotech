@@ -4,9 +4,9 @@ char* stristr(const char* haystack, const char* needle)
 {
     const char* pHaystack = haystack;
     const char* pNeedle = needle;
-    const char* result = (*pNeedle == '\0') ? haystack : nullptr;
+    const char* result = (*pNeedle == 0) ? haystack : nullptr;
 
-    while (*pHaystack != '\0' && *pNeedle != '\0')
+    while (*pHaystack != 0 && *pNeedle != 0)
     {
         if (tolower(static_cast<unsigned char>(*pHaystack)) == tolower(static_cast<unsigned char>(*pNeedle)))
         {
@@ -39,7 +39,29 @@ char* stristr(const char* haystack, const char* needle)
         pHaystack++;
     }
 
-    return (*pNeedle == '\0') ? const_cast<char*>(result) : nullptr;
+    return (*pNeedle == 0) ? const_cast<char*>(result) : nullptr;
+}
+
+bool isNumeric(const char* str) {
+    int size = strlen(str);
+    for (int i = 0; i < size; i++) {
+        if (str[i] == ',') {
+            continue;
+        }
+        if (!isdigit(str[i]) && str[i] != '.') {
+            return false;
+        }
+    }
+    return true;
+}
+
+double convertToDouble(const char* str) {
+    char* endptr;
+    double num = strtod(str, &endptr);
+    if (*endptr != '\0') {
+        num = -1;
+    }
+    return num;
 }
 
 void cursor (int x)
