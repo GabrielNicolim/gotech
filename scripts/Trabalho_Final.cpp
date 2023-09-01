@@ -94,8 +94,6 @@ typedef struct Product
 	long quantity;
 	char type;
 	double price;
-	bool excluido;
-	
 } Product;
 
 // Global variables
@@ -149,9 +147,6 @@ void loading()
     getch();
 }
 
-//
-// Primeira página que o usuário tem contato 
-//
 void start()
 {	
 	while (true) {
@@ -159,18 +154,18 @@ void start()
 	
 		switch(random_menu){
 			case 0:
-				drawnDiskette(38, 6); // Disquete + drawnLogo
+				drawnDiskette(38, 6);
 				drawnLogo(68, 8);
 				break;
-			case 1:				// drawnCPU + drawnLogo
+			case 1:
 				drawnCPU(38, 6); 	
 				drawnLogo(68, 8);
 				break;	
-			case 2:				// drawnLogo
-				drawnLogo(52, 8); 	
+			case 2:
+				drawnLogo(52, 8);
 				break;
-			case 3:				// drawnMobo + drawnLogo
-				drawnMobo(103, 6); 		
+			case 3:
+				drawnMobo(103, 6);
 				drawnLogo(40, 8);
 				break;		
 		}
@@ -219,7 +214,7 @@ void registerProductUI()
 	
 	cursor(1);
 	
-	do{
+	do {
 		system("cls");
 		
 		drawnBorder();
@@ -239,7 +234,7 @@ void registerProductUI()
 			
 		registerProductData();
 				
-	}while( confirmChoice(20,26,3) );
+	} while(confirmChoice(20,26,3));
 	
 	fclose(fp);
 	
@@ -939,14 +934,12 @@ void queryAll()
 	
 	bool empty = true;  
 	
-	while(fread(&product, sizeof(product), 1, fp) == 1){// Verifica se o arquivo bin está vazio 
-		if(!product.excluido){		
-			empty = false;				//marca o arquivo como contendo dados e conta quantos tem
-			cont_tuplas++;
-		}
+	while (fread(&product, sizeof(product), 1, fp) == 1) {
+		cont_tuplas++;
+		empty = false;
 	}
 	
-	if(empty){	
+	if (empty) {	
 		drawnBorder();
 		textcolor(CONTRAST_COLOR); 
 		gotoxy(52, 16); printf("[ N%co h%c nenhum item registrado! Por favor registre algo ]", 198,160);
@@ -1164,19 +1157,19 @@ void queryType()
 		
 		switch(retornar){
 					
-			case char(77): // Se a seta direita for pressionada
+			case char(77): // Right arrow ->
 				if(pag <= pag_limite)
 				{
-					pag++; // Avança a página | Limita pag a 10 
-					rewind(fp);		//seta a leitura do arquivo na posição inicial do arquivo ("1º linha e coluna")	
+					pag++;
+					rewind(fp);
 					generateTable(20);
 				}	
 				break;
 				
-			case char(75): // Se a seta da esquerda
-				if(pag > 1){ 				
+			case char(75): // Left arrow <-
+				if(pag > 1){
 				
-					pag--; // Volta a pagina
+					pag--;
 					rewind(fp);	
 					generateTable(20);	
 				} 			
@@ -1205,7 +1198,7 @@ int searchByName(const char* name) {
 
 void queryName()
 {
-	char aux[MAX_NAME_LENGTH], comp[MAX_NAME_LENGTH];
+	char nameSearch[MAX_NAME_LENGTH], comp[MAX_NAME_LENGTH];
 	int tam, results;
 	
 	while (true)
@@ -1221,9 +1214,9 @@ void queryName()
 		textcolor(TEXT_COLOR); 
 		gotoxy(20, 7); printf("Digite o Nome (0 para sair): ");
 		
-		strcpy(aux, validateName(49, 7));
+		strcpy(nameSearch, validateName(49, 7));
 		
-		if(aux[0] == '0'){
+		if(nameSearch[0] == '0'){
 			returningMenu(74, 35, 1500, false);
 			return;
 		}	
@@ -1231,7 +1224,7 @@ void queryName()
 		cursor(0);
 		openFile();
 				
-		results = searchByName(aux);
+		results = searchByName(nameSearch);
 		
 		if(results == 0)
 		{
@@ -1254,12 +1247,12 @@ void queryName()
 			{			
 				strcpy(comp, product.name);
 					
-				if(strstr(strlwr(comp),strlwr(aux)) != NULL)
+				if(strstr(strlwr(comp),strlwr(nameSearch)) != NULL)
 				{	
 					generateVerticalTable(11);
 					typesTable(58,37,1);
 					break;
-				} 	
+				}
 			}
 			gotoxy(20, 30);
 			printf("Pressione uma tecla para redigitar...");
@@ -1298,21 +1291,21 @@ void queryName()
 			
 			rewind(fp);
 			
-			while(fread(&product, sizeof(product), 1, fp) == 1) // segue até o fim do arquivo
+			while(fread(&product, sizeof(product), 1, fp) == 1)
 			{		
 				strcpy(comp, product.name);
 				
-				if(contl > limiteAnte) //se a linha atual for maior que o limit inferior:
+				if(contl > limiteAnte)
 				{
-					if(strstr(strlwr(comp), strlwr(aux)) != NULL && !product.excluido) // Só apresenta e vai para a próxima posição se o item não tiver sido excluido 
+					if(strstr(strlwr(comp), strlwr(nameSearch)) != NULL)
 					{
-						fillTable(linha);    //preenche a tabela
+						fillTable(linha);
 						linha += 2; 
 					}
 				}
 				
-				if(contl == limit) break; //se a linha atual for igual ao limit quebra
-				else if(strstr(strlwr(comp), strlwr(aux)) != NULL) contl++; //adiciona mais uma linha ao contador
+				if(contl == limit) break;
+				else if(strstr(strlwr(comp), strlwr(nameSearch)) != NULL) contl++;
 			}
 			
 			gotoxy(20, 34); 
@@ -1390,7 +1383,7 @@ void deleteData()
 			
 			while(!feof(fp)){
 				fread(&product, sizeof(product), 1, fp);
-				if(product.id == IDaux and !product.excluido){			
+				if(product.id == IDaux){			
 					generateVerticalTable(11);
 
 					break;
