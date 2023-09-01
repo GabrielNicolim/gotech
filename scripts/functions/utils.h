@@ -1,48 +1,49 @@
 #include <string.h>
 
-char* stristr( const char* str1, const char* str2 )
+char* stristr(const char* haystack, const char* needle)
 {
-    const char* p1 = str1 ;
-    const char* p2 = str2 ;
-    const char* r = *p2 == 0 ? str1 : 0 ;
+    const char* pHaystack = haystack;
+    const char* pNeedle = needle;
+    const char* result = (*pNeedle == '\0') ? haystack : nullptr;
 
-    while( *p1 != 0 && *p2 != 0 )
+    while (*pHaystack != '\0' && *pNeedle != '\0')
     {
-        if( tolower( (unsigned char)*p1 ) == tolower( (unsigned char)*p2 ) )
+        if (tolower(static_cast<unsigned char>(*pHaystack)) == tolower(static_cast<unsigned char>(*pNeedle)))
         {
-            if( r == 0 )
+            if (result == nullptr)
             {
-                r = p1 ;
+                result = pHaystack;
             }
 
-            p2++ ;
+            pNeedle++;
         }
         else
         {
-            p2 = str2 ;
-            if( r != 0 )
+            pNeedle = needle;
+            if (result != nullptr)
             {
-                p1 = r + 1 ;
+                pHaystack = result + 1;
             }
 
-            if( tolower( (unsigned char)*p1 ) == tolower( (unsigned char)*p2 ) )
+            if (tolower(static_cast<unsigned char>(*pHaystack)) == tolower(static_cast<unsigned char>(*pNeedle)))
             {
-                r = p1 ;
-                p2++ ;
+                result = pHaystack;
+                pNeedle++;
             }
             else
             {
-                r = 0 ;
+                result = nullptr;
             }
         }
 
-        p1++ ;
+        pHaystack++;
     }
 
-    return *p2 == 0 ? (char*)r : 0 ;
+    return (*pNeedle == '\0') ? const_cast<char*>(result) : nullptr;
 }
 
-void cursor (int x) { 	// Define se o cursor ira aparecer sim(1) ou não(0)
+void cursor (int x)
+{
 	switch (x) {
 		case 0: {
 			CONSOLE_CURSOR_INFO cursor = {1, FALSE};
@@ -57,15 +58,15 @@ void cursor (int x) { 	// Define se o cursor ira aparecer sim(1) ou não(0)
 	}
 }
 
-void clreol(int x)  //função customizada e mais versátil para o programa do clreol da conio.h
+// Clear the line
+void clreol(int x)
 {
 	for(int i=0; i < x; i++)
-        printf(" ");         //preenche com "vazio/em branco" X espaços escolhidos
+        printf(" ");
 	for(int i=0; i < x; i++)
-        printf("\b");		//volta X vezes o cursor para trás para a posição original após limpar a linha
+        printf("\b");
 }
 
-// Move o cursor para a coluna e linha desejada
 void gotoxy(int x, int y)
 {
 	COORD coord;
