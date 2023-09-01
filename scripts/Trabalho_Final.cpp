@@ -98,6 +98,7 @@ typedef struct Product
 
 // Global variables
 int random_menu;
+const int MAX_PRODUCT_QUANTITY = 9999999;
 Product product;
 FILE *fp;
 
@@ -434,21 +435,20 @@ long validateQuantity(int line, int column)
 		fflush(stdin);
 		gotoxy(line, column);
 		fgets(aux, sizeof(aux), stdin);
-		// Remove o caractere de nova line (\n) no final da string
+		// Removes the newline character (\n) at the end of the string
         aux[strcspn(aux, "\n")] = '\0';
 
 		size = strlen(aux);
 
 		if(size <= 0) continue;
 
-		// Verifica se todos os caracteres são dígitos
+		// Formats the string to long
 		if (sscanf(aux, "%ld", &quantity) != 1) {
             errorErase(line, column, 2 , 70); //"[ERRO] Quantidade Inválida"
             continue;
         }
 
-		// Verifica se o valor é muito grande
-		if(quantity > 9999999){
+		if(quantity > MAX_PRODUCT_QUANTITY){
             errorErase(line, column, 5, 70);  //"[ERRO] Sem espaço no estoque"
 			continue;	
         }
@@ -503,7 +503,7 @@ double validatePrice(int line, int column)
 		fflush(stdin);
 		
 		gotoxy(line, column); fgets(aux, sizeof(aux), stdin);
-		// Remove o caractere de nova line (\n) no final da string
+		// Removes the newline character (\n) at the end of the string
         aux[strcspn(aux, "\n")] = '\0';
 
 		if (strlen(aux) == 0) continue;
@@ -679,7 +679,7 @@ void generalChange()
 		id = getIDEdit();
 		if(id == 0) continue;
 
-		double num = product.price;
+		double price = product.price;
 		long aux_quantity = product.quantity;
 		char aux_type = product.type;
 		char aux_name[MAX_NAME_LENGTH];
@@ -712,7 +712,7 @@ void generalChange()
 			strcpy(aux_name,validateName(39, 23));
 			aux_quantity = validateQuantity(39, 25);
 			aux_type = validateType(39, 27);
-			num = validatePrice(39, 29);
+			price = validatePrice(39, 29);
 		}
 		else if(choice == 1) // Alterar Nome
 		{
@@ -758,7 +758,7 @@ void generalChange()
 			printf("Pre%co Unit%crio...: ", 135, 160);
 			
 			textcolor(TEXT_COLOR);		
-			num = validatePrice(39,25);
+			price = validatePrice(39,25);
 		}
 		
 		if(confirmChoice(70, 31, 0)){
@@ -770,7 +770,7 @@ void generalChange()
 					
 					int fposicao = ftell(fp); // Store the position of the file pointer
 										
-					product.price = num;
+					product.price = price;
 					product.quantity = aux_quantity;
 					product.type = aux_type;
 					strcpy(product.name, aux_name);
@@ -823,7 +823,7 @@ int getIDEdit()
 		
 		aux = validateID(49, 8, 100);
 			                                                                    
-		if(aux == 0) return 0; // Retorna 0 para que a func de generalChange saia do loop 
+		if(aux == 0) return 0;
 
 		if(isIDRegistered(aux)){
 			textbackground(TEXT_COLOR); textcolor(CONTRAST_COLOR); 
@@ -850,7 +850,7 @@ int getIDEdit()
 	return aux; 
 }
 
-void systemInfo() // Apresenta as informações do sistema
+void systemInfo()
 {
 	drawnBorder();
 	
