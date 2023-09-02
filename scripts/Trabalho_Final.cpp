@@ -11,7 +11,6 @@
 	- Este projeto visa aplicar os conceitos aprendidos em FPD e TP ao longo de 2020.
 
 	Know bugs:
-	- To run this code in newer versions of DEVC++ (>Orwell) you need to uncomment all the lines with text_info(linha 35) and vActual(1959 e 1969)
 	- Because of conio.h, modern terminals break the console positions, making the interface seem weird, but the problem can be circumvented by
 	maximizing the terminal window with ALT + ENTER or F11 and updating the frame(easier to do this while loading).
 
@@ -34,7 +33,6 @@
 
 #define version 5.0
 #define MAX_NAME_LENGTH 194
-//text_info vActual = {0, 0, 79, 24, WHITE, WHITE, C80, 160, 38, 1, 1}; // Define the limits to 38 lines and 160 cols
 
 // conio.c functions
 void textcolor(int newcolor);
@@ -69,7 +67,7 @@ void deleteData();
 void generateTable(int column);
 void generateVerticalTable(int line);
 void fillTableLine(int line);
-void displaySearchResults(Product** produtos, int numProdutos);
+void displaySearchResults(Product** products, int numProdutos);
 void typesTable(int col, int line, int spacing);
 void registerProductUI();
 int registerProductData();
@@ -410,7 +408,7 @@ char *validateName(int line, int column)
             }
             after_read++;
 		}
-		name[after_write] = '\0'; // Adiciona o caractere nulo ao final do name
+		name[after_write] = '\0';
 
         if (after_write == 0 || isspace(name[0])) {
             continue;
@@ -568,7 +566,7 @@ void errorErase(int col, int lin, int errorType, int apagar)
 			break;
 	}
 	Sleep(1000);
-	while (kbhit())  //Isso continua se vê que há um input do teclado em espera e, em caso afirmativo, chama getch() para descartar o caractere
+	while (kbhit())
     getch();
 	textbackground(BACKGROUND_COLOR);
 	gotoxy(col, lin); clreol(apagar);
@@ -932,18 +930,20 @@ void queryAll()
 	cursor(0);
 
 	int numProducts = 0;
-    Product** produtos = NULL;
+    Product** products = NULL;
 
     while (fread(&product, sizeof(product), 1, fp) == 1) {
 		numProducts++;
-		produtos = (Product**) realloc(produtos, numProducts * sizeof(Product*));
-		produtos[numProducts - 1] = (Product*) malloc(sizeof(Product));
-		*produtos[numProducts - 1] = product;
+		products = (Product**) realloc(products, numProducts * sizeof(Product*));
+		products[numProducts - 1] = (Product*) malloc(sizeof(Product));
+		*products[numProducts - 1] = product;
     }
 
-	displaySearchResults(produtos, numProducts);
+	displaySearchResults(products, numProducts);
 
-	free(produtos);
+	for (int i = 0; i < numProducts; i++) {
+		free(products[i]);
+	}
 	fclose(fp);
 
 	return;
@@ -1014,20 +1014,22 @@ void queryType()
 	openFile();
 
 	int numProducts = 0;
-    Product** produtos = NULL;
+    Product** products = NULL;
 
     while (fread(&product, sizeof(product), 1, fp) == 1) {
         if (product.type == aux) {
             numProducts++;
-			produtos = (Product**) realloc(produtos, numProducts * sizeof(Product*));
-			produtos[numProducts - 1] = (Product*) malloc(sizeof(Product));
-			*produtos[numProducts - 1] = product;
+			products = (Product**) realloc(products, numProducts * sizeof(Product*));
+			products[numProducts - 1] = (Product*) malloc(sizeof(Product));
+			*products[numProducts - 1] = product;
         }
     }
 
-	displaySearchResults(produtos, numProducts);
+	displaySearchResults(products, numProducts);
 
-	free(produtos);
+	for (int i = 0; i < numProducts; i++) {
+		free(products[i]);
+	}
 	fclose(fp);
 
 	return;
@@ -1083,7 +1085,7 @@ void queryName()
 
 }
 
-void displaySearchResults(Product** produtos, int numProducts) {
+void displaySearchResults(Product** products, int numProducts) {
 	if (numProducts == 0)
 	{
 		drawnBorder();
@@ -1131,7 +1133,7 @@ void displaySearchResults(Product** produtos, int numProducts) {
 		line = 7;
 
 		for(int i = 0; i < numProducts; i++) {
-			product = *produtos[i];
+			product = *products[i];
 
 			if(lineCounter > previousLimit){
 				fillTableLine(line);
@@ -1402,7 +1404,6 @@ void textcolor(int newcolor)
    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
       (csbi.wAttributes & 0xf0) | newcolor);
-   //vActual.attribute = (csbi.wAttributes & 0xf0) | newcolor;
 }
 
 void textbackground(int newcolor)
@@ -1412,7 +1413,6 @@ void textbackground(int newcolor)
    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
       (csbi.wAttributes & 0x0f) | (newcolor << 4));
-   //vActual.attribute = (csbi.wAttributes & 0x0f) | (newcolor << 4);
 }
 
 void returningMenu(int linha,int coluna,int delay, bool menu){

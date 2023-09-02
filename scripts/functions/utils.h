@@ -2,6 +2,7 @@
 
 char* stristr(const char* haystack, const char* needle)
 {
+    char* nullptr = NULL;
     const char* pHaystack = haystack;
     const char* pNeedle = needle;
     const char* result = (*pNeedle == 0) ? haystack : nullptr;
