@@ -19,83 +19,21 @@
 
 #ifdef _WIN32
 #include <conio.h>
+#include <windows.h>
 #endif
 
 #include <stdio.h>
 #include <math.h>
-#include <windows.h>
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
 #include <io.h>
-#include "functions\desenhos.h"
 #include "functions\utils.h"
+#include "functions\drawings.h"
 
-#define version 5.0
-#define MAX_NAME_LENGTH 194
-
-// conio.c functions
-void textcolor(int newcolor);
-void textbackground(int newcolor);
-void gotoxy(int x, int y);
-void cursor (int x);
-void clreol(int x);
-
-// Program flow
-void loading();
-void start();
-void drawnBorder();
-
-typedef struct Product
-{
-	long id;
-	char name[MAX_NAME_LENGTH];
-	long quantity;
-	char type;
-	double price;
-	boolean excluido;
-} Product;
-
-// Data interaction
-void openFile();
-int openFileEdit();
-void queryAll();
-void queryID();
-void queryName();
-void queryType();
-void deleteData();
-void generateTable(int column);
-void generateVerticalTable(int line);
-void fillTableLine(int line);
-void displaySearchResults(Product** products, int numProdutos);
-void typesTable(int col, int line, int spacing);
-void registerProductUI();
-int registerProductData();
-int getIDEdit();
-
-// Menu
-void startMenu();
-void generalChange();
-void subMenu();
-int browseMenu(int start, int end, int p);
-void systemInfo();
-void shutdown();
-
-// Receives and validates data
-bool isIDRegistered(int aux);
-long validateID(int line, int column, int eraseQuantity);
-long validateQuantity(int line, int column);
-char *validateName(int line, int column);
-char validateType(int line, int column);
-double validatePrice(int line, int column);
-
-// Error messages
-void errorErase(int col, int lin, int errorType, int apagar);
-void returningMenu(int line,int column, int delay, bool menu);
-bool confirmChoice(int line, int column,int confirmaTipo);
+#define VERSION_NUMBER 5.0f
 
 // Global variables
-const int MAX_PRODUCT_QUANTITY = 9999999;
 Product product;
 FILE *fp;
 
@@ -121,14 +59,14 @@ int main()
 
 void loading()
 {
-	drawnBorder();
+	drawBorder();
 
 	cursor(0);
 
 	textcolor(TEXT_COLOR);
 	gotoxy(58, 10); printf("Aguarde, estamos preparando tudo para voc%c!",136);
 	gotoxy(15, 30); printf("Copyright%c GoTech",184);
-	gotoxy(139, 30); printf("Vers%co %.1f",198, version);
+	gotoxy(139, 30); printf("Vers%co %.1f",198, VERSION_NUMBER);
 	textcolor(LIGHTRED);
 
 	for(int i = 0; i <= 52; i++){
@@ -151,23 +89,23 @@ void start()
 	int random_menu = rand() % 4;
 
 	while (true) {
-		drawnBorder();
+		drawBorder();
 
 		switch(random_menu){
 			case 0:
-				drawnDiskette(38, 6);
-				drawnLogo(68, 8);
+				drawDiskette(38, 6);
+				drawLogo(68, 8);
 				break;
 			case 1:
-				drawnCPU(38, 6);
-				drawnLogo(68, 8);
+				drawCPU(38, 6);
+				drawLogo(68, 8);
 				break;
 			case 2:
-				drawnLogo(52, 8);
+				drawLogo(52, 8);
 				break;
 			case 3:
-				drawnMobo(103, 6);
-				drawnLogo(40, 8);
+				drawMobo(103, 6);
+				drawLogo(40, 8);
 				break;
 		}
 
@@ -184,7 +122,7 @@ void startMenu()
 	gotoxy(70, 23); printf("Altera%c%co", 135, 198);
 	gotoxy(70, 25); printf("Info de Sistema");
 	gotoxy(70, 27); printf("Sair");
-	gotoxy(150, 41); printf("Vers%co %.1f",198, version);
+	gotoxy(150, 41); printf("Vers%co %.1f",198, VERSION_NUMBER);
 
 	int choice = browseMenu(19, 27, 68);
 
@@ -202,7 +140,7 @@ void startMenu()
 			systemInfo();
 			break;
 		case 4:
-			shutdown();
+			closeProgram();
 			break;
 	}
 
@@ -216,7 +154,7 @@ void registerProductUI()
 	do {
 		system("cls");
 
-		drawnBorder();
+		drawBorder();
 
 		typesTable(58, 37, 1);
 
@@ -276,7 +214,7 @@ int registerProductData()
 		else {
 
 			fflush(fp);
-			drawnBorder();
+			drawBorder();
 
 			srand(time(NULL));
 			int random_menu = rand() % 3;
@@ -284,13 +222,13 @@ int registerProductData()
 			switch(random_menu)
 			{
 				case 0:
-					drawnRAM(85, 8);
+					drawRAM(85, 8);
 					break;
 				case 1:
-					drawnGPU(88, 8);
+					drawGPU(88, 8);
 					break;
 				case 2:
-					drawnDiskette(85, 8);
+					drawDiskette(85, 8);
 					break;
 			}
 			cursor(0);
@@ -385,10 +323,9 @@ char *validateName(int line, int column)
 		// Remove extra spaces
         int after_read = 0;
         int after_write = 0;
-        int size = strlen(name);
         int doubleSpace = 0;
 
-		while(name[after_read]) {
+		while(name[after_read] != '\0') {
 			if (isspace(name[after_read])) {
 				if (after_write == 0 || isspace(name[after_write - 1])) {
                     after_read++;
@@ -579,9 +516,9 @@ void subMenu()
 	int choice;
 
 	do{
-		drawnBorder();
+		drawBorder();
 
-		drawnMagnifier(63, 4);
+		drawMagnifier(63, 4);
 
 		textcolor(TEXT_COLOR);
 		gotoxy(70, 19);  printf("Geral");
@@ -661,9 +598,9 @@ void generalChange()
 	int id, choice;
 
 	while (true) {
-		drawnBorder();
+		drawBorder();
 
-		drawnHDD(69, 4);
+		drawHDD(69, 4);
 
 		textcolor(TEXT_COLOR);
 		gotoxy(70, 19); printf("Altera%c%co Geral", 135, 198);
@@ -686,7 +623,7 @@ void generalChange()
 		char aux_name[MAX_NAME_LENGTH];
 		strcpy(aux_name, product.name);
 
-		drawnBorder();
+		drawBorder();
 		textcolor(TEXT_COLOR);
 		// Creates table already populated with data
 		gotoxy(20, 5);	printf("-Dados originais:");
@@ -809,7 +746,7 @@ int getIDEdit()
 	openFile();
 
 	do {
-		drawnBorder();
+		drawBorder();
 
 		cursor(1);
 
@@ -853,42 +790,45 @@ int getIDEdit()
 
 void systemInfo()
 {
-	drawnBorder();
+	drawBorder();
 
-	char input;
 	const int INFO_X = 20;
     const int INFO_Y = 7;
-    const int MAX_INPUT_LENGTH = 2;
+
+	char input;
 
 	do {
-		textcolor(CONTRAST_COLOR); textbackground(TEXT_COLOR);
-		gotoxy(73, 4);  printf(" Info do Sistema ");
+		textcolor(CONTRAST_COLOR);
+		textbackground(TEXT_COLOR);
+		gotoxy(73, 4);
+		printf(" Info do Sistema ");
 		textbackground(BACKGROUND_COLOR);
 
 		time_t t = time(NULL);
     	struct tm *tm = localtime(&t);
     	char time_str[20];
         strftime(time_str, sizeof(time_str), "%c", tm);
-        gotoxy(125, 4); printf("%s", time_str);
+        gotoxy(125, 4);
+		printf("%s", time_str);
 
 		textcolor(CONTRAST_COLOR);
-		gotoxy(INFO_X, INFO_Y); 	 printf("Empresa: ");
-		gotoxy(INFO_X, INFO_Y+2);   printf("Nomes: ");
-		gotoxy(INFO_X, INFO_Y+4);  printf("N%cmeros: ",163);
-		gotoxy(INFO_X, INFO_Y+6);  printf("Turma: ");
-		gotoxy(INFO_X, INFO_Y+8);  printf("Ano: ");
-		gotoxy(INFO_X, INFO_Y+10);  printf("Sobre o software: ");
+		gotoxy(INFO_X, INFO_Y); 	printf("Empresa: ");
+		gotoxy(INFO_X, INFO_Y+2);	printf("Nomes: ");
+		gotoxy(INFO_X, INFO_Y+4);	printf("N%cmeros: ",163);
+		gotoxy(INFO_X, INFO_Y+6);	printf("Turma: ");
+		gotoxy(INFO_X, INFO_Y+8);	printf("Ano: ");
+		gotoxy(INFO_X, INFO_Y+10);	printf("Sobre o software: ");
 
 		textcolor(TEXT_COLOR);
-		gotoxy(INFO_X+9, INFO_Y);	 printf("GoTech");
-		gotoxy(INFO_X+7, INFO_Y+2);   printf("Felipe Lima e Gabriel Nicolim");
-		gotoxy(INFO_X+9, INFO_Y+4);  printf("06 e 08");
-		gotoxy(INFO_X+7, INFO_Y+6);  printf("71A");
-		gotoxy(INFO_X+5, INFO_Y+8);  printf("2020");
-		gotoxy(INFO_X, INFO_Y+10);  printf("Sobre o software: ");
+		gotoxy(INFO_X+9, INFO_Y);	printf("GoTech");
+		gotoxy(INFO_X+7, INFO_Y+2);	printf("Felipe Lima e Gabriel Nicolim");
+		gotoxy(INFO_X+9, INFO_Y+4);	printf("06 e 08");
+		gotoxy(INFO_X+7, INFO_Y+6);	printf("71A");
+		gotoxy(INFO_X+5, INFO_Y+8);	printf("2020");
+		gotoxy(INFO_X, INFO_Y+10);	printf("Sobre o software: ");
 
 		textcolor(TEXT_COLOR);
-		printf("Nosso software, que hoje se encontra na vers%co %.1f, se destina a simular um sistema de gerenciamento de",198, version);
+		printf("Nosso software, que hoje se encontra na vers%co %.1f, se destina a simular um sistema de gerenciamento de",198, VERSION_NUMBER);
 		gotoxy(20, 19); printf("estoque de uma loja de inform%ctica em C/C++.",160);
 		gotoxy(20, 21); printf("Para a realiza%c%co desse projeto utilizamos fun%c%ces de cabe%calho da conio.c e conio.h e file da stdio.h.",135,198,135,228,135);
 		gotoxy(20, 23); printf("Podem ser registrados perif%cricos e outras pe%cas de computador, que mais tarde podem ser alterados ou excluidos.",130,135);
@@ -896,20 +836,18 @@ void systemInfo()
 		textcolor(CONTRAST_COLOR);
 		gotoxy(20, 30); printf("Pressione 0 para retornar ao menu");
 
-		fflush(stdin);
-
 		input =	getch();
 
 	} while (input != '0');
 
-	returningMenu(72, 35, 1500, true);
+	returningMenu(72, 35, 1200, true);
 
 	return;
 }
 
-void shutdown()
+void closeProgram()
 {
-	drawnBorder();
+	drawBorder();
 
 	textcolor(TEXT_COLOR);
 	gotoxy(62, 17);
@@ -955,7 +893,7 @@ void queryID()
 
 	while (true)
 	{
-		drawnBorder();
+		drawBorder();
 
 		textcolor(CONTRAST_COLOR);
 		gotoxy(73, 4); textbackground(TEXT_COLOR); printf(" Consulta por ID "); textbackground(BACKGROUND_COLOR);
@@ -995,7 +933,7 @@ void queryID()
 
 void queryType()
 {
-	drawnBorder();
+	drawBorder();
 
 	textcolor(CONTRAST_COLOR);textbackground(TEXT_COLOR);
 	gotoxy(71, 4); printf(" Consulta por Tipo ");
@@ -1041,7 +979,7 @@ void queryName()
 
 	while (true)
 	{
-		drawnBorder();
+		drawBorder();
 		cursor(1);
 
 		textcolor(CONTRAST_COLOR);
@@ -1088,7 +1026,7 @@ void queryName()
 void displaySearchResults(Product** products, int numProducts) {
 	if (numProducts == 0)
 	{
-		drawnBorder();
+		drawBorder();
 		textcolor(CONTRAST_COLOR);
 		gotoxy(52, 16); printf("[ N%co h%c nenhum item registrado! Por favor registre algo ]", 198,160);
 		gotoxy(62, 30); printf("Pressione qualquer tecla para voltar");
@@ -1180,7 +1118,7 @@ void deleteData()
 	int IDaux = 1;
 
 	while (true) {
-		drawnBorder();
+		drawBorder();
 
 		typesTable(58, 37, 1);
 
@@ -1322,7 +1260,7 @@ int browseMenu(int start, int end, int p)
 
 void generateTable(int column)
 {
-	drawnBorder();
+	drawBorder();
 	typesTable(58,37,1);
 
 	textcolor(TEXT_COLOR);
@@ -1430,7 +1368,7 @@ void returningMenu(int linha,int coluna,int delay, bool menu){
 void openFile()
 {
 	if((fp = fopen("estoque.bin", "ab+")) == NULL){
-		system("cls"); drawnBorder();
+		system("cls"); drawBorder();
 		textcolor(TEXT_COLOR);
 		gotoxy(65, 16);
 		printf("Erro na abertura do arquivo!");

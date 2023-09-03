@@ -1,6 +1,9 @@
 // Source file for drawing functions
 // Diskette, CPU, GPU, RAM, Magnifier and Logo
 
+#ifndef DRAWINGS_H
+#define DRAWINGS_H
+
 // Colors and Chards
 #define CONTRAST_COLOR 0
 #define BORDER_COLOR 1
@@ -17,7 +20,7 @@ void gotoxy(int x, int y);
 void textcolor(int newcolor);
 void textbackground(int newcolor);
 
-void drawnBorder()
+void drawBorder()
 {
 	textbackground(BACKGROUND_COLOR);
 	system("cls");
@@ -44,7 +47,7 @@ void drawnBorder()
 	textcolor(TEXT_COLOR);
 }
 
-void drawnDiskette(int column, int line)
+void drawDiskette(int column, int line)
 {
 	// Line 1
 	textcolor(CONTRAST_COLOR);
@@ -133,7 +136,7 @@ void drawnDiskette(int column, int line)
 	textcolor(TEXT_COLOR);
 }
 
-void drawnLogo(int column, int line)
+void drawLogo(int column, int line)
 {
 	textcolor(CONTRAST_COLOR);
 
@@ -199,7 +202,7 @@ void drawnLogo(int column, int line)
 	gotoxy(column+51,line+5); printf("%c%c%c", 200, 205, 188);
 }
 
-void drawnMagnifier(int column, int line)
+void drawMagnifier(int column, int line)
 {
 	textcolor(CONTRAST_COLOR);
 	textbackground(BACKGROUND_COLOR);
@@ -247,7 +250,7 @@ void drawnMagnifier(int column, int line)
 	gotoxy(column+24, line+12);printf("%c%c%c%c%c%c", 223, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR,223);
 }
 
-void drawnCPU(int column, int line)
+void drawCPU(int column, int line)
 {
 	//Quadrados básicos:
 	textbackground(6);
@@ -401,7 +404,7 @@ void drawnCPU(int column, int line)
 	textbackground(BACKGROUND_COLOR);
 }
 
-void drawnGPU(int column, int line)
+void drawGPU(int column, int line)
 {
     // Line 1 - top border
     gotoxy(column, line);
@@ -505,7 +508,7 @@ void drawnGPU(int column, int line)
     textcolor(CONTRAST_COLOR);
 }
 
-void drawnRAM(const int column, const int line)
+void drawRAM(const int column, const int line)
 {
     // Line 1 => Borda de cima
     gotoxy(column, line);
@@ -595,7 +598,7 @@ void drawnRAM(const int column, const int line)
     gotoxy(column+2,line+4); printf("%c %c %c %c %c %c %c %c   %c %c %c %c %c %c %c %c %c %c %c %c", BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR);
 }
 
-void drawnMobo(int column, int line)
+void drawMobo(int column, int line)
 {
 	// Construir o PCB bruto
 	gotoxy(column, line);
@@ -620,7 +623,7 @@ void drawnMobo(int column, int line)
 	textcolor(LIGHTGRAY);
 	gotoxy((column+6), (line+2)); printf("%c",BLOCK_CHAR);
 	gotoxy((column+6), (line+3)); printf("%c",BLOCK_CHAR);
-	gotoxy((column+9), (line+2)); printf("%c",BLOCK_CHAR);		//socket do drawnCPU
+	gotoxy((column+9), (line+2)); printf("%c",BLOCK_CHAR);		//socket do drawCPU
 	gotoxy((column+9), (line+3)); printf("%c",BLOCK_CHAR);
 	textcolor(14);
 	gotoxy((column+7), (line+2)); printf("%c%c",BLOCK_CHAR,BLOCK_CHAR);
@@ -629,7 +632,7 @@ void drawnMobo(int column, int line)
 	textcolor(2);
 	gotoxy((column+13), (line+1)); printf("%c",BLOCK_CHAR);
 	gotoxy((column+13), (line+2)); printf("%c",BLOCK_CHAR);
-	gotoxy((column+13), (line+3)); printf("%c",BLOCK_CHAR);    //slots de drawnRAM e etc
+	gotoxy((column+13), (line+3)); printf("%c",BLOCK_CHAR);    //slots de drawRAM e etc
 	gotoxy((column+13), (line+4)); printf("%c",BLOCK_CHAR);
 	gotoxy((column+15), (line+1)); printf("%c",BLOCK_CHAR);
 	gotoxy((column+15), (line+2)); printf("%c",BLOCK_CHAR);
@@ -655,7 +658,7 @@ void drawnMobo(int column, int line)
 	gotoxy((column+10), (line+10));
 }
 
-void drawnHDD(int column, int line)
+void drawHDD(int column, int line)
 {
 	textcolor(CONTRAST_COLOR);
 	for(int i = 0; i < 21; i++)
@@ -710,3 +713,6 @@ void drawnHDD(int column, int line)
 
 	textbackground(BACKGROUND_COLOR);
 }
+
+
+#endif /* DRAWINGS_H */
