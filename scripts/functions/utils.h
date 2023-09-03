@@ -1,48 +1,156 @@
+#include <stdio.h>
 #include <string.h>
+#include <windows.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h> // Include this header file to define the boolean type
+#include <ctype.h>
 
-char* stristr( const char* str1, const char* str2 )
+#ifndef UTILS_H
+#define UTILS_H
+
+#define MAX_NAME_LENGTH 194
+#define MAX_PRODUCT_QUANTITY 9999999
+
+typedef struct Product
 {
-    const char* p1 = str1 ;
-    const char* p2 = str2 ;
-    const char* r = *p2 == 0 ? str1 : 0 ;
+	long id;
+	char name[MAX_NAME_LENGTH];
+	long quantity;
+	char type;
+	double price;
+	bool excluido;
+} Product;
 
-    while( *p1 != 0 && *p2 != 0 )
+// conio.c functions
+void textcolor(int newcolor);
+void textbackground(int newcolor);
+void gotoxy(int x, int y);
+void cursor (int x);
+void clreol(int x);
+
+// Program flow
+void loading();
+void start();
+
+// Data interaction
+void openFile();
+int openFileEdit();
+void queryAll();
+void queryID();
+void queryName();
+void queryType();
+void deleteData();
+void generateTable(int column);
+void generateVerticalTable(int line);
+void fillTableLine(int line);
+void displaySearchResults(Product** products, int numProdutos);
+void typesTable(int col, int line, int spacing);
+void registerProductUI();
+int registerProductData();
+int getIDEdit();
+
+// Menu
+void startMenu();
+void generalChange();
+void subMenu();
+int browseMenu(int start, int end, int p);
+void systemInfo();
+void closeProgram();
+
+// Receives and validates data
+bool isIDRegistered(int aux);
+long validateID(int line, int column, int eraseQuantity);
+long validateQuantity(int line, int column);
+char *validateName(int line, int column);
+char validateType(int line, int column);
+double validatePrice(int line, int column);
+
+// Error messages
+void errorErase(int col, int lin, int errorType, int apagar);
+void returningMenu(int line,int column, int delay, bool menu);
+bool confirmChoice(int line, int column,int confirmaTipo);
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef NULL
+#define NULL 0
+#endif
+
+char* stristr(const char* haystack, const char* needle)
+{
+    //char* nullptr = NULL;
+    const char* pHaystack = haystack;
+    const char* pNeedle = needle;
+    const char* result = (*pNeedle == 0) ? haystack : NULL;
+
+    while (*pHaystack != 0 && *pNeedle != 0)
     {
-        if( tolower( (unsigned char)*p1 ) == tolower( (unsigned char)*p2 ) )
+        if (tolower((unsigned char)(*pHaystack)) == tolower((unsigned char)(*pNeedle)))
         {
-            if( r == 0 )
+            if (result == NULL)
             {
-                r = p1 ;
+                result = pHaystack;
             }
 
-            p2++ ;
+            pNeedle++;
         }
         else
         {
-            p2 = str2 ;
-            if( r != 0 )
+            pNeedle = needle;
+            if (result != NULL)
             {
-                p1 = r + 1 ;
+                pHaystack = result + 1;
             }
 
-            if( tolower( (unsigned char)*p1 ) == tolower( (unsigned char)*p2 ) )
+            if (tolower((unsigned char)(*pHaystack)) == tolower((unsigned char)(*pNeedle)))
             {
-                r = p1 ;
-                p2++ ;
+                result = pHaystack;
+                pNeedle++;
             }
             else
             {
-                r = 0 ;
+                result = NULL;
             }
         }
 
-        p1++ ;
+        pHaystack++;
     }
 
-    return *p2 == 0 ? (char*)r : 0 ;
+    return (*pNeedle == 0) ? (char *)(result) : NULL;
 }
 
-void cursor (int x) { 	// Define se o cursor ira aparecer sim(1) ou não(0)
+#ifdef __cplusplus
+}
+#endif
+
+
+bool isNumeric(const char* str) {
+    int size = strlen(str);
+    for (int i = 0; i < size; i++) {
+        if (str[i] == ',') {
+            continue;
+        }
+        if (!isdigit(str[i]) && str[i] != '.') {
+            return false;
+        }
+    }
+    return true;
+}
+
+double convertToDouble(const char* str) {
+    char* endptr;
+    double num = strtod(str, &endptr);
+    if (*endptr != '\0') {
+        num = -1;
+    }
+    return num;
+}
+
+void cursor (int x)
+{
 	switch (x) {
 		case 0: {
 			CONSOLE_CURSOR_INFO cursor = {1, FALSE};
@@ -57,15 +165,15 @@ void cursor (int x) { 	// Define se o cursor ira aparecer sim(1) ou não(0)
 	}
 }
 
-void clreol(int x)  //função customizada e mais versátil para o programa do clreol da conio.h
+// Clear the line
+void clreol(int x)
 {
 	for(int i=0; i < x; i++)
-        printf(" ");         //preenche com "vazio/em branco" X espaços escolhidos
+        printf(" ");
 	for(int i=0; i < x; i++)
-        printf("\b");		//volta X vezes o cursor para trás para a posição original após limpar a linha
+        printf("\b");
 }
 
-// Move o cursor para a coluna e linha desejada
 void gotoxy(int x, int y)
 {
 	COORD coord;
@@ -73,3 +181,5 @@ void gotoxy(int x, int y)
 	coord.Y = y - 1;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
+
+#endif /* UTILS_H */
