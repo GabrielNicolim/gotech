@@ -42,8 +42,8 @@ void queryName();
 void queryType();
 void deleteData();
 void generateTable(int column);
-void generateVerticalTable(int line);
-void fillTableLine(int line);
+void generateVerticalTable(int line, Product product);
+void fillTableLine(int line, Product product);
 void displaySearchResults(Product** products, int numProdutos);
 void typesTable(int col, int line, int spacing);
 void registerProductUI();
@@ -125,7 +125,6 @@ char* stristr(const char* haystack, const char* needle)
 #ifdef __cplusplus
 }
 #endif
-
 
 bool isNumeric(const char* str) {
     int size = strlen(str);

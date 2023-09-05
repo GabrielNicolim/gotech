@@ -627,12 +627,12 @@ void generalChange()
 		textcolor(TEXT_COLOR);
 		// Creates table already populated with data
 		gotoxy(20, 5);	printf("-Dados originais:");
-		generateVerticalTable(7);
+		generateVerticalTable(7, product);
 
 		gotoxy(20, 21);	printf("-Novos dados:");
 		textcolor(CONTRAST_COLOR);
 		cursor(1);
-		typesTable(58,37,1);
+		typesTable(58, 37, 1);
 
 		if(choice == 0) // Alteração geral
 		{
@@ -915,7 +915,7 @@ void queryID()
 			getch();
 			continue;
 		}
-		generateVerticalTable(11);
+		generateVerticalTable(11, product);
 
 		typesTable(58, 37, 1);
 
@@ -1002,7 +1002,6 @@ void queryName()
 
 		int numProducts = 0;
 		Product** products = NULL;
-
 		while (fread(&product, sizeof(product), 1, fp) == 1) {
 			if (stristr(product.name, nameSearch) != NULL) {
 				numProducts++;
@@ -1015,7 +1014,9 @@ void queryName()
 		displaySearchResults(products, numProducts);
 
 		returningMenu(75, 35, 1000,false);
-		free(products);
+		for (int i = 0; i < numProducts; i++) {
+			free(products[i]);
+		}
 		fclose(fp);
 	};
 
@@ -1034,10 +1035,10 @@ void displaySearchResults(Product** products, int numProducts) {
 		fclose(fp);
 		return;
 	}
-
 	if(numProducts == 1)
 	{
-		generateVerticalTable(11);
+		product = *products[0];
+		generateVerticalTable(11, product);
 		typesTable(58, 37, 1);
 
 		textcolor(CONTRAST_COLOR);
@@ -1066,6 +1067,7 @@ void displaySearchResults(Product** products, int numProducts) {
 
 		gotoxy(20, 31); printf("Pressione 0 para voltar ao menu de pesquisa");
 		gotoxy(146, 4);	printf("%d", page);
+		gotoxy(142, 31); printf("Total: %d", numProducts);
 
 		lineCounter = 1;
 		line = 7;
@@ -1074,7 +1076,7 @@ void displaySearchResults(Product** products, int numProducts) {
 			product = *products[i];
 
 			if(lineCounter > previousLimit){
-				fillTableLine(line);
+				fillTableLine(line, product);
 				line += 2;
 			}
 
@@ -1149,7 +1151,7 @@ void deleteData()
 			while(!feof(fp)){
 				fread(&product, sizeof(product), 1, fp);
 				if(product.id == IDaux){
-					generateVerticalTable(11);
+					generateVerticalTable(11, product);
 
 					break;
 				}
@@ -1184,14 +1186,14 @@ void deleteData()
 			fclose(fp);
 			fclose(fp_tmp);
 
-			if (_access("estoque.bin", 0) != 0)
+			if (_access("inventory.bin", 0) != 0)
 				perror("Erro ao acessar o arquivo!");
-			else if (remove("estoque.bin") != 0)
+			else if (remove("inventory.bin") != 0)
 				perror("Não foi possivel deletar o aquivo original!");
 
 			if (_access("tmp.bin", 0) != 0)
 				perror("Erro ao acessar o arquivo temporario!");
-			else if (rename("tmp.bin", "estoque.bin") != 0)
+			else if (rename("tmp.bin", "inventory.bin") != 0)
 				perror( "Erro renomeando arquivo!");
 
 			textcolor(CONTRAST_COLOR);
@@ -1261,7 +1263,7 @@ int browseMenu(int start, int end, int p)
 void generateTable(int column)
 {
 	drawBorder();
-	typesTable(58,37,1);
+	typesTable(58, 37, 1);
 
 	textcolor(TEXT_COLOR);
 	gotoxy(column, 4);	printf ("+------------------------------------------------------------------------------------------------------------------------+");
@@ -1294,7 +1296,7 @@ void generateTable(int column)
 
 }
 
-void fillTableLine(int line)
+void fillTableLine(int line, Product product)
 {
 	gotoxy(22, line); printf("%ld", product.id);
 	gotoxy(33, line); printf("%.66s", product.name);
@@ -1303,7 +1305,7 @@ void fillTableLine(int line)
 	gotoxy(136, line); printf("%c", product.type);
 }
 
-void generateVerticalTable(int line)
+void generateVerticalTable(int line, Product product)
 {
 	const int MAX_LINE_LENGTH = 97;
 
@@ -1367,7 +1369,7 @@ void returningMenu(int linha,int coluna,int delay, bool menu){
 
 void openFile()
 {
-	if((fp = fopen("estoque.bin", "ab+")) == NULL){
+	if((fp = fopen("inventory.bin", "ab+")) == NULL){
 		system("cls"); drawBorder();
 		textcolor(TEXT_COLOR);
 		gotoxy(65, 16);
@@ -1379,7 +1381,7 @@ void openFile()
 
 int openFileEdit()
 {
-	if((fp = fopen("estoque.bin", "rb+")) == NULL){
+	if((fp = fopen("inventory.bin", "rb+")) == NULL){
 		cursor(0);
 		gotoxy(40, 16); printf("N%co foram encontrados dados, cadastre algo!", 198);
 		getch();
